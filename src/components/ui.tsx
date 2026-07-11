@@ -69,18 +69,23 @@ export function Stat({
   label: string;
   accent?: boolean;
 }) {
+  // Allow a clean line break right after a "→" (e.g. "$12.42→$1.74") so a value
+  // that can't fit on one line wraps between its two parts instead of mid-number.
+  const wrappable = value.replace(/→/g, "→​");
   return (
-    <div className="card" style={{ padding: "1.1rem 1.2rem" }}>
+    <div className="card" style={{ padding: "1.1rem 1.2rem", minWidth: 0 }}>
       <div
         className="mono tnum"
         style={{
-          fontSize: "clamp(1.5rem, 3.5vw, 2.1rem)",
+          fontSize: "clamp(1.2rem, 2.5vw, 2rem)",
           fontWeight: 600,
           letterSpacing: "-0.02em",
           color: accent ? "var(--brand)" : "var(--text)",
+          minWidth: 0,
+          overflowWrap: "break-word",
         }}
       >
-        {value}
+        {wrappable}
       </div>
       <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "0.35rem" }}>{label}</div>
     </div>
