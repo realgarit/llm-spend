@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260" role="img" aria-label="llm-spend — What LLM APIs actually cost.">
+  <title>llm-spend — What LLM APIs actually cost.</title>
+  <style>
+    .bar { transform-box: fill-box; transform-origin: left center; animation: grow 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .axis { transform-box: fill-box; transform-origin: top center; animation: rise 0.5s ease-out both; }
+    .b1 { animation-delay: 0.35s; }
+    .b2 { animation-delay: 0.60s; }
+    .b3 { animation-delay: 0.90s; }
+    .fade { opacity: 0; animation: fade 0.7s ease-out both; }
+    .w1 { animation-delay: 1.05s; }
+    .w2 { animation-delay: 1.25s; }
+    @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .bar, .axis, .fade { animation: none; opacity: 1; transform: none; }
+    }
+    text { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+  </style>
+
+  <!-- Dark tile: reads on both GitHub light and dark themes -->
+  <rect x="0.5" y="0.5" width="899" height="259" rx="22" fill="#0F1115" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Brand mark: falling price bars against an axis -->
+  <g transform="translate(60 66) scale(2.0)">
+    <rect class="axis" x="0" y="0" width="3.5" height="35" rx="1.75" fill="#3E4450"/>
+    <rect class="bar b1" x="8" y="0" width="26" height="7" rx="3.5" fill="#4C5361"/>
+    <rect class="bar b2" x="8" y="14" width="17" height="7" rx="3.5" fill="#99A3B4"/>
+    <rect class="bar b3" x="8" y="28" width="9" height="7" rx="3.5" fill="#F6A821"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <g transform="translate(180 0)">
+    <text class="fade w1" x="0" y="126" font-size="58" font-weight="700" letter-spacing="-1" fill="#E7EBF3">llm<tspan fill="#F6A821">-</tspan>spend</text>
+    <text class="fade w2" x="2" y="168" font-size="24" font-weight="400" fill="#98A2B3">What LLM APIs actually cost.</text>
+  </g>
+</svg>
