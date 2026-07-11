@@ -2,7 +2,7 @@
   "name": "llm-spend",
   "version": "0.1.0",
   "private": true,
-  "description": "What LLM APIs actually cost — a data-driven reference on LLM API pricing, prompt-cache economics, and cost verification.",
+  "description": "What LLM APIs actually cost. Real prices in USD and CHF, measured on Azure AI Foundry and direct APIs, with prompt-cache economics and cost verification.",
   "engines": {
     "node": "20.x"
   },

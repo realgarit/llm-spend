@@ -2,7 +2,7 @@ export const site = {
   name: "llm-spend",
   tagline: "What LLM APIs actually cost.",
   description:
-    "A data-driven reference on LLM API pricing, prompt-cache economics, and how to verify real costs — not sticker prices. USD and CHF, every rate sourced.",
+    "Real LLM API prices in USD and CHF. Measured mostly on Azure AI Foundry, plus direct APIs, with hidden cache meters flagged and every rate sourced.",
   url: "https://llmcost.realgar.ch",
   githubUrl: "https://github.com/realgarit/llm-spend",
   author: "realgarit",

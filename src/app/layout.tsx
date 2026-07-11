@@ -30,7 +30,7 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.tagline}`,
+    default: `${site.name}: ${site.tagline}`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -41,17 +41,18 @@ export const metadata: Metadata = {
     "API cost",
     "prompt caching",
     "token pricing",
+    "Azure AI Foundry",
     "Azure OpenAI",
     "DeepSeek",
     "Claude",
     "Gemini",
     "GLM",
     "Kimi",
-    "cost optimization",
+    "cost verification",
   ],
   openGraph: {
     type: "website",
-    title: `${site.name} — ${site.tagline}`,
+    title: `${site.name}: ${site.tagline}`,
     description: site.description,
     siteName: site.name,
     url: site.url,
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: `${site.name} — ${site.tagline}`,
+    title: `${site.name}: ${site.tagline}`,
     description: site.description,
     images: ["/icon.svg"],
   },

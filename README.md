@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/banner.svg" alt="llm-spend — What LLM APIs actually cost." width="900">
+  <img src=".github/banner.svg" alt="llm-spend: What LLM APIs actually cost." width="900">
 </p>
 
 <p align="center">
@@ -9,7 +9,7 @@
   <a href="https://llmcost.realgar.ch"><img src="https://img.shields.io/badge/live-llmcost.realgar.ch-F6A821?style=flat" alt="Live site"></a>
 </p>
 
-A reference for what LLM APIs actually cost. It lists real, measured rates per provider, flags hidden cache meters that pricing pages leave out, and shows every price in USD and CHF. Numbers that come from billing reconciliation or a pattern are marked as such, so you can tell a published rate from a derived one.
+A reference for what LLM APIs actually cost. It lists real, measured rates per provider (mostly on Azure AI Foundry, plus direct APIs like DeepSeek, Fireworks, Anthropic, OpenAI, and Google), flags hidden cache meters that pricing pages leave out, and shows every price in USD and CHF. Numbers reconciled from billing or inferred from a pattern are marked, so you can tell a published rate from a derived one.
 
 Live site: **https://llmcost.realgar.ch**
 
