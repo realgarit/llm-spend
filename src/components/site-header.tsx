@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { nav, site } from "@/lib/site";
+import { BrandMark, BrandWordmark } from "./brand-mark";
 import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
@@ -28,24 +29,8 @@ export function SiteHeader() {
     >
       <div className="container-page" style={{ display: "flex", alignItems: "center", height: "3.75rem", gap: "1rem" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
-          <span
-            aria-hidden
-            className="mono"
-            style={{
-              width: "1.6rem",
-              height: "1.6rem",
-              display: "grid",
-              placeItems: "center",
-              borderRadius: "0.4rem",
-              background: "var(--brand)",
-              color: "#0a0c10",
-              fontWeight: 700,
-              fontSize: "0.95rem",
-            }}
-          >
-            $
-          </span>
-          <span style={{ fontWeight: 600, letterSpacing: "-0.01em" }}>{site.name}</span>
+          <BrandMark size={26} />
+          <BrandWordmark />
         </Link>
 
         <nav

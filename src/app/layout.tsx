@@ -55,11 +55,13 @@ export const metadata: Metadata = {
     description: site.description,
     siteName: site.name,
     url: site.url,
+    images: [{ url: "/icon.svg", width: 64, height: 64, alt: `${site.name} mark` }],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
+    images: ["/icon.svg"],
   },
   robots: { index: true, follow: true },
 };

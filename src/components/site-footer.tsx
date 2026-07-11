@@ -2,6 +2,7 @@ import Link from "next/link";
 import { providers } from "@/data/providers";
 import { USD_TO_CHF } from "@/data/currency";
 import { nav, site } from "@/lib/site";
+import { BrandMark, BrandWordmark } from "./brand-mark";
 
 export function SiteFooter() {
   return (
@@ -16,23 +17,8 @@ export function SiteFooter() {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem" }}>
-              <span
-                aria-hidden
-                className="mono"
-                style={{
-                  width: "1.4rem",
-                  height: "1.4rem",
-                  display: "grid",
-                  placeItems: "center",
-                  borderRadius: "0.35rem",
-                  background: "var(--brand)",
-                  color: "#0a0c10",
-                  fontWeight: 700,
-                }}
-              >
-                $
-              </span>
-              <span style={{ fontWeight: 600 }}>{site.name}</span>
+              <BrandMark size={22} />
+              <BrandWordmark />
             </div>
             <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "22rem" }}>
               {site.tagline} A living reference — verify against your own billing exports before you commit.
