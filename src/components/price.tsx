@@ -9,8 +9,8 @@ const CONF_LABEL: Record<Confidence, string> = {
 
 const CONF_TITLE: Record<Confidence, string> = {
   official: "Taken from an official, published pricing page.",
-  derived: "Back-calculated from a real billing / cost-management export — not published.",
-  estimate: "Inferred from an established pricing pattern — not yet published.",
+  derived: "Back-calculated from a real billing / cost-management export, not published.",
+  estimate: "Inferred from an established pricing pattern, not yet published.",
 };
 
 export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {

@@ -11,7 +11,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Cache economics",
   description:
-    "A worked case study on prompt caching: how a 97% cache-hit rate cut a bill from $12.42 to $1.74, why cache reads and writes are priced the way they are, and why caching often beats model choice.",
+    "A worked case study on prompt caching: how a 97% hit rate cut a bill from $12.42 to $1.74, why cache reads and writes are priced the way they are, and why caching often beats model choice.",
   alternates: { canonical: `${site.url}/cache-economics` },
 };
 
@@ -50,8 +50,8 @@ export default function CacheEconomicsPage() {
           without changing the model
         </h1>
         <p style={{ color: "var(--text-muted)", marginTop: "1.1rem", fontSize: "1.1rem", maxWidth: "44rem" }}>
-          Prompt caching is the single biggest lever on real-world agentic coding costs — routinely bigger than which
-          model you pick. Here is the arithmetic behind that claim.
+          Prompt caching is the biggest lever on real agentic coding costs, usually bigger than which model you pick.
+          Here&rsquo;s the arithmetic.
         </p>
       </header>
 
@@ -65,49 +65,44 @@ export default function CacheEconomicsPage() {
       <section className="prose" style={{ maxWidth: "44rem", marginBottom: "3rem" }}>
         <SectionHeading eyebrow="What happened" title="A 97% cache-hit rate did the work" />
         <p>
-          An agentic coding task, run against the same model with the same prompts, was measured twice. Priced naively at
-          the flat input rate, it would have cost <strong>{formatDual(12.42)}</strong>. The actual billed cost, with a
-          measured <strong>97% cache-hit rate</strong>, was <strong>{formatDual(1.74)}</strong>.
+          The same agentic coding task ran twice against the same model. Priced naively at the flat input rate it would
+          have cost <strong>{formatDual(12.42)}</strong>. Actual billed cost, at a measured{" "}
+          <strong>97% cache-hit rate</strong>, was <strong>{formatDual(1.74)}</strong>.
         </p>
         <p>
-          Nothing about the model changed. The difference is entirely that 97% of the input tokens — the large, stable
-          prefix of system prompt and codebase context that repeats on every turn — were served from cache at a fraction
-          of the fresh-input price, instead of being re-billed in full each time.
-        </p>
-        <p>
-          This is why the first question about any agentic workload&rsquo;s cost is not &ldquo;which model?&rdquo; but
-          &ldquo;what is your cache-hit rate, and does this tier even have a cache meter?&rdquo;
+          Nothing about the model changed. 97% of the input tokens (the stable prefix of system prompt and codebase that
+          repeats every turn) came from cache instead of being re-billed in full. So the first question about an agentic
+          workload isn&rsquo;t &ldquo;which model?&rdquo; but &ldquo;what&rsquo;s your hit rate, and does this tier even
+          have a cache meter?&rdquo;
         </p>
       </section>
 
       <section style={{ marginBottom: "3rem" }}>
         <SectionHeading eyebrow="The mechanism" title="How cache reads and writes are priced">
-          Two rates, not one. Understanding both is what lets you predict the curve.
+          Two rates, not one. Both decide the curve.
         </SectionHeading>
         <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
           <div className="callout callout-insight">
             <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Cache read</div>
             <h4>~10% of the input price</h4>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "0.4rem" }}>
-              Reusing a cached prefix costs roughly a tenth of fresh input. On Claude, cache reads run ~10% of standard
-              input; the derived cloud cache meters land in the same ballpark (DeepSeek V4 Pro ~
-              {formatUsd(0.145)} vs {formatUsd(1.74)} fresh — a ~91.7% discount).
+              Reusing a cached prefix costs about a tenth of fresh input. Claude reads run ~10% of input; the derived
+              cloud meters land nearby (DeepSeek V4 Pro ~{formatUsd(0.145)} vs {formatUsd(1.74)} fresh, ~91.7% off).
             </p>
           </div>
           <div className="callout callout-warning">
             <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Cache write</div>
             <h4>~1.25× the input price, once</h4>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "0.4rem" }}>
-              Writing a prefix into cache costs a one-time premium — ~1.25x standard input on Claude, and the same 1.25x
-              on GPT-5.6&rsquo;s revised cache-write billing. It is amortized across every later read, so a prefix reused
-              many times pays the write once and banks the ~90% discount thereafter.
+              Writing a prefix into cache costs a one-time premium, ~1.25x input on Claude and on GPT-5.6. It&rsquo;s
+              amortized across every later read, so a prefix reused many times pays the write once and banks the ~90%
+              discount.
             </p>
           </div>
         </div>
         <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "1rem", maxWidth: "44rem" }}>
-          The upshot: caching wins when a large context is <strong style={{ color: "var(--text)" }}>reused</strong>. A
-          stable system prompt and codebase re-sent across dozens of agentic turns is the ideal case — exactly the
-          workload where costs otherwise spiral.
+          Caching wins when a large context is <strong style={{ color: "var(--text)" }}>reused</strong>: a stable system
+          prompt and codebase re-sent across dozens of turns, exactly where costs otherwise spiral.
         </p>
       </section>
 
@@ -168,7 +163,7 @@ export default function CacheEconomicsPage() {
         <p style={{ fontSize: "0.8rem", color: "var(--text-faint)", marginTop: "0.8rem" }}>
           Cache rate for V4 Pro is <span className="mark mark-derived">†</span> derived from a billing export. At a{" "}
           {Math.round(HIT_RATES[HIT_RATES.length - 1] * 100)}% hit rate this workload drops {reductionPct}% versus no
-          caching — {formatUsd(noCache)} → {formatUsd(best)}.
+          caching ({formatUsd(noCache)} → {formatUsd(best)}).
         </p>
       </section>
 
@@ -177,12 +172,12 @@ export default function CacheEconomicsPage() {
         <div className="callout callout-insight" style={{ maxWidth: "44rem" }}>
           <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
             On this workload, DeepSeek-V4 <strong style={{ color: "var(--text)" }}>Pro</strong> at a 90% cache-hit rate
-            costs <strong style={{ color: "var(--text)" }}>{formatUsd(proCached90)}</strong> — well under DeepSeek{" "}
+            costs <strong style={{ color: "var(--text)" }}>{formatUsd(proCached90)}</strong>, well under DeepSeek{" "}
             <strong style={{ color: "var(--text)" }}>V3.2</strong> at{" "}
             <strong style={{ color: "var(--text)" }}>{formatUsd(v32NoCache)}</strong>, even though V3.2&rsquo;s sticker
             input rate (<span className="mono">{formatUsd(V32_GLOBAL.inputUsd)}</span>/M) is a third of V4 Pro&rsquo;s
             (<span className="mono">{formatUsd(V4_PRO.inputUsd)}</span>/M). V3.2 has no cache meter, so its low sticker
-            price never materializes; V4 Pro&rsquo;s cache does the work. The lower headline number loses.
+            price never shows up; V4 Pro&rsquo;s cache does the work. The lower headline number loses.
           </p>
         </div>
         <p style={{ color: "var(--text-muted)", marginTop: "1.25rem", maxWidth: "44rem" }}>

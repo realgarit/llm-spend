@@ -3,10 +3,10 @@ import { formatTokens } from "@/lib/calc";
 import { ConfidenceBadge, PriceStacked } from "./price";
 
 const TIER_TITLE: Record<string, string> = {
-  Global: "Global — routed to any datacenter (cheapest, highest throughput).",
-  DataZone: "Data Zone — constrained to US or EU (~10% premium).",
-  Regional: "Regional — single specific region (most restrictive).",
-  Direct: "Direct — the provider's own first-party API.",
+  Global: "Global: routed to any datacenter (cheapest, highest throughput).",
+  DataZone: "Data Zone: US or EU only (~10% premium).",
+  Regional: "Regional: single region (most restrictive).",
+  Direct: "Direct: the provider's own first-party API.",
 };
 
 export function PricingTable({ provider }: { provider: Provider }) {

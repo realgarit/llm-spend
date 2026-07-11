@@ -1,5 +1,5 @@
 /**
- * llm-spend brand mark: falling price bars against an axis — a dim wide
+ * llm-spend brand mark: falling price bars against an axis. A dim wide
  * "sticker price" bar, a mid bar, and a short bright-amber "real cached cost"
  * bar, on a dark rounded tile. The mark reads the site's core thesis: what you
  * actually pay collapses below the sticker price.

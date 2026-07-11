@@ -9,47 +9,47 @@ const NARRATIVE: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Blended cost depends on your input:output ratio",
-    body: "Output tokens typically cost 3–4x input tokens. Knowing your split matters more than the headline input price — two models with the same input rate can differ 2x on a real workload.",
+    body: "Output usually costs 3-4x input. Two models with the same input rate can differ 2x on a real workload, so your token split matters more than the headline price.",
   },
   {
     n: "02",
     title: "Prompt caching is the single biggest lever",
-    body: "Often bigger than model choice itself. Measured swings of 80–97% cost reduction from caching alone — a task that would cost $12.42 / CHF 10 without cache came in at $1.74 / CHF 1.40 at a 97% cache-hit rate.",
+    body: "Often bigger than model choice. A task that costs $12.42 / CHF 10 without cache came in at $1.74 / CHF 1.40 at a 97% hit rate.",
   },
   {
     n: "03",
-    title: "Cloud platforms can publish incomplete pricing",
-    body: "Public pages often omit a cached-input column for third-party models even when a cached-token meter genuinely exists and is billed. Cross-referencing a real cost export against confirmed base rates exposes these hidden meters.",
+    title: "Azure AI Foundry can publish incomplete pricing",
+    body: "Foundry's public pages often skip the cached-input column for third-party models even though the cache meter exists and gets billed. A billing export exposes it.",
   },
   {
     n: "04",
     title: "Resale markups vary wildly",
-    body: "From near 0% (a model resold close to a provider's own direct rate), to a consistent ~10% (Data Zone vs Global), to as much as 4.5x (a 'Global' native tier vs the developer's own direct API, per public support forums).",
+    body: "From near 0% (resold at the provider's own rate), to ~10% (Data Zone vs Global), to as much as 4.5x (a 'Global' tier vs the direct API, per public support forums).",
   },
   {
     n: "05",
     title: "Context window is a real autonomy lever",
-    body: "Not just a spec-sheet number. Larger windows (1M tokens — DeepSeek V4, GLM-5.2) reduce forced context compaction, which reduces the babysitting and lost-context behavior of smaller-window models.",
+    body: "Bigger windows (1M tokens on DeepSeek V4 and GLM-5.2) mean less forced context compaction, so less babysitting on long runs.",
   },
   {
     n: "06",
     title: "Benchmark leaders don't always win",
-    body: "GPT-5.3-Codex tops coding benchmarks but can underperform in real agentic use — poor context retention, constant correction — versus DeepSeek V4 Pro and GLM-5.2.",
+    body: "GPT-5.3-Codex tops coding benchmarks but can lag in real agentic work, with poor context retention, versus DeepSeek V4 Pro and GLM-5.2.",
   },
   {
     n: "07",
     title: "Don't trust in-app 'estimated cost' widgets",
-    body: "Portal cost estimates can silently show $0 or wildly wrong numbers even when real charges exist. Trust dedicated cost-analysis tooling grouped by meter, and actual billing exports, over any dashboard's live estimate.",
+    body: "Portal estimates can show $0 or wildly wrong numbers while real charges pile up. Trust billing exports grouped by meter instead.",
   },
 ];
 
 const METHOD: { n: string; body: string }[] = [
-  { n: "1", body: "Get the provider's published per-million-token rate for input, output, and (if it exists) cached input." },
-  { n: "2", body: "Run a real workload and get the actual billed cost from the platform's billing / cost-analysis tool — not a chat client's own estimate." },
-  { n: "3", body: "If real cost is far below the naive flat-rate calculation, suspect an undocumented cache discount before assuming a bug." },
-  { n: "4", body: "Export a cost-management CSV grouped by meter (not coarse service name). Match known meters against confirmed rates to back-calculate token counts, then solve for the unknown cached rate: cached_rate = cached_meter_cost / cached_token_count." },
-  { n: "5", body: "Cross-check against usage / metrics dashboards (input / output / total token counts per period) to validate the token-count assumptions." },
-  { n: "6", body: "Treat anything not on an official pricing page as a high-confidence estimate, not fact — verify again once real numbers are published or a full billing cycle closes." },
+  { n: "1", body: "Get the provider's published per-million rate for input, output, and cached input if it's listed." },
+  { n: "2", body: "Run a real workload and read the actual billed cost from Azure Cost Management, not a chat client's estimate." },
+  { n: "3", body: "If real cost is far below the flat-rate math, suspect an undocumented cache discount before assuming a bug." },
+  { n: "4", body: "Export a cost report grouped by meter, not by service name. Match known meters to confirmed rates to back out token counts, then solve for the unknown: cached_rate = cached_meter_cost / cached_token_count." },
+  { n: "5", body: "Cross-check those token counts against the usage dashboards to validate your assumptions." },
+  { n: "6", body: "Treat anything not on an official page as an estimate, not fact. Re-check once real numbers land or a billing cycle closes." },
 ];
 
 function fromPrice(slug: string): number {
@@ -80,10 +80,11 @@ export default function HomePage() {
           cost.
         </h1>
         <p style={{ fontSize: "clamp(1.05rem, 2.2vw, 1.3rem)", color: "var(--text-muted)", marginTop: "1.4rem", maxWidth: "40rem" }}>
-          A data-driven reference on real LLM pricing — every rate in{" "}
+          Real LLM API prices, in{" "}
           <span className="mono" style={{ color: "var(--text)" }}>USD</span> and{" "}
-          <span className="mono" style={{ color: "var(--text)" }}>CHF</span>, sourced, and clearly marked
-          when it&rsquo;s reconciled from billing rather than a sticker price.
+          <span className="mono" style={{ color: "var(--text)" }}>CHF</span>. Every number is sourced, and when a rate
+          comes from billing data instead of a pricing page, we say so. Mostly measured on Azure AI Foundry, plus direct
+          APIs to compare against.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginTop: "1.8rem" }}>
           <Link href="/compare" className="btn btn-primary">Open the cost calculator →</Link>
@@ -105,8 +106,8 @@ export default function HomePage() {
       {/* Provider index */}
       <section style={{ marginTop: "4.5rem" }}>
         <SectionHeading eyebrow="Reference" title="Providers">
-          One page per provider: full pricing table in USD and CHF, plus the quirks that don&rsquo;t show up on a
-          pricing page — hidden cache meters, Responses-API-only models, deployment-tier premiums.
+          One page each: the full table in USD and CHF, plus the quirks a pricing page hides, like cache meters,
+          Responses-API-only models, and deployment-tier premiums.
         </SectionHeading>
         <div style={{ display: "grid", gap: "0.9rem", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
           {providers.map((p) => (
@@ -136,7 +137,7 @@ export default function HomePage() {
       {/* Core narrative */}
       <section style={{ marginTop: "5rem" }}>
         <SectionHeading eyebrow="The framework" title="Don't trust the sticker price">
-          Seven things that decide what you actually pay — none of which are the headline number on a pricing page.
+          Seven things that decide what you actually pay. None of them is the headline number.
         </SectionHeading>
         <div style={{ display: "grid", gap: "1px", background: "var(--border)", border: "1px solid var(--border)", borderRadius: "0.75rem", overflow: "hidden" }}>
           <div style={{ display: "grid", gap: "1px", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }} className="narrative-grid">
@@ -154,8 +155,8 @@ export default function HomePage() {
       {/* Methodology */}
       <section style={{ marginTop: "5rem" }}>
         <SectionHeading eyebrow="Reusable method" title="How to verify real LLM costs">
-          A six-step framework for finding what a workload truly costs — including how to back-solve an undocumented
-          cache rate from a billing export.
+          Six steps for finding what a workload really costs, including how to back out an undocumented cache rate from a
+          billing export.
         </SectionHeading>
         <ol style={{ display: "flex", flexDirection: "column", gap: "0.75rem", counterReset: "step" }}>
           {METHOD.map((s) => (

@@ -21,7 +21,7 @@ export function SiteFooter() {
               <BrandWordmark />
             </div>
             <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "22rem" }}>
-              {site.tagline} A living reference — verify against your own billing exports before you commit.
+              {site.tagline} Verify against your own billing exports before you commit.
             </p>
           </div>
 

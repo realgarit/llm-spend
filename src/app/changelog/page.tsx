@@ -7,7 +7,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Changelog",
   description:
-    "Dated log of pricing changes, model launches, and methodology updates for llm-spend — because LLM pricing changes often and a reference is only trustworthy if it says when.",
+    "Dated log of pricing changes, model launches, and method updates for llm-spend. LLM pricing changes often, and a reference is only trustworthy if it says when.",
   alternates: { canonical: `${site.url}/changelog` },
 };
 
@@ -36,8 +36,8 @@ export default function ChangelogPage() {
           Changelog
         </h1>
         <p style={{ color: "var(--text-muted)", marginTop: "1rem", fontSize: "1.05rem", maxWidth: "42rem" }}>
-          LLM pricing changes often. This log records when a rate moved, a model launched, or the methodology changed —
-          a reference is only trustworthy if it tells you how fresh it is.
+          LLM pricing moves fast. This log records when a rate changed, a model launched, or the method changed. A
+          reference is only trustworthy if it says how fresh it is.
         </p>
       </header>
 

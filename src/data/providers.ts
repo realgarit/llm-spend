@@ -20,10 +20,9 @@ export const providers: Provider[] = [
     slug: "kimi",
     name: "Kimi",
     org: "Moonshot AI",
-    tagline: "Coding-focused chat models resold across cloud tiers — with at least one cache meter the public page won't admit to.",
+    tagline: "Coding chat models resold on Azure AI Foundry across tiers, with a cache meter the public page won't admit to.",
     intro: [
-      "Kimi (Moonshot AI) models are resold through cloud marketplaces at Global and Data Zone tiers, plus a third-party Fireworks-hosted listing. The K2.7 Code tier publishes a cached-input rate; the K2.6 / K2.7 \"Thinking Global\" listings do not — yet a real billing export shows a cache meter is present and billed.",
-      "Kimi is generation-only: there is no dedicated Kimi embedding model. For retrieval, pair it with a dedicated embeddings model (see the Embeddings page).",
+      "Kimi (Moonshot AI) is resold on Azure AI Foundry at Global and Data Zone tiers, plus a Fireworks-hosted listing. It's generation-only, so pair it with an embeddings model for retrieval.",
     ],
     entries: [
       {
@@ -36,7 +35,7 @@ export const providers: Provider[] = [
         confidence: "official",
         notes: "Native Global tier.",
         sourceNote:
-          "Input/output officially published. The public page shows no cached column, but a billing export revealed a cache meter; ~$0.19/M reconciled at a ~81% cache-hit rate.",
+          "Input and output are official. The public page shows no cached column, but a billing export revealed a cache meter; ~$0.19/M reconciled at ~81% hit rate.",
         effectiveDate: CAPTURED,
       },
       {
@@ -47,7 +46,7 @@ export const providers: Provider[] = [
         outputUsd: 4.0,
         confidence: "official",
         notes: "Cached rate officially published for this tier.",
-        sourceNote: "Official pricing page (input, cached, and output all listed).",
+        sourceNote: "Official page (input, cached, and output all listed).",
         effectiveDate: CAPTURED,
       },
       {
@@ -88,8 +87,8 @@ export const providers: Provider[] = [
         cachedUsd: 0.176,
         outputUsd: 4.4,
         confidence: "official",
-        notes: "Third-party Fireworks-hosted listing — publishes a cached column.",
-        sourceNote: "Fireworks official live pricing page.",
+        notes: "Third-party Fireworks-hosted listing with a published cached column.",
+        sourceNote: "Fireworks live pricing page.",
         effectiveDate: CAPTURED,
       },
     ],
@@ -98,15 +97,14 @@ export const providers: Provider[] = [
         title: "The cache meter the pricing page omits",
         tone: "warning",
         body: [
-          "Azure's public Kimi pricing page does not show a cached-input column for the K2.6 / K2.7 \"Thinking Global\" listings. A real Cost Management export, however, contained a \"K2.7 Code cached\" meter that is genuinely charged.",
-          "Reconciling a period's total token metrics against the known input/output rates back-solved a cached rate of roughly $0.19 / CHF 0.15 per million (~81% cache-hit rate). Treat this as derived, not published — verify again once the number appears on an official page.",
+          "Azure AI Foundry's public page shows no cached column for the K2.6 / K2.7 Thinking Global listings, but a Cost Management export had a billed cache meter. Reconciling token totals back-solved ~$0.19 / CHF 0.15 per M (about 81% hit rate). Derived, not published.",
         ],
       },
       {
         title: "Data Zone premium via Fireworks",
         tone: "info",
         body: [
-          "The Fireworks-hosted K2.6 Data Zone listing ($1.045 / CHF 0.84 input) sits above the native Global tier ($0.95 / CHF 0.77), consistent with the broader Data-Zone-premium pattern seen across providers.",
+          "The Fireworks-hosted K2.6 Data Zone listing ($1.045 / CHF 0.84 input) sits above the native Global tier ($0.95 / CHF 0.77).",
         ],
       },
     ],
@@ -115,11 +113,9 @@ export const providers: Provider[] = [
   {
     slug: "deepseek",
     name: "DeepSeek",
-    tagline: "1M-token context, aggressive direct pricing, and cloud resale markups that swing from ~10% to a reported 4.5x.",
+    tagline: "1M-token context, cheap direct pricing, and Azure AI Foundry resale markups from ~10% to a reported 4.5x.",
     intro: [
-      "DeepSeek's V4 Pro and V4 Flash both ship genuine 1M-token context windows (max output up to 384K), which materially reduces forced context compaction during long agentic coding sessions.",
-      "The pricing story is a case study in resale markup. DeepSeek's own direct API is cheap (V4 Pro at $0.435 / CHF 0.35 input after a 75% cut). Cloud-resold \"Global\" tiers have been reported on public support forums at up to ~4.5x that direct price. Between those extremes sit Fireworks-hosted listings at a consistent ~10% Data Zone premium.",
-      "As with Kimi, the cloud V4 Pro / V4 Flash \"Global\" listings publish no cached column — but billing exports prove the cache meters exist and are billed.",
+      "DeepSeek V4 Pro and V4 Flash ship real 1M-token windows (max output up to 384K). Pricing is a resale case study: the direct API is cheap, Azure AI Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. Numbers below.",
     ],
     entries: [
       {
@@ -134,7 +130,7 @@ export const providers: Provider[] = [
         confidence: "official",
         notes: "1M context. Cache meter present but unpublished.",
         sourceNote:
-          "Input/output from the official page. Cached rate ~$0.145/M derived from a Cost Management export (~91.7% discount off input), reconciled by matching a week's total-token metrics against known-rate line items.",
+          "Input and output from the official page. Cached rate ~$0.145/M derived from a Cost Management export (~91.7% off input), by matching a week's token totals against known-rate line items.",
         effectiveDate: CAPTURED,
       },
       {
@@ -149,7 +145,7 @@ export const providers: Provider[] = [
         confidence: "official",
         notes: "1M context. Cache meter present but unpublished.",
         sourceNote:
-          "Input/output from the official page. Cached rate ~$0.028/M derived from a billing export (~85% discount off input).",
+          "Input and output from the official page. Cached rate ~$0.028/M derived from a billing export (~85% off input).",
         effectiveDate: CAPTURED,
       },
       {
@@ -197,7 +193,7 @@ export const providers: Provider[] = [
         cachedUsd: 0.165,
         outputUsd: 3.828,
         confidence: "official",
-        notes: "~10% above the Fireworks direct rate — the Data Zone premium.",
+        notes: "~10% above the Fireworks direct rate: the Data Zone premium.",
         sourceNote: "Fireworks official live pricing page.",
         effectiveDate: CAPTURED,
       },
@@ -254,33 +250,31 @@ export const providers: Provider[] = [
     ],
     quirks: [
       {
-        title: "Resale markup: from ~10% to a reported 4.5x",
+        title: "Resale markup: ~10% to a reported 4.5x",
         tone: "insight",
         body: [
-          "DeepSeek's own direct V4 Pro is $0.435 / CHF 0.35 input. A \"Global\" cloud-hosted V4 Pro tier has been reported on public support forums at roughly 4.5x that direct price — the widest resale markup documented here.",
-          "The Fireworks-hosted Data Zone listing ($1.925 / CHF 1.55 input) is a more modest ~10% above the Fireworks direct rate ($1.74 / CHF 1.40) — the same consistent Data Zone premium GLM shows.",
+          "Direct V4 Pro is $0.435 / CHF 0.35 input. A \"Global\" Azure AI Foundry V4 Pro has been reported at about 4.5x that, the widest markup here. The Fireworks Data Zone listing ($1.925 / CHF 1.55) is a milder ~10% over Fireworks direct ($1.74 / CHF 1.40).",
         ],
       },
       {
-        title: "Hidden cache meters, proven by billing export",
+        title: "Hidden cache meters, proven by billing",
         tone: "warning",
         body: [
-          "Neither the V4 Pro nor V4 Flash \"Global\" pricing page shows a cached column. Cost Management exports grouped by meter revealed both are billing a cache meter.",
-          "Back-solving against known input/output rates yields ~$0.145 / CHF 0.12 per M for V4 Pro (~91.7% off input) and ~$0.028 / CHF 0.02 per M for V4 Flash (~85% off). Derived, not published.",
+          "Neither V4 Pro nor V4 Flash Global shows a cached column, but exports show both bill one. Back-solving gives ~$0.145 / CHF 0.12 per M for V4 Pro (~91.7% off) and ~$0.028 / CHF 0.02 for V4 Flash (~85% off). Derived, not published.",
         ],
       },
       {
         title: "1M context is a real autonomy lever",
         tone: "info",
         body: [
-          "V4 Pro and V4 Flash both carry genuine 1M-token windows (max output up to 384K). Larger windows reduce forced compaction, which in practice reduces the \"babysitting\" and lost-context behavior seen with smaller-window models.",
+          "V4 Pro and V4 Flash carry 1M-token windows (max output up to 384K). Bigger windows mean less forced compaction, so less babysitting.",
         ],
       },
       {
         title: "No first-party embedding model",
         tone: "info",
         body: [
-          "DeepSeek's coding-focused chat models are generation-only. A separate deepseek-embedding-v2 (768-dim) exists for retrieval, but for code RAG the Embeddings page recommends Cohere embed-v4.",
+          "The chat models are generation-only. A separate deepseek-embedding-v2 (768-dim) exists, but for code RAG the Embeddings page recommends Cohere embed-v4.",
         ],
       },
     ],
@@ -290,10 +284,9 @@ export const providers: Provider[] = [
     slug: "glm",
     name: "GLM",
     org: "Zhipu / Z.ai",
-    tagline: "GLM-5.2 brings a 1M-token window; Fireworks charges 5.1 and 5.2 the same, so the 5.2 Data Zone rate is a validated estimate.",
+    tagline: "GLM-5.2 adds a 1M-token window. Fireworks charges 5.1 and 5.2 the same, so the 5.2 Data Zone rate is a validated estimate.",
     intro: [
-      "GLM-5.2 lifts the context window to a genuine 1M tokens — a 5x jump over GLM-5.1's 200K — with 131K max output. That larger window is the practical differentiator for agentic coding.",
-      "Fireworks charges GLM-5.1 and GLM-5.2 the same direct rate. GLM-5.2's Data Zone listing was not officially published at capture time, so its Data Zone rate is estimated as identical to GLM-5.1's — an estimate later validated against real invoice data that matched almost exactly.",
+      "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Fireworks charges 5.1 and 5.2 the same, which is why the unlisted 5.2 Data Zone rate can be estimated (see below).",
     ],
     entries: [
       {
@@ -318,9 +311,9 @@ export const providers: Provider[] = [
         contextWindow: 1_000_000,
         maxOutput: 131_000,
         confidence: "estimate",
-        notes: "Estimated identical to GLM-5.1 Data Zone; later validated against real invoice data.",
+        notes: "Estimated equal to GLM-5.1 Data Zone; later validated against real invoice data.",
         sourceNote:
-          "Not officially listed at capture time. Estimated equal to GLM-5.1's Data Zone rate (Fireworks charges 5.1 and 5.2 the same); subsequently matched real invoice data almost exactly.",
+          "Not listed at capture time. Estimated equal to GLM-5.1's Data Zone rate (Fireworks charges 5.1 and 5.2 the same); later matched real invoice data almost exactly.",
         effectiveDate: CAPTURED,
       },
       {
@@ -355,15 +348,14 @@ export const providers: Provider[] = [
         title: "5.2 Data Zone: an estimate that held up",
         tone: "insight",
         body: [
-          "Because Fireworks prices GLM-5.1 and GLM-5.2 identically on the direct API, the unlisted GLM-5.2 Data Zone rate was estimated as equal to GLM-5.1's Data Zone rate ($1.54 / CHF 1.24 input, $0.286 / CHF 0.23 cached, $4.84 / CHF 3.90 output).",
-          "Real invoice data later matched that estimate almost exactly — a reminder that a well-reasoned estimate, clearly flagged as such, can be trustworthy while you wait for an official number.",
+          "The unlisted GLM-5.2 Data Zone rate was set equal to GLM-5.1's ($1.54 / CHF 1.24 input, $0.286 / CHF 0.23 cached, $4.84 / CHF 3.90 output). Real invoices later matched almost exactly. A well-reasoned estimate, flagged as such, can hold until an official number lands.",
         ],
       },
       {
         title: "1M context window on 5.2",
         tone: "info",
         body: [
-          "GLM-5.2's 1M-token window (up from 200K on 5.1) puts it in the same autonomy tier as DeepSeek V4 for long agentic runs.",
+          "GLM-5.2's 1M-token window (up from 200K on 5.1) puts it in the same autonomy tier as DeepSeek V4 for long runs.",
         ],
       },
     ],
@@ -372,10 +364,9 @@ export const providers: Provider[] = [
   {
     slug: "openai-azure",
     name: "OpenAI / Azure OpenAI",
-    tagline: "Azure resells OpenAI at 1:1 with no markup. The catch is deployment type, Responses-API-only variants, and a not-yet-listed GPT-5.6.",
+    tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type, Responses-API-only variants, and a not-yet-listed GPT-5.6.",
     intro: [
-      "Unlike third-party models, Azure OpenAI pricing matches OpenAI's direct pricing 1:1 — there is no cloud resale markup. What varies is the deployment type: Global (cheapest, any datacenter), Data Zone (~10% premium, US or EU only), and Regional (most restrictive, priciest), used for data-residency compliance.",
-      "GPT-5.6 (Sol / Terra / Luna) reached general availability on 2026-07-09 but is not yet on Azure's public pricing page. The rates below are OpenAI's direct rates — a high-confidence estimate for Azure given the established 1:1 pattern.",
+      "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Azure AI Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 but isn't on Azure's public page yet, so the rates below are OpenAI's direct rates, a high-confidence estimate via the 1:1 pattern.",
     ],
     entries: [
       {
@@ -387,7 +378,7 @@ export const providers: Provider[] = [
         confidence: "estimate",
         notes: "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09.",
         sourceNote:
-          "Direct OpenAI rate; not yet on Azure's public page. High-confidence estimate for Azure via the 1:1 pattern. GPT-5.6 changes cache-write billing to 1.25x uncached input; cache reads remain ~90% off.",
+          "OpenAI direct rate, not on Azure's page yet. High-confidence estimate for Azure via the 1:1 pattern. GPT-5.6 bills cache writes at 1.25x uncached input; reads stay ~90% off.",
         effectiveDate: "2026-07-09",
       },
       {
@@ -544,30 +535,28 @@ export const providers: Provider[] = [
         title: "Deployment types: Global vs Data Zone vs Regional",
         tone: "info",
         body: [
-          "Global routes requests to any datacenter — cheapest and highest throughput. Data Zone constrains routing to US or EU only and adds roughly a 10% premium. Regional pins to a single specific region and is the most restrictive and priciest.",
-          "Choose Global unless a data-residency or compliance requirement forces Data Zone or Regional. The premium buys geography, not capability.",
+          "Global routes to any datacenter: cheapest, highest throughput. Data Zone pins routing to US or EU and adds ~10%. Regional pins to one region and is the most restrictive and priciest. Pick Global unless data residency forces otherwise. The premium buys geography, not capability.",
         ],
       },
       {
         title: "-codex variants are Responses-API only",
         tone: "warning",
         body: [
-          "GPT-5.3-Codex, GPT-5.2-Codex and other \"-codex\" variants only support the Responses API (/v1/responses), not Chat Completions.",
-          "Many client tools default to Chat Completions and will fail against these models with a 400 \"unsupported operation\" error unless configured to use a Responses-API-capable integration.",
+          "GPT-5.3-Codex, GPT-5.2-Codex and other \"-codex\" variants only support the Responses API (/v1/responses), not Chat Completions. Clients that default to Chat Completions fail with a 400 \"unsupported operation\" until reconfigured.",
         ],
       },
       {
         title: "GPT-5.6 cache-write billing changed",
         tone: "warning",
         body: [
-          "GPT-5.6 changes cache-write billing to 1.25x the uncached input rate (previously the standard input rate). Cache reads remain a ~90% discount. Factor the write premium into cache economics for high-churn prompts.",
+          "GPT-5.6 bills cache writes at 1.25x the uncached input rate (was the standard input rate). Reads stay ~90% off. Factor the write premium into high-churn prompts.",
         ],
       },
       {
         title: "Benchmark leader, real-world laggard",
         tone: "insight",
         body: [
-          "GPT-5.3-Codex tops coding benchmarks but can underperform in real agentic use — poor context retention, constant correction — versus DeepSeek V4 Pro and GLM-5.2, likely due to a smaller context window and less mature Responses-API tooling support in some clients.",
+          "GPT-5.3-Codex tops coding benchmarks but can lag in real agentic use, with poor context retention, versus DeepSeek V4 Pro and GLM-5.2. Likely a smaller window and less mature Responses-API support in some clients.",
         ],
       },
     ],
@@ -577,14 +566,13 @@ export const providers: Provider[] = [
     slug: "claude",
     name: "Claude",
     org: "Anthropic",
-    tagline: "1M-token Opus, intro pricing through August, and a caching model priced as a multiplier rather than a column.",
+    tagline: "1M-token Opus, intro pricing through August, and caching priced as a multiplier instead of a column.",
     intro: [
-      "Claude prices caching as a multiplier on the input rate rather than a published cached column: cache reads run ~10% of the standard input price, while cache writes cost ~1.25x standard input (a one-time cost, amortized over subsequent reads).",
-      "Opus 4.8 carries a 1M-token context window. Introductory pricing runs through 2026-08-31 for Opus 4.8 and Sonnet 5; Sonnet 5's standard rate takes effect 2026-09-01.",
+      "Claude prices caching as a multiplier, not a published cached column (see below). Opus 4.8 has a 1M-token window. Intro pricing runs through 2026-08-31 for Opus 4.8 and Sonnet 5; Sonnet 5's standard rate starts 2026-09-01.",
     ],
     entries: [
       {
-        model: "Claude Opus 4.8 — Standard",
+        model: "Claude Opus 4.8 (Standard)",
         tier: "Direct",
         inputUsd: 5.0,
         cachedUsd: null,
@@ -596,7 +584,7 @@ export const providers: Provider[] = [
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Opus 4.8 — Intro",
+        model: "Claude Opus 4.8 (Intro)",
         tier: "Direct",
         inputUsd: 2.0,
         cachedUsd: null,
@@ -608,7 +596,7 @@ export const providers: Provider[] = [
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Opus 4.8 — Fast Mode",
+        model: "Claude Opus 4.8 (Fast Mode)",
         tier: "Direct",
         inputUsd: 10.0,
         cachedUsd: null,
@@ -620,7 +608,7 @@ export const providers: Provider[] = [
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Sonnet 5 — Intro",
+        model: "Claude Sonnet 5 (Intro)",
         tier: "Direct",
         inputUsd: 2.0,
         cachedUsd: null,
@@ -631,14 +619,14 @@ export const providers: Provider[] = [
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Sonnet 5 — Standard",
+        model: "Claude Sonnet 5 (Standard)",
         tier: "Direct",
         inputUsd: 3.0,
         cachedUsd: null,
         outputUsd: 15.0,
         confidence: "official",
         notes: "Standard rate from 2026-09-01.",
-        sourceNote: "Anthropic pricing. New tokenizer can inflate code token counts 1.0–1.35x vs Sonnet 4.6.",
+        sourceNote: "Anthropic pricing. New tokenizer can inflate code token counts 1.0-1.35x vs Sonnet 4.6.",
         effectiveDate: "2026-09-01",
       },
     ],
@@ -647,15 +635,14 @@ export const providers: Provider[] = [
         title: "Caching is a multiplier, not a column",
         tone: "info",
         body: [
-          "Anthropic doesn't publish a flat cached-input rate. Cache reads cost ~10% of the standard input price; cache writes cost ~1.25x the standard input price as a one-time charge, amortized across every subsequent read of that cached prefix.",
-          "For a stable system prompt / codebase context reused across many turns, the write premium is paid once and the ~90% read discount dominates — see the Cache Economics page.",
+          "Anthropic doesn't publish a flat cached rate. Reads cost ~10% of input; writes cost ~1.25x input once, amortized across every later read of that prefix. For a stable system prompt reused across many turns, the ~90% read discount wins. See the Cache Economics page.",
         ],
       },
       {
         title: "Sonnet 5's tokenizer can inflate code counts",
         tone: "warning",
         body: [
-          "Sonnet 5 ships a new tokenizer that can inflate code token counts by 1.0–1.35x versus Sonnet 4.6. A same-priced model can still cost more per real task if your workload is code-heavy, because the token meter runs faster. Measure on your own code before assuming parity.",
+          "Sonnet 5's new tokenizer can inflate code token counts 1.0-1.35x versus Sonnet 4.6. Same price, more tokens per task on code-heavy work, because the meter runs faster. Measure on your own code before assuming parity.",
         ],
       },
     ],
@@ -665,9 +652,9 @@ export const providers: Provider[] = [
     slug: "gemini",
     name: "Gemini",
     org: "Google",
-    tagline: "Tiered by context length, with a Flash tier that undercuts Pro while beating it on coding benchmarks.",
+    tagline: "Tiered by context length, with a Flash tier that undercuts Pro and beats it on coding benchmarks.",
     intro: [
-      "Gemini 3 Pro prices in two context bands: one rate at or below 200K tokens and a higher rate beyond 200K. Gemini 3.5 Flash is roughly 25% cheaper than 3.1 Pro while beating it on coding and agentic benchmarks — a case where the cheaper tier is also the better tool.",
+      "Gemini 3 Pro prices in two bands: one rate at or below 200K tokens, a higher one above. Gemini 3.5 Flash is about 25% cheaper than 3.1 Pro and beats it on coding and agentic benchmarks, so here the cheaper tier is also the better tool.",
     ],
     entries: [
       {
@@ -710,7 +697,7 @@ export const providers: Provider[] = [
         title: "Context-banded pricing",
         tone: "info",
         body: [
-          "Gemini 3 Pro doubles its input rate (from $2.00 / CHF 1.61 to $4.00 / CHF 3.22) and lifts output (from $12.00 / CHF 9.66 to $18.00 / CHF 14.49) once a request exceeds 200K tokens. A long-context agentic run silently crosses into the higher band — budget for it.",
+          "Gemini 3 Pro doubles input ($2.00 / CHF 1.61 to $4.00 / CHF 3.22) and lifts output ($12.00 / CHF 9.66 to $18.00 / CHF 14.49) past 200K tokens. A long-context run crosses into the higher band on its own, so budget for it.",
         ],
       },
     ],
@@ -721,8 +708,7 @@ export const providers: Provider[] = [
     name: "Embeddings",
     tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
     intro: [
-      "Embedding models are priced per million input tokens only — there is no output-token meter. For codebase indexing and RAG, the recommendation is Cohere embed-v4 (its input_type query/document distinction meaningfully helps retrieval), paired with a vector store such as LanceDB and a strong coding LLM on top.",
-      "The DeepSeek and Kimi coding chat models are generation-only; DeepSeek offers a separate deepseek-embedding-v2 (768-dim) for retrieval.",
+      "Embedding models bill per million input tokens only, no output meter. The DeepSeek and Kimi chat models are generation-only; DeepSeek has a separate deepseek-embedding-v2 (768-dim) for retrieval.",
     ],
     entries: [
       {
@@ -764,25 +750,24 @@ export const providers: Provider[] = [
         cachedUsd: null,
         outputUsd: 0,
         confidence: "official",
-        notes: "Legacy — worse than 3-small on both cost and quality. Avoid.",
+        notes: "Legacy: worse than 3-small on cost and quality. Avoid.",
         sourceNote: "OpenAI pricing page.",
         effectiveDate: CAPTURED,
       },
     ],
     quirks: [
       {
-        title: "Cheapest ≠ best for code retrieval",
+        title: "Cheapest isn't best for code retrieval",
         tone: "insight",
         body: [
-          "text-embedding-3-small is the cheapest at $0.02 / CHF 0.016 per M, but for code RAG Cohere embed-v4 ($0.12 / CHF 0.097 per M) is the recommended pick — its query/document input_type distinction and Matryoshka dimensions (256/512/1024/1536) pay off in retrieval quality.",
-          "ada-002 ($0.10 / CHF 0.081 per M) is legacy: worse than 3-small on both price and quality. There is no reason to choose it for new work.",
+          "text-embedding-3-small is cheapest at $0.02 / CHF 0.016 per M, but for code RAG Cohere embed-v4 ($0.12 / CHF 0.097 per M) wins on retrieval quality (query/document input_type, Matryoshka dims 256/512/1024/1536). ada-002 ($0.10 / CHF 0.081) is legacy: worse than 3-small on price and quality. No reason to pick it for new work.",
         ],
       },
       {
         title: "A reference retrieval stack",
         tone: "info",
         body: [
-          "For codebase indexing + RAG: pair a dedicated embedding model (Cohere embed-v4) with a vector store (e.g. LanceDB), then use a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) for the reasoning/generation layer over retrieved chunks.",
+          "For code indexing plus RAG: a dedicated embedding model (Cohere embed-v4), a vector store (LanceDB), then a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) over the retrieved chunks.",
         ],
       },
     ],
@@ -795,7 +780,7 @@ export function getProvider(slug: string): Provider | undefined {
   return providers.find((p) => p.slug === slug);
 }
 
-/** Chat/generation models only (excludes embeddings) — used by compare + calculator. */
+/** Chat/generation models only (excludes embeddings); used by compare + calculator. */
 export function chatEntries(): { provider: Provider; entry: Provider["entries"][number] }[] {
   return providers
     .filter((p) => p.slug !== "embeddings")

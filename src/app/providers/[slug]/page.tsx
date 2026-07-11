@@ -24,7 +24,7 @@ export async function generateMetadata({
   const title = `${provider.name} pricing${provider.org ? ` (${provider.org})` : ""}`;
   return {
     title,
-    description: `${provider.name} LLM API pricing in USD and CHF — ${provider.tagline}`,
+    description: `${provider.name} LLM API pricing in USD and CHF. ${provider.tagline}`,
     alternates: { canonical: `${site.url}/providers/${provider.slug}` },
   };
 }

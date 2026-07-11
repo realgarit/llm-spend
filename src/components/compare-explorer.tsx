@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import type { CompareRow } from "@/data/compare-data";
 import { formatChf, formatUsd } from "@/data/currency";
 import { computeCost, DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
-import { ConfidenceBadge, Mark } from "@/components/price";
+import { Mark } from "@/components/price";
 
 type SortKey =
   | "provider"
@@ -185,7 +185,7 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
                   <td className="num" style={{ color: "var(--text-muted)" }}>
                     {formatUsd(cost.blendedInputPerMUsd)}
                     {!cost.cacheApplied && (
-                      <span title="No cache meter — hit rate does not apply" style={{ color: "var(--text-faint)" }}>*</span>
+                      <span title="No cache meter, so hit rate does not apply" style={{ color: "var(--text-faint)" }}>*</span>
                     )}
                   </td>
                   <td className="num">
@@ -207,10 +207,10 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
       </div>
 
       <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", marginTop: "0.9rem" }}>
-        <span className="mono">Blended in</span> is the effective $/1M input actually paid after the cache split.
-        <span className="mono"> *</span> marks models with no cache meter (hit rate is ignored). Daggers{" "}
+        <span className="mono">Blended in</span> is the effective $/1M input paid after the cache split.
+        <span className="mono"> *</span> marks models with no cache meter (hit rate ignored). Daggers{" "}
         <span className="mark mark-derived">†</span> /<span className="mark mark-estimate">‡</span> mark derived /
-        estimated rates. <ConfidenceBadge confidence="official" /> figures come from official pricing pages.
+        estimated rates.
       </p>
 
       <style>{`
