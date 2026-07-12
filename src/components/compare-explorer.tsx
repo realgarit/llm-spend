@@ -273,13 +273,13 @@ function Calculator({
 
       <div style={{ display: "grid", gap: "1.4rem", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}>
         <NumberField
-          label="Input tokens"
+          label="Input tokens (M)"
           value={workload.inputTokens}
           onChange={(v) => onChange({ ...workload, inputTokens: v })}
           hint={formatTokens(workload.inputTokens)}
         />
         <NumberField
-          label="Output tokens"
+          label="Output tokens (M)"
           value={workload.outputTokens}
           onChange={(v) => onChange({ ...workload, outputTokens: v })}
           hint={formatTokens(workload.outputTokens)}
@@ -320,6 +320,7 @@ function NumberField({
   onChange: (v: number) => void;
   hint: string;
 }) {
+  const displayValue = Number((value / 1_000_000).toFixed(4));
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
@@ -329,9 +330,13 @@ function NumberField({
       <input
         type="number"
         min={0}
-        step={1000}
-        value={value}
-        onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
+        step={0.01}
+        value={displayValue}
+        onChange={(e) => {
+          const millions = Number(e.target.value);
+          const tokens = Number.isNaN(millions) ? 0 : millions * 1_000_000;
+          onChange(Math.max(0, Math.round(tokens)));
+        }}
         style={{ width: "100%" }}
       />
     </div>
