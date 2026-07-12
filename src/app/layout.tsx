@@ -42,6 +42,7 @@ export const metadata: Metadata = {
     "prompt caching",
     "token pricing",
     "Azure AI Foundry",
+    "Microsoft Foundry",
     "Azure OpenAI",
     "DeepSeek",
     "Claude",
