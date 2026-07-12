@@ -20,9 +20,9 @@ export const providers: Provider[] = [
     slug: "kimi",
     name: "Kimi",
     org: "Moonshot AI",
-    tagline: "Coding chat models resold on Azure AI Foundry across tiers, with a cache meter the public page won't admit to.",
+    tagline: "Coding chat models resold on Microsoft Foundry across tiers, with a cache meter the public page won't admit to.",
     intro: [
-      "Kimi (Moonshot AI) is resold on Azure AI Foundry at Global and Data Zone tiers, plus a Fireworks-hosted listing. It's generation-only, so pair it with an embeddings model for retrieval.",
+      "Kimi (Moonshot AI) is resold on Microsoft Foundry at Global and Data Zone tiers, plus a Fireworks-hosted listing. It's generation-only, so pair it with an embeddings model for retrieval.",
     ],
     entries: [
       {
@@ -97,7 +97,7 @@ export const providers: Provider[] = [
         title: "The cache meter the pricing page omits",
         tone: "warning",
         body: [
-          "Azure AI Foundry's public page shows no cached column for the K2.6 / K2.7 Thinking Global listings, but a Cost Management export had a billed cache meter. Reconciling token totals back-solved ~$0.19 / CHF 0.15 per M (about 81% hit rate). Derived, not published.",
+          "Microsoft Foundry's public page shows no cached column for the K2.6 / K2.7 Thinking Global listings, but a Cost Management export had a billed cache meter. Reconciling token totals back-solved ~$0.19 / CHF 0.15 per M (about 81% hit rate). Derived, not published.",
         ],
       },
       {
@@ -113,9 +113,9 @@ export const providers: Provider[] = [
   {
     slug: "deepseek",
     name: "DeepSeek",
-    tagline: "1M-token context, cheap direct pricing, and Azure AI Foundry resale markups from ~10% to a reported 4.5x.",
+    tagline: "1M-token context, cheap direct pricing, and Microsoft Foundry resale markups from ~10% to a reported 4.5x.",
     intro: [
-      "DeepSeek V4 Pro and V4 Flash ship real 1M-token windows (max output up to 384K). Pricing is a resale case study: the direct API is cheap, Azure AI Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. Numbers below.",
+      "DeepSeek V4 Pro and V4 Flash ship real 1M-token windows (max output up to 384K). Pricing is a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. Numbers below.",
     ],
     entries: [
       {
@@ -253,7 +253,7 @@ export const providers: Provider[] = [
         title: "Resale markup: ~10% to a reported 4.5x",
         tone: "insight",
         body: [
-          "Direct V4 Pro is $0.435 / CHF 0.35 input. A \"Global\" Azure AI Foundry V4 Pro has been reported at about 4.5x that, the widest markup here. The Fireworks Data Zone listing ($1.925 / CHF 1.55) is a milder ~10% over Fireworks direct ($1.74 / CHF 1.40).",
+          "Direct V4 Pro is $0.435 / CHF 0.35 input. A \"Global\" Microsoft Foundry V4 Pro has been reported at about 4.5x that, the widest markup here. The Fireworks Data Zone listing ($1.925 / CHF 1.55) is a milder ~10% over Fireworks direct ($1.74 / CHF 1.40).",
         ],
       },
       {
@@ -366,7 +366,7 @@ export const providers: Provider[] = [
     name: "OpenAI / Azure OpenAI",
     tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type, Responses-API-only variants, and a not-yet-listed GPT-5.6.",
     intro: [
-      "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Azure AI Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 but isn't on Azure's public page yet, so the rates below are OpenAI's direct rates, a high-confidence estimate via the 1:1 pattern.",
+      "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 but isn't on Azure's public page yet, so the rates below are OpenAI's direct rates, a high-confidence estimate via the 1:1 pattern.",
     ],
     entries: [
       {
@@ -566,9 +566,10 @@ export const providers: Provider[] = [
     slug: "claude",
     name: "Claude",
     org: "Anthropic",
-    tagline: "1M-token Opus, intro pricing through August, and caching priced as a multiplier instead of a column.",
+    tagline: "1M-token Opus, intro pricing through August, caching priced as a multiplier, and now natively hosted on Microsoft Foundry with Azure billing.",
     intro: [
       "Claude prices caching as a multiplier, not a published cached column (see below). Opus 4.8 has a 1M-token window. Intro pricing runs through 2026-08-31 for Opus 4.8 and Sonnet 5; Sonnet 5's standard rate starts 2026-09-01.",
+      "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters.",
     ],
     entries: [
       {
@@ -629,6 +630,30 @@ export const providers: Provider[] = [
         sourceNote: "Anthropic pricing. New tokenizer can inflate code token counts 1.0-1.35x vs Sonnet 4.6.",
         effectiveDate: "2026-09-01",
       },
+      {
+        model: "Claude Sonnet 5 (Foundry, Intro)",
+        tier: "Global",
+        inputUsd: 2.0,
+        cachedUsd: null,
+        outputUsd: 10.0,
+        confidence: "estimate",
+        notes: "Hosted-on-Azure Foundry deployment, billed via CCU. Promo runs through 2026-08-31.",
+        sourceNote:
+          "Microsoft's Foundry Claude models docs confirm Sonnet 5 is now GA and Hosted on Azure, billed in Claude Consumption Units (CCU) rather than a separate per-token Azure meter. Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates without stating a separate markup, so this $/M figure is inherited from Anthropic's direct rate above, not independently published by Microsoft as a Foundry-native number.",
+        effectiveDate: CAPTURED,
+      },
+      {
+        model: "Claude Sonnet 5 (Foundry, Standard)",
+        tier: "Global",
+        inputUsd: 3.0,
+        cachedUsd: null,
+        outputUsd: 15.0,
+        confidence: "estimate",
+        notes: "Hosted-on-Azure Foundry deployment, billed via CCU. Standard rate from 2026-09-01.",
+        sourceNote:
+          "Same Hosted-on-Azure Foundry deployment as the intro row above, billed via CCU rather than a separate token meter. Microsoft's CCU billing docs confirm the CCU price converts Anthropic's own per-model rates with no documented markup, so this figure is inherited from Anthropic's direct standard rate, not independently published by Microsoft.",
+        effectiveDate: "2026-09-01",
+      },
     ],
     quirks: [
       {
@@ -643,6 +668,13 @@ export const providers: Provider[] = [
         tone: "warning",
         body: [
           "Sonnet 5's new tokenizer can inflate code token counts 1.0-1.35x versus Sonnet 4.6. Same price, more tokens per task on code-heavy work, because the meter runs faster. Measure on your own code before assuming parity.",
+        ],
+      },
+      {
+        title: "Foundry billing switched to Claude Consumption Units",
+        tone: "info",
+        body: [
+          "Claude usage on Microsoft Foundry is now billed in Claude Consumption Units (CCU) instead of the old per-model Azure token meters. A single CCU line shows up in Azure Cost Management, but the CCU price is designed to convert Anthropic's own per-token rates, so the effective $/M cost should track the direct-API numbers above rather than introduce an independent markup. Microsoft doesn't publish an exact CCU-to-dollar conversion ratio, so treat the direct rate as the best available proxy.",
         ],
       },
     ],

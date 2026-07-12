@@ -14,6 +14,23 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-12",
+    title: "Heads-up: non-Global Foundry prices rising 2026-09-01",
+    tag: "pricing",
+    body: [
+      "Per the Azure Foundry Models pricing page, EU Data Zone and other non-US Regional deployment prices are set to increase on 2026-09-01. Global deployments are unchanged. No specific increase amount is published yet, so budget for a change and re-check closer to the date.",
+    ],
+  },
+  {
+    date: "2026-07-12",
+    title: "Microsoft Foundry rebrand; Claude now GA and Azure-hosted",
+    tag: "model",
+    body: [
+      "Microsoft renamed Azure AI Foundry to Microsoft Foundry. The site now uses the new name throughout; older entries below keep their original wording as a historical record.",
+      "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold), billed through Azure via Claude Consumption Units (CCU) instead of the old per-model Azure meters. Added Sonnet 5 Foundry pricing, mirroring the direct rates: $2 / $10 per M input/output through 2026-08-31, then $3 / $15 per M from 2026-09-01. Microsoft doesn't publish a separate CCU-to-dollar ratio or an independent Foundry-native price, so the effective $/M is inherited from Anthropic's direct rate.",
+    ],
+  },
+  {
     date: "2026-07-11",
     title: "Site launch",
     tag: "launch",

@@ -18,7 +18,7 @@ const NARRATIVE: { n: string; title: string; body: string }[] = [
   },
   {
     n: "03",
-    title: "Azure AI Foundry can publish incomplete pricing",
+    title: "Microsoft Foundry can publish incomplete pricing",
     body: "Foundry's public pages often skip the cached-input column for third-party models even though the cache meter exists and gets billed. A billing export exposes it.",
   },
   {
@@ -83,8 +83,8 @@ export default function HomePage() {
           Real LLM API prices, in{" "}
           <span className="mono" style={{ color: "var(--text)" }}>USD</span> and{" "}
           <span className="mono" style={{ color: "var(--text)" }}>CHF</span>. Every number is sourced, and when a rate
-          comes from billing data instead of a pricing page, we say so. Mostly measured on Azure AI Foundry, plus direct
-          APIs to compare against.
+          comes from billing data instead of a pricing page, we say so. Mostly measured on Microsoft Foundry (formerly
+          Azure AI Foundry), plus direct APIs to compare against.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginTop: "1.8rem" }}>
           <Link href="/compare" className="btn btn-primary">Open the cost calculator →</Link>

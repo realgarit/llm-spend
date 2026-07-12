@@ -7,7 +7,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Rate limits: RPM vs TPM",
   description:
-    "Why tokens-per-minute (TPM), not requests-per-minute (RPM), is usually the binding limit for large-context agentic workloads, and why some Azure AI Foundry serverless models couple the two.",
+    "Why tokens-per-minute (TPM), not requests-per-minute (RPM), is usually the binding limit for large-context agentic workloads, and why some Microsoft Foundry serverless models couple the two.",
   alternates: { canonical: `${site.url}/rate-limits` },
 };
 
@@ -62,7 +62,7 @@ export default function RateLimitsPage() {
           <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Watch out</div>
           <h4>Some serverless models couple RPM to TPM</h4>
           <p style={{ color: "var(--text-muted)", fontSize: "0.92rem", marginTop: "0.4rem" }}>
-            For some third-party serverless models on Azure AI Foundry, RPM isn&rsquo;t fully independent. It may scale
+            For some third-party serverless models on Microsoft Foundry, RPM isn&rsquo;t fully independent. It may scale
             with the underlying TPM assignment instead of being granted separately. The ratio isn&rsquo;t always
             published, so <strong style={{ color: "var(--text)" }}>test after any quota increase</strong> instead of
             trusting the documented number.
@@ -72,7 +72,7 @@ export default function RateLimitsPage() {
           <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Insight</div>
           <h4>Fireworks-hosted models often ship far higher default TPM</h4>
           <p style={{ color: "var(--text-muted)", fontSize: "0.92rem", marginTop: "0.4rem" }}>
-            On Azure AI Foundry, Fireworks-hosted models often get much higher default TPM (e.g.{" "}
+            On Microsoft Foundry, Fireworks-hosted models often get much higher default TPM (e.g.{" "}
             <span className="mono">500K</span>) than natively-hosted ones (e.g. <span className="mono">100K</span>), a
             real advantage on top of their better cache economics.
           </p>
