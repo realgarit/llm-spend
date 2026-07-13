@@ -279,10 +279,11 @@ function Calculator({
           hint={formatTokens(workload.inputTokens)}
         />
         <NumberField
-          label="Output tokens (M)"
+          label="Output tokens (K)"
           value={workload.outputTokens}
           onChange={(v) => onChange({ ...workload, outputTokens: v })}
           hint={formatTokens(workload.outputTokens)}
+          thousands
         />
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
@@ -314,13 +315,16 @@ function NumberField({
   value,
   onChange,
   hint,
+  thousands,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   hint: string;
+  thousands?: boolean;
 }) {
-  const displayValue = value === 0 ? "" : String(Number((value / 1_000_000).toFixed(4)));
+  const divisor = thousands ? 1_000 : 1_000_000;
+  const displayValue = value === 0 ? "" : String(Number((value / divisor).toFixed(4)));
 
   const parseAndCommit = (raw: string) => {
     const trimmed = raw.trim();
@@ -328,9 +332,9 @@ function NumberField({
       onChange(0);
       return;
     }
-    const millions = Number(trimmed);
-    if (Number.isNaN(millions)) return;
-    const tokens = Math.max(0, Math.round(millions * 1_000_000));
+    const units = Number(trimmed);
+    if (Number.isNaN(units)) return;
+    const tokens = Math.max(0, Math.round(units * divisor));
     onChange(tokens);
   };
 
@@ -352,9 +356,9 @@ function NumberField({
             onChange(0);
             return;
           }
-          const millions = Number(raw);
-          if (!Number.isNaN(millions) && millions >= 0) {
-            const tokens = Math.round(millions * 1_000_000);
+          const units = Number(raw);
+          if (!Number.isNaN(units) && units >= 0) {
+            const tokens = Math.round(units * divisor);
             onChange(tokens);
           }
         }}
