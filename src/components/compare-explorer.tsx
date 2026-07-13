@@ -320,7 +320,20 @@ function NumberField({
   onChange: (v: number) => void;
   hint: string;
 }) {
-  const displayValue = Number((value / 1_000_000).toFixed(4));
+  const displayValue = value === 0 ? "" : String(Number((value / 1_000_000).toFixed(4)));
+
+  const parseAndCommit = (raw: string) => {
+    const trimmed = raw.trim();
+    if (trimmed === "" || trimmed === "-") {
+      onChange(0);
+      return;
+    }
+    const millions = Number(trimmed);
+    if (Number.isNaN(millions)) return;
+    const tokens = Math.max(0, Math.round(millions * 1_000_000));
+    onChange(tokens);
+  };
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
@@ -328,14 +341,22 @@ function NumberField({
         <span className="mono" style={{ color: "var(--text-faint)", fontSize: "0.8rem" }}>{hint}</span>
       </div>
       <input
-        type="number"
-        min={0}
-        step={0.01}
-        value={displayValue}
+        type="text"
+        inputMode="decimal"
+        defaultValue={displayValue}
+        placeholder="0"
+        onBlur={(e) => parseAndCommit(e.target.value)}
         onChange={(e) => {
-          const millions = Number(e.target.value);
-          const tokens = Number.isNaN(millions) ? 0 : millions * 1_000_000;
-          onChange(Math.max(0, Math.round(tokens)));
+          const raw = e.target.value;
+          if (raw === "") {
+            onChange(0);
+            return;
+          }
+          const millions = Number(raw);
+          if (!Number.isNaN(millions) && millions >= 0) {
+            const tokens = Math.round(millions * 1_000_000);
+            onChange(tokens);
+          }
         }}
         style={{ width: "100%" }}
       />
