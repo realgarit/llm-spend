@@ -14,6 +14,14 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-14",
+    title: "Claude Fable 5 and Mythos 5 added",
+    tag: "model",
+    body: [
+      "Added Claude Fable 5 ($10 / $50 per MTok input/output) and Claude Mythos 5 ($10 / $50, limited availability) — Anthropic's next-gen frontier models — matching their published direct pricing. Same cache model as other Claude models: reads ~10% of input, writes ~1.25x input.",
+    ],
+  },
+  {
     date: "2026-07-12",
     title: "Heads-up: non-Global Foundry prices rising 2026-09-01",
     tag: "pricing",
