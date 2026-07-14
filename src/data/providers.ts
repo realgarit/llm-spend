@@ -654,6 +654,30 @@ export const providers: Provider[] = [
           "Same Hosted-on-Azure Foundry deployment as the intro row above, billed via CCU rather than a separate token meter. Microsoft's CCU billing docs confirm the CCU price converts Anthropic's own per-model rates with no documented markup, so this figure is inherited from Anthropic's direct standard rate, not independently published by Microsoft.",
         effectiveDate: "2026-09-01",
       },
+      {
+        model: "Claude Fable 5",
+        tier: "Direct",
+        inputUsd: 10.0,
+        cachedUsd: null,
+        outputUsd: 50.0,
+        confidence: "official",
+        notes: "Flagship model — Anthropic's next-gen frontier.",
+        sourceNote:
+          "Anthropic pricing. Cache reads ~10% of input; cache writes ~1.25x input.",
+        effectiveDate: CAPTURED,
+      },
+      {
+        model: "Claude Mythos 5",
+        tier: "Direct",
+        inputUsd: 10.0,
+        cachedUsd: null,
+        outputUsd: 50.0,
+        confidence: "official",
+        notes: "Limited availability at launch.",
+        sourceNote:
+          "Anthropic pricing (limited availability). Cache reads ~10% of input; cache writes ~1.25x input.",
+        effectiveDate: CAPTURED,
+      },
     ],
     quirks: [
       {
