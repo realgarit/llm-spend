@@ -15,6 +15,14 @@ export interface ChangelogEntry {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-07-14",
+    title: "Claude cache pricing: multiplier → explicit published rates",
+    tag: "pricing",
+    body: [
+      "Anthropic's pricing page now publishes per-model cache hit rates (e.g., Opus 4.8 cache read = $0.50/MTok, Sonnet 5 = $0.20/MTok intro / $0.30 standard, Fable 5 / Mythos 5 = $1.00/MTok), replacing the earlier multiplier approximation. All Claude entries updated with exact `cachedUsd` values.",
+    ],
+  },
+  {
+    date: "2026-07-14",
     title: "Claude Fable 5 and Mythos 5 added",
     tag: "model",
     body: [
