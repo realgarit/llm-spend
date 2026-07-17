@@ -14,6 +14,24 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-17",
+    title: "Kimi K3 added; outdated catalog entries pruned",
+    tag: "model",
+    body: [
+      "Added Kimi K3's direct API pricing: $3/M cache-miss input, $0.30/M cache-hit input, and $15/M output. K3 is available now with a 1M-token context window.",
+      "Removed older GPT-5, DeepSeek, Kimi Thinking, Gemini 3 Pro, and Claude Opus 4.8 Fast Mode entries to keep the comparison catalog focused on relevant current options.",
+    ],
+  },
+  {
+    date: "2026-07-17",
+    title: "DeepSeek direct cache rates and Azure meter provenance corrected",
+    tag: "pricing",
+    body: [
+      "Added DeepSeek's first-party V4 Pro ($0.003625/M) and V4 Flash ($0.0028/M) cache-hit rates, so the calculator now applies the selected cache-hit rate to direct API estimates.",
+      "Upgraded Azure Global V4 Pro ($0.145/M) and V4 Flash ($0.028/M) cached-input rates from derived to official after confirming the exact meters in Azure's public retail catalog. Billing exports reconcile to those published rates.",
+    ],
+  },
+  {
     date: "2026-07-14",
     title: "Claude cache pricing: multiplier → explicit published rates",
     tag: "pricing",

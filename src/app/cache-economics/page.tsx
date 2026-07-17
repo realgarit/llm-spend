@@ -21,10 +21,6 @@ const V4_PRO = getProvider("deepseek")!.entries.find(
 )!;
 const HIT_RATES = [0, 0.5, 0.8, 0.9, 0.97, 0.99];
 
-// A LOWER-sticker model with NO cache meter, to show caching beats sticker price.
-const V32_GLOBAL = getProvider("deepseek")!.entries.find(
-  (e) => e.model === "DeepSeek V3.2" && e.tier === "Global"
-)!;
 
 export default function CacheEconomicsPage() {
   const sweep = HIT_RATES.map((hit) => ({
@@ -35,7 +31,6 @@ export default function CacheEconomicsPage() {
   const best = sweep[sweep.length - 1].cost.totalUsd;
   const reductionPct = Math.round((1 - best / noCache) * 100);
 
-  const v32NoCache = computeCost(V32_GLOBAL, { ...DEFAULT_WORKLOAD, cacheHitRate: 0.9 }).totalUsd;
   const proCached90 = computeCost(V4_PRO, { ...DEFAULT_WORKLOAD, cacheHitRate: 0.9 }).totalUsd;
 
   return (
@@ -86,8 +81,8 @@ export default function CacheEconomicsPage() {
             <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Cache read</div>
             <h4>~10% of the input price</h4>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "0.4rem" }}>
-              Reusing a cached prefix costs about a tenth of fresh input. Claude reads run ~10% of input; the derived
-              cloud meters land nearby (DeepSeek V4 Pro ~{formatUsd(0.145)} vs {formatUsd(1.74)} fresh, ~91.7% off).
+              Reusing a cached prefix costs about a tenth of fresh input. Claude reads run ~10% of input; Azure&rsquo;s
+              published cache meter lands nearby (DeepSeek V4 Pro ~{formatUsd(0.145)} vs {formatUsd(1.74)} fresh, ~91.7% off).
             </p>
           </div>
           <div className="callout callout-warning">
@@ -109,7 +104,7 @@ export default function CacheEconomicsPage() {
       <section style={{ marginBottom: "3rem" }}>
         <SectionHeading eyebrow="The curve" title="Workload cost vs cache-hit rate">
           The same {formatTokens(DEFAULT_WORKLOAD.inputTokens)} input / {formatTokens(DEFAULT_WORKLOAD.outputTokens)}{" "}
-          output workload against DeepSeek-V4 Pro Global (derived cache rate {formatUsd(0.145)}/M). Watch the total
+          output workload against DeepSeek-V4 Pro Global (published Azure cache rate {formatUsd(0.145)}/M). Watch the total
           collapse as the hit rate climbs.
         </SectionHeading>
         <div className="table-wrap">
@@ -161,7 +156,7 @@ export default function CacheEconomicsPage() {
           </table>
         </div>
         <p style={{ fontSize: "0.8rem", color: "var(--text-faint)", marginTop: "0.8rem" }}>
-          Cache rate for V4 Pro is <span className="mark mark-derived">†</span> derived from a billing export. At a{" "}
+          Cache rate for V4 Pro is published in Azure&rsquo;s retail catalog and reconciles to billing exports. At a{" "}
           {Math.round(HIT_RATES[HIT_RATES.length - 1] * 100)}% hit rate this workload drops {reductionPct}% versus no
           caching ({formatUsd(noCache)} → {formatUsd(best)}).
         </p>
@@ -172,12 +167,9 @@ export default function CacheEconomicsPage() {
         <div className="callout callout-insight" style={{ maxWidth: "44rem" }}>
           <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
             On this workload, DeepSeek-V4 <strong style={{ color: "var(--text)" }}>Pro</strong> at a 90% cache-hit rate
-            costs <strong style={{ color: "var(--text)" }}>{formatUsd(proCached90)}</strong>, well under DeepSeek{" "}
-            <strong style={{ color: "var(--text)" }}>V3.2</strong> at{" "}
-            <strong style={{ color: "var(--text)" }}>{formatUsd(v32NoCache)}</strong>, even though V3.2&rsquo;s sticker
-            input rate (<span className="mono">{formatUsd(V32_GLOBAL.inputUsd)}</span>/M) is a third of V4 Pro&rsquo;s
-            (<span className="mono">{formatUsd(V4_PRO.inputUsd)}</span>/M). V3.2 has no cache meter, so its low sticker
-            price never shows up; V4 Pro&rsquo;s cache does the work. The lower headline number loses.
+            costs <strong style={{ color: "var(--text)" }}>{formatUsd(proCached90)}</strong>. Compare models using the
+            blended cost at your observed cache-hit rate, not their headline input price: a model with a slightly higher
+            fresh-input rate can still be cheaper once a stable prompt and codebase are repeatedly reused.
           </p>
         </div>
         <p style={{ color: "var(--text-muted)", marginTop: "1.25rem", maxWidth: "44rem" }}>
