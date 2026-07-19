@@ -15,6 +15,8 @@ export type ProviderSlug =
   | "openai-azure"
   | "claude"
   | "gemini"
+  | "xai"
+  | "qwen"
   | "embeddings";
 
 /**

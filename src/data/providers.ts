@@ -594,6 +594,154 @@ export const providers: Provider[] = [
   },
 
   {
+    slug: "xai",
+    name: "Grok",
+    org: "xAI",
+    tagline: "Grok 4.5 is direct-API only for now; Microsoft Foundry resells the 4.x line up to Grok-4.3 with no cache meter.",
+    intro: [
+      "xAI's flagship Grok 4.5 (500K context, configurable reasoning) currently ships only on xAI's own API. Microsoft Foundry hosts the older Grok line as serverless listings — currently topping out at Grok-4.3 Global — with published input/output rates but no cached-input column on any Grok meter.",
+    ],
+    entries: [
+      {
+        model: "Grok 4.5",
+        host: "xAI direct API",
+        tier: "Direct",
+        inputUsd: 2.0,
+        cachedUsd: 0.5,
+        cachedConfidence: "estimate",
+        outputUsd: 6.0,
+        contextWindow: 500_000,
+        confidence: "official",
+        notes: "Flagship. All rates double for requests with ≥200K prompt tokens ($4 input / $12 output).",
+        sourceNote:
+          "Input/output/context from xAI's official models page. Cached input ($0.50/M, 75% off) is listed by OpenRouter and third-party trackers but not on xAI's own docs page yet.",
+        effectiveDate: "2026-07-19",
+      },
+      {
+        model: "Grok-4.3",
+        tier: "Global",
+        inputUsd: 1.25,
+        cachedUsd: null,
+        outputUsd: 2.5,
+        confidence: "official",
+        notes: "Newest Grok on Foundry; no cached-input meter published.",
+        sourceNote: "Microsoft Foundry Models pricing page (Grok tab), captured 2026-07-19.",
+        effectiveDate: "2026-07-19",
+      },
+      {
+        model: "Grok 4.1 Fast",
+        tier: "Global",
+        inputUsd: 0.2,
+        cachedUsd: null,
+        outputUsd: 0.5,
+        confidence: "official",
+        notes: "Cheap fast tier on Foundry.",
+        sourceNote: "Microsoft Foundry Models pricing page (Grok tab), captured 2026-07-19.",
+        effectiveDate: "2026-07-19",
+      },
+    ],
+    quirks: [
+      {
+        title: "Grok 4.5 is not on Foundry yet",
+        tone: "warning",
+        body: [
+          "As of 2026-07-19 the Foundry Grok lineup stops at Grok-4.3 Global ($1.25 / CHF 1.01 input, $2.50 / CHF 2.01 output). To run Grok 4.5 you must bill through xAI directly. Watch the Foundry Grok pricing page for a 4.5 listing before assuming Azure availability.",
+        ],
+      },
+      {
+        title: "No cache meter on any Foundry Grok listing",
+        tone: "info",
+        body: [
+          "Foundry's Grok table publishes only input and output columns — no cached input on any tier. xAI's direct API does discount cache hits (~75% off per third-party listings), so cache-heavy workloads currently favor the direct API even before comparing base rates.",
+        ],
+      },
+      {
+        title: "Long-context surcharge on the direct API",
+        tone: "warning",
+        body: [
+          "On xAI's API, requests at or above 200K prompt tokens double every meter: $4 / CHF 3.22 input and $12 / CHF 9.66 output per M. The 500K window is usable, but the second half of it bills at 2x.",
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "qwen",
+    name: "Qwen",
+    org: "Alibaba",
+    tagline: "Cheap direct-API rates with a published cache rule — but on Microsoft Foundry it's GPU-hour managed compute only, no per-token meter.",
+    intro: [
+      "Alibaba's Qwen 3.6 family (Plus, Flash, and the Max preview) is priced on Alibaba Cloud Model Studio's International (Singapore) endpoint. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
+    ],
+    entries: [
+      {
+        model: "Qwen3.6 Plus",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 0.5,
+        cachedUsd: 0.05,
+        cachedConfidence: "estimate",
+        outputUsd: 3.0,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes: "Tiered: rates shown are ≤256K prompt tokens; 256K-1M bills $2/M input, $6/M output.",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint. Cache hits bill at ~10% of input per the published context-cache rule; explicit cache writes at 125%.",
+        effectiveDate: "2026-07-19",
+      },
+      {
+        model: "Qwen3.6 Flash",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 0.25,
+        cachedUsd: 0.025,
+        cachedConfidence: "estimate",
+        outputUsd: 1.5,
+        confidence: "official",
+        notes: "Cheap tier; 50% batch-inference discount also published.",
+        sourceNote: "Alibaba Cloud Model Studio pricing page, International endpoint (≤256K tier).",
+        effectiveDate: "2026-07-19",
+      },
+      {
+        model: "Qwen3.6 Max Preview",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 1.3,
+        cachedUsd: 0.13,
+        cachedConfidence: "estimate",
+        outputUsd: 7.8,
+        confidence: "official",
+        notes: "Preview flagship; rates shown are the ≤128K tier.",
+        sourceNote: "Alibaba Cloud Model Studio pricing page, International endpoint.",
+        effectiveDate: "2026-07-19",
+      },
+    ],
+    quirks: [
+      {
+        title: "No per-token Qwen meter on Foundry",
+        tone: "warning",
+        body: [
+          "Microsoft Foundry hosts Qwen models (e.g. the Qwen3-VL family) only via Managed Compute: dedicated A100/H100/MI300 GPUs at $4-8 / CHF 3.22-6.44 per compute hour. There is no serverless per-token Qwen listing on the Foundry pricing page — neither native nor Fireworks-hosted — so cost per token depends entirely on your utilization.",
+        ],
+      },
+      {
+        title: "Endpoint pricing differs sharply",
+        tone: "info",
+        body: [
+          "The Chinese-mainland (Beijing) endpoint is far cheaper than International: Qwen3.6 Plus drops from $0.50 / CHF 0.40 to ~$0.276 / CHF 0.22 input and from $3.00 / CHF 2.42 to ~$1.65 / CHF 1.33 output. The catalog lists International (Singapore) rates as the realistic option for most non-China deployments.",
+        ],
+      },
+      {
+        title: "Published cache rule, per-model rates pending",
+        tone: "insight",
+        body: [
+          "Model Studio documents its context-cache billing as cache hits at ~10% of the input rate and explicit cache creation at 125% — the same shape as Anthropic's model. The pricing page states the rule as a general example rather than per-model numbers, so cached rates here are marked estimates until confirmed on the Context Cache page or a billing export.",
+        ],
+      },
+    ],
+  },
+
+  {
     slug: "embeddings",
     name: "Embeddings",
     tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
