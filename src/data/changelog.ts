@@ -14,6 +14,15 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-19",
+    title: "Grok (xAI) and Qwen (Alibaba) added to the catalog",
+    tag: "model",
+    body: [
+      "Added Grok: the new flagship Grok 4.5 at xAI's direct rates ($2/M input, $6/M output, 500K context; all meters double at ≥200K prompt tokens; cached input ~$0.50/M per third-party listings, flagged estimate). Grok 4.5 is not on Microsoft Foundry yet — the Foundry lineup tops out at Grok-4.3 Global ($1.25/$2.50) and Grok 4.1 Fast ($0.20/$0.50), and no Foundry Grok listing publishes a cached-input meter.",
+      "Added Qwen: Alibaba Model Studio International rates for Qwen3.6 Plus ($0.50/$3.00 up to 256K, $2/$6 beyond), Qwen3.6 Flash ($0.25/$1.50), and Qwen3.6 Max Preview ($1.30/$7.80). Cache hits bill at ~10% of input per the published context-cache rule (marked estimate pending per-model confirmation). On Foundry, Qwen is Managed Compute only (GPU-hour, $4-8/hr) — there is no serverless per-token Qwen meter to compare.",
+    ],
+  },
+  {
     date: "2026-07-17",
     title: "Kimi K3 added; outdated catalog entries pruned",
     tag: "model",
