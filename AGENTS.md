@@ -26,3 +26,6 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 ## Working notes
 
 <!-- Any agent: append short dated notes here (YYYY-MM-DD — note). Prune notes when stale or once folded into the sections above. -->
+
+- 2026-07-20 — Gotcha: Alibaba's Model Studio pricing page lists model families beyond the obvious names — the 2026-07-19 Qwen capture missed the qwen3.7 flagships (snapshots dated May 2026) by only sweeping "3.6" rows. When capturing that page, grep table rows for ALL `qwen` matches, not the family you expect. Its price columns are Input | Output (non-thinking) | Output (thinking), and "List price $X Limited-time N% off" means the shown figure is BEFORE discount.
+- 2026-07-20 — Watch: Qwen3.7 Max (50% off) and Plus (20% off) are promo rates with no published end date; if the promo lapses, catalog reverts to list ($2.50/$7.50 and $0.40/$1.60 ≤256K). Still pending elsewhere: Grok 4.5 on Foundry, GPT-5.6 on Azure's public page, non-Global Foundry increase 2026-09-01, Sonnet 5 intro ends 2026-08-31.
