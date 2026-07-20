@@ -669,24 +669,56 @@ export const providers: Provider[] = [
     slug: "qwen",
     name: "Qwen",
     org: "Alibaba",
-    tagline: "Cheap direct-API rates with a published cache rule — but on Microsoft Foundry it's GPU-hour managed compute only, no per-token meter.",
+    tagline: "Qwen3.7 flagships under limited-time promo rates, an officially documented cache rule — but on Microsoft Foundry it's GPU-hour managed compute only, no per-token meter.",
     intro: [
-      "Alibaba's Qwen 3.6 family (Plus, Flash, and the Max preview) is priced on Alibaba Cloud Model Studio's International (Singapore) endpoint. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
+      "Alibaba's current flagships are the Qwen3.7 family (Max and Plus), currently sold at limited-time promotional discounts with no published end date; the Qwen 3.6 line (Plus, Flash, Max preview) remains listed at stable rates. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
     ],
     entries: [
+      {
+        model: "Qwen3.7 Max (Promo)",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 1.25,
+        cachedUsd: 0.125,
+        cachedConfidence: "derived",
+        outputUsd: 3.75,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes:
+          "Current flagship. Effective rate under a limited-time 50% discount (list $2.50/M in, $7.50/M out); no promo end date published. Single price tier across the full 1M window; thinking and non-thinking modes priced the same.",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list $2.5/$7.5 marked 'Limited-time 50% off'. Cached input derived as 10% of effective input per the official context-cache rule (explicit cache hits).",
+        effectiveDate: "2026-07-20",
+      },
+      {
+        model: "Qwen3.7 Plus (Promo)",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 0.32,
+        cachedUsd: 0.032,
+        cachedConfidence: "derived",
+        outputUsd: 1.28,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes:
+          "Effective rate under a limited-time 20% discount (list $0.40/$1.60); no promo end date published. Rates shown are ≤256K prompt tokens; 256K–1M bills $0.96/$3.84 effective ($1.20/$4.80 list). Thinking and non-thinking output priced the same.",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list prices marked 'Limited-time 20% off'. Cached input derived as 10% of effective input per the official context-cache rule.",
+        effectiveDate: "2026-07-20",
+      },
       {
         model: "Qwen3.6 Plus",
         host: "Model Studio (Intl)",
         tier: "Direct",
         inputUsd: 0.5,
         cachedUsd: 0.05,
-        cachedConfidence: "estimate",
+        cachedConfidence: "derived",
         outputUsd: 3.0,
         contextWindow: 1_000_000,
         confidence: "official",
         notes: "Tiered: rates shown are ≤256K prompt tokens; 256K-1M bills $2/M input, $6/M output.",
         sourceNote:
-          "Alibaba Cloud Model Studio pricing page, International endpoint. Cache hits bill at ~10% of input per the published context-cache rule; explicit cache writes at 125%.",
+          "Alibaba Cloud Model Studio pricing page, International endpoint. Cached input derived as 10% of input per the official context-cache doc (explicit hits 10%, creation 125%, implicit hits 20%), which lists this model as supported.",
         effectiveDate: "2026-07-19",
       },
       {
@@ -695,11 +727,12 @@ export const providers: Provider[] = [
         tier: "Direct",
         inputUsd: 0.25,
         cachedUsd: 0.025,
-        cachedConfidence: "estimate",
+        cachedConfidence: "derived",
         outputUsd: 1.5,
         confidence: "official",
         notes: "Cheap tier; 50% batch-inference discount also published.",
-        sourceNote: "Alibaba Cloud Model Studio pricing page, International endpoint (≤256K tier).",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint (≤256K tier). Cached input derived as 10% of input per the official context-cache doc, which lists this model as supported.",
         effectiveDate: "2026-07-19",
       },
       {
@@ -708,11 +741,12 @@ export const providers: Provider[] = [
         tier: "Direct",
         inputUsd: 1.3,
         cachedUsd: 0.13,
-        cachedConfidence: "estimate",
+        cachedConfidence: "derived",
         outputUsd: 7.8,
         confidence: "official",
-        notes: "Preview flagship; rates shown are the ≤128K tier.",
-        sourceNote: "Alibaba Cloud Model Studio pricing page, International endpoint.",
+        notes: "Thinking-only preview; rates shown are the ≤128K tier (128K-256K bills $2/$12). Superseded as flagship by Qwen3.7 Max.",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint. Cached input derived as 10% of input per the official context-cache doc, which lists this model as supported.",
         effectiveDate: "2026-07-19",
       },
     ],
@@ -732,10 +766,17 @@ export const providers: Provider[] = [
         ],
       },
       {
-        title: "Published cache rule, per-model rates pending",
+        title: "Cache rule now officially documented",
         tone: "insight",
         body: [
-          "Model Studio documents its context-cache billing as cache hits at ~10% of the input rate and explicit cache creation at 125% — the same shape as Anthropic's model. The pricing page states the rule as a general example rather than per-model numbers, so cached rates here are marked estimates until confirmed on the Context Cache page or a billing export.",
+          "Model Studio's Context Cache doc now states the billing rule outright: explicit cache hits at 10% of the input rate, explicit cache creation at 125% (5-minute validity), and implicit cache hits at 20% — the same shape as Anthropic's model, plus a pricier implicit path. The doc lists every Qwen model in this catalog as supported, so cached rates here are upgraded from estimate to derived (10% of the billed input rate; still no per-model dollar figures published).",
+        ],
+      },
+      {
+        title: "Flagship pricing is promotional",
+        tone: "warning",
+        body: [
+          "Qwen3.7 Max ($1.25 / CHF 1.01 input, $3.75 / CHF 3.02 output effective) and Qwen3.7 Plus ($0.32 / CHF 0.26 input, $1.28 / CHF 1.03 output effective, ≤256K) are billed under limited-time discounts of 50% and 20% off list — with no published end date. If the promos lapse, Max reverts to $2.50/$7.50 and Plus to $0.40/$1.60. Budget against list price for anything long-lived.",
         ],
       },
     ],

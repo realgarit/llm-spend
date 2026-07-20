@@ -14,6 +14,16 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-20",
+    title: "Qwen3.7 flagships added; Alibaba cache rule confirmed official",
+    tag: "model",
+    body: [
+      "Added Alibaba's current flagship family, missed in yesterday's Qwen capture: Qwen3.7 Max at $1.25/M input, $3.75/M output effective (list $2.50/$7.50 under a limited-time 50% discount with no published end date; single price tier across a 1M-token window) and Qwen3.7 Plus at $0.32/$1.28 effective ≤256K, $0.96/$3.84 beyond (list rates under a 20% limited-time discount). Both priced on Model Studio's International (Singapore) endpoint.",
+      "Alibaba's Context Cache doc now officially states the billing rule — explicit cache hits at 10% of input, cache creation at 125%, implicit hits at 20% — and lists every catalog Qwen model as supported. All Qwen cached-input rates upgraded from estimate to derived (10% of the billed input rate).",
+      "Checked with no change needed: Grok 4.5 is still absent from Microsoft Foundry (the Grok tab still tops out at Grok-4.3 Global, $1.25/$2.50, no cache meters), Qwen still has no serverless per-token Foundry listing, and GPT-5.6 is still not on Azure's public OpenAI pricing page.",
+    ],
+  },
+  {
     date: "2026-07-19",
     title: "Grok (xAI) and Qwen (Alibaba) added to the catalog",
     tag: "model",
