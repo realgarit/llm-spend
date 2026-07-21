@@ -633,15 +633,14 @@ export const providers: Provider[] = [
         host: "xAI direct API",
         tier: "Direct",
         inputUsd: 2.0,
-        cachedUsd: 0.5,
-        cachedConfidence: "estimate",
+        cachedUsd: 0.3,
         outputUsd: 6.0,
         contextWindow: 500_000,
         confidence: "official",
         notes: "Flagship. All rates double for requests with ≥200K prompt tokens ($4 input / $12 output).",
         sourceNote:
-          "Input/output/context from xAI's official models page. Cached input ($0.50/M, 75% off) is listed by OpenRouter and third-party trackers but not on xAI's own docs page yet.",
-        effectiveDate: "2026-07-19",
+          "xAI's official Grok 4.5 model page: $2/M input, $0.30/M cached input, $6/M output, and 500K context; captured 2026-07-21.",
+        effectiveDate: "2026-07-21",
       },
       {
         model: "Grok-4.3",
@@ -678,7 +677,7 @@ export const providers: Provider[] = [
         title: "No cache meter on any Foundry Grok listing",
         tone: "info",
         body: [
-          "Foundry's Grok table publishes only input and output columns — no cached input on any tier. xAI's direct API does discount cache hits (~75% off per third-party listings), so cache-heavy workloads currently favor the direct API even before comparing base rates.",
+          "Foundry's Grok table publishes only input and output columns — no cached input on any tier. xAI's direct API discounts cache hits to $0.30/M, so cache-heavy workloads currently favor the direct API even before comparing base rates.",
         ],
       },
       {
