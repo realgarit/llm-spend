@@ -316,9 +316,9 @@ export const providers: Provider[] = [
   {
     slug: "openai-azure",
     name: "OpenAI / Azure OpenAI",
-    tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type, Responses-API-only variants, and a not-yet-listed GPT-5.6.",
+    tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type and Responses-API-only variants.",
     intro: [
-      "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 but isn't on Azure's public page yet, so the rates below are OpenAI's direct rates, a high-confidence estimate via the 1:1 pattern.",
+      "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and now has official Azure Foundry meters confirming the 1:1 pattern, including cached-input and cache-write meters plus Data Zone (+10%) and long-context tiers.",
     ],
     entries: [
       {
@@ -327,11 +327,35 @@ export const providers: Provider[] = [
         inputUsd: 5.0,
         cachedUsd: 0.5,
         outputUsd: 30.0,
-        confidence: "estimate",
-        notes: "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09.",
+        confidence: "official",
+        notes: "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
         sourceNote:
-          "OpenAI direct rate, not on Azure's page yet. High-confidence estimate for Azure via the 1:1 pattern. GPT-5.6 bills cache writes at 1.25x uncached input; reads stay ~90% off.",
-        effectiveDate: "2026-07-09",
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std Gl, effective 2026-07-01; captured 2026-07-21). Cache write bills at 1.25x uncached input ($6.25/M meter); reads stay ~90% off.",
+        effectiveDate: "2026-07-21",
+      },
+      {
+        model: "GPT-5.6 Sol",
+        tier: "DataZone",
+        inputUsd: 5.5,
+        cachedUsd: 0.55,
+        outputUsd: 33.0,
+        confidence: "official",
+        notes: "~10% Data Zone premium over Global.",
+        sourceNote:
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std DZ, effective 2026-07-01; captured 2026-07-21).",
+        effectiveDate: "2026-07-21",
+      },
+      {
+        model: "GPT-5.6 Sol Long Context",
+        tier: "Global",
+        inputUsd: 10.0,
+        cachedUsd: 1.0,
+        outputUsd: 45.0,
+        confidence: "official",
+        notes: "Long Context tier; all meters roughly double the short-context rates.",
+        sourceNote:
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 sol LongCo Std Gl, effective 2026-07-01; captured 2026-07-21).",
+        effectiveDate: "2026-07-21",
       },
       {
         model: "GPT-5.6 Terra",
@@ -339,10 +363,11 @@ export const providers: Provider[] = [
         inputUsd: 2.5,
         cachedUsd: 0.25,
         outputUsd: 15.0,
-        confidence: "estimate",
-        notes: "Balanced production tier. GA 2026-07-09.",
-        sourceNote: "Direct OpenAI rate; high-confidence estimate for Azure via the 1:1 pattern.",
-        effectiveDate: "2026-07-09",
+        confidence: "official",
+        notes: "Balanced production tier. GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
+        sourceNote:
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 terra Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($5/$0.50/$22.50) meters also published.",
+        effectiveDate: "2026-07-21",
       },
       {
         model: "GPT-5.6 Luna",
@@ -350,10 +375,11 @@ export const providers: Provider[] = [
         inputUsd: 1.0,
         cachedUsd: 0.1,
         outputUsd: 6.0,
-        confidence: "estimate",
-        notes: "Fast / cheap, high-volume. GA 2026-07-09.",
-        sourceNote: "Direct OpenAI rate; high-confidence estimate for Azure via the 1:1 pattern.",
-        effectiveDate: "2026-07-09",
+        confidence: "official",
+        notes: "Fast / cheap, high-volume. GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
+        sourceNote:
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 luna Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($2/$0.20/$9) meters also published.",
+        effectiveDate: "2026-07-21",
       },
       {
         model: "GPT-5.5",
