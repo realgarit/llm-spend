@@ -75,3 +75,20 @@ test("prices Kimi K3 direct cache hits at the published rate", () => {
 
   assert.equal(result.totalUsd, 0.3);
 });
+
+test("prices Grok 4.5 direct cache hits at xAI's published rate", () => {
+  const xai = getProvider("xai");
+  const entry = xai?.entries.find(
+    (candidate) => candidate.model === "Grok 4.5" && candidate.host === "xAI direct API",
+  );
+
+  assert.ok(entry, "Expected a Grok 4.5 direct API entry");
+
+  const result = computeCost(entry, {
+    inputTokens: 1_000_000,
+    outputTokens: 0,
+    cacheHitRate: 1,
+  });
+
+  assert.equal(result.totalUsd, 0.3);
+});

@@ -5,6 +5,15 @@ export interface ChangelogEntry {
   /** Paragraphs / bullet lines of body text. */
   body: string[];
   tag?: "launch" | "pricing" | "model" | "methodology";
+  /** Supporting articles and pricing documentation, rendered after the body. */
+  sources: ChangelogSource[];
+  /** Date every source URL and its relevance were last checked. */
+  sourcesVerifiedOn: string;
+}
+
+export interface ChangelogSource {
+  label: string;
+  href: string;
 }
 
 /**
@@ -21,7 +30,14 @@ export const changelog: ChangelogEntry[] = [
       "Azure's Retail Prices API now publishes Foundry meters for the whole GPT-5.6 family (effective 2026-07-01), confirming the 1:1 pattern: Sol $5/$30, Terra $2.50/$15, Luna $1/$6 per M tokens on Global, cached input at 10% of input, cache writes at 1.25x. All three entries upgraded from estimate to official.",
       "Added two Sol rows now that the meters are public: Data Zone at $5.50/$0.55/$33 (~10% premium over Global) and Long Context Global at $10/$1/$45. Terra and Luna have matching Data Zone and long-context meters, noted on their entries.",
       "Checked with no change needed: Grok 4.5 still has no Foundry meter (the retail catalog tops out at the Grok-4.x meters already tracked), and Qwen still has no serverless per-token Foundry meter (only Qwen3 32B fine-tuning hosting meters exist).",
+      "Corrected Grok 4.5 cached input from the earlier ~$0.50/M third-party estimate to xAI's now-published official rate of $0.30/M.",
     ],
+    sources: [
+      { label: "Azure Retail Prices API — GPT-5.6 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27gpt-5.6%27)" },
+      { label: "OpenAI — GPT-5.6 launch and pricing", href: "https://openai.com/index/gpt-5-6/" },
+      { label: "SpaceXAI — Grok 4.5 model pricing", href: "https://docs.x.ai/developers/models/grok-4.5" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-20",
@@ -32,15 +48,29 @@ export const changelog: ChangelogEntry[] = [
       "Alibaba's Context Cache doc now officially states the billing rule — explicit cache hits at 10% of input, cache creation at 125%, implicit hits at 20% — and lists every catalog Qwen model as supported. All Qwen cached-input rates upgraded from estimate to derived (10% of the billed input rate).",
       "Checked with no change needed: Grok 4.5 is still absent from Microsoft Foundry (the Grok tab still tops out at Grok-4.3 Global, $1.25/$2.50, no cache meters), Qwen still has no serverless per-token Foundry listing, and GPT-5.6 is still not on Azure's public OpenAI pricing page.",
     ],
+    sources: [
+      { label: "Alibaba Cloud — Model Studio pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "Alibaba Cloud — Qwen Context Cache", href: "https://www.alibabacloud.com/help/en/model-studio/context-cache" },
+      { label: "Microsoft Azure — Foundry Grok pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-19",
     title: "Grok (xAI) and Qwen (Alibaba) added to the catalog",
     tag: "model",
     body: [
-      "Added Grok: the new flagship Grok 4.5 at xAI's direct rates ($2/M input, $6/M output, 500K context; all meters double at ≥200K prompt tokens; cached input ~$0.50/M per third-party listings, flagged estimate). Grok 4.5 is not on Microsoft Foundry yet — the Foundry lineup tops out at Grok-4.3 Global ($1.25/$2.50) and Grok 4.1 Fast ($0.20/$0.50), and no Foundry Grok listing publishes a cached-input meter.",
+      "Added Grok: the new flagship Grok 4.5 at xAI's direct rates ($2/M input, $6/M output, 500K context; all meters double at ≥200K prompt tokens). Cached input was initially catalogued at ~$0.50/M from third-party listings and flagged estimate; xAI later published a $0.30/M official rate, recorded in the 2026-07-21 entry above. Grok 4.5 is not on Microsoft Foundry yet — the Foundry lineup tops out at Grok-4.3 Global ($1.25/$2.50) and Grok 4.1 Fast ($0.20/$0.50), and no Foundry Grok listing publishes a cached-input meter.",
       "Added Qwen: Alibaba Model Studio International rates for Qwen3.6 Plus ($0.50/$3.00 up to 256K, $2/$6 beyond), Qwen3.6 Flash ($0.25/$1.50), and Qwen3.6 Max Preview ($1.30/$7.80). Cache hits bill at ~10% of input per the published context-cache rule (marked estimate pending per-model confirmation). On Foundry, Qwen is Managed Compute only (GPU-hour, $4-8/hr) — there is no serverless per-token Qwen meter to compare.",
     ],
+    sources: [
+      { label: "SpaceXAI — Introducing Grok 4.5", href: "https://x.ai/news/grok-4-5" },
+      { label: "SpaceXAI — Grok 4.5 model pricing", href: "https://docs.x.ai/developers/models/grok-4.5" },
+      { label: "Alibaba Cloud — Model Studio pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "Microsoft Azure — Foundry Grok pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/" },
+      { label: "Microsoft Azure — Foundry Qwen fine-tuning pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/fine-tuning-models/" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-17",
@@ -50,6 +80,10 @@ export const changelog: ChangelogEntry[] = [
       "Added Kimi K3's direct API pricing: $3/M cache-miss input, $0.30/M cache-hit input, and $15/M output. K3 is available now with a 1M-token context window.",
       "Removed older GPT-5, DeepSeek, Kimi Thinking, Gemini 3 Pro, and Claude Opus 4.8 Fast Mode entries to keep the comparison catalog focused on relevant current options.",
     ],
+    sources: [
+      { label: "Kimi — Introducing K3 and API pricing", href: "https://www.kimi.com/blog/kimi-k3" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-17",
@@ -59,6 +93,11 @@ export const changelog: ChangelogEntry[] = [
       "Added DeepSeek's first-party V4 Pro ($0.003625/M) and V4 Flash ($0.0028/M) cache-hit rates, so the calculator now applies the selected cache-hit rate to direct API estimates.",
       "Upgraded Azure Global V4 Pro ($0.145/M) and V4 Flash ($0.028/M) cached-input rates from derived to official after confirming the exact meters in Azure's public retail catalog. Billing exports reconcile to those published rates.",
     ],
+    sources: [
+      { label: "DeepSeek — Models and pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "Azure Retail Prices API — DeepSeek V4 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27deepseek-v4%27)" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-14",
@@ -67,6 +106,10 @@ export const changelog: ChangelogEntry[] = [
     body: [
       "Anthropic's pricing page now publishes per-model cache hit rates (e.g., Opus 4.8 cache read = $0.50/MTok, Sonnet 5 = $0.20/MTok intro / $0.30 standard, Fable 5 / Mythos 5 = $1.00/MTok), replacing the earlier multiplier approximation. All Claude entries updated with exact `cachedUsd` values.",
     ],
+    sources: [
+      { label: "Anthropic — Claude API pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-14",
@@ -75,6 +118,11 @@ export const changelog: ChangelogEntry[] = [
     body: [
       "Added Claude Fable 5 ($10 / $50 per MTok input/output) and Claude Mythos 5 ($10 / $50, limited availability) — Anthropic's next-gen frontier models — matching their published direct pricing. Same cache model as other Claude models: reads ~10% of input, writes ~1.25x input.",
     ],
+    sources: [
+      { label: "Anthropic — Claude Fable 5 and Mythos 5", href: "https://www.anthropic.com/news/claude-fable-5-mythos-5" },
+      { label: "Anthropic — Claude Mythos availability and pricing", href: "https://www.anthropic.com/claude/mythos" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-12",
@@ -83,6 +131,10 @@ export const changelog: ChangelogEntry[] = [
     body: [
       "Per the Azure Foundry Models pricing page, EU Data Zone and other non-US Regional deployment prices are set to increase on 2026-09-01. Global deployments are unchanged. No specific increase amount is published yet, so budget for a change and re-check closer to the date.",
     ],
+    sources: [
+      { label: "Microsoft Azure — Foundry Models pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/deepseek/" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-12",
@@ -92,6 +144,13 @@ export const changelog: ChangelogEntry[] = [
       "Microsoft renamed Azure AI Foundry to Microsoft Foundry. The site now uses the new name throughout; older entries below keep their original wording as a historical record.",
       "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold), billed through Azure via Claude Consumption Units (CCU) instead of the old per-model Azure meters. Added Sonnet 5 Foundry pricing, mirroring the direct rates: $2 / $10 per M input/output through 2026-08-31, then $3 / $15 per M from 2026-09-01. Microsoft doesn't publish a separate CCU-to-dollar ratio or an independent Foundry-native price, so the effective $/M is inherited from Anthropic's direct rate.",
     ],
+    sources: [
+      { label: "Microsoft Learn — Microsoft Foundry product naming", href: "https://learn.microsoft.com/en-us/azure/foundry/how-to/navigate-from-classic" },
+      { label: "Microsoft Foundry Blog — Claude reaches GA", href: "https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-june-2026/" },
+      { label: "Microsoft Learn — Claude models in Foundry", href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models" },
+      { label: "Anthropic — Introducing Claude Sonnet 5", href: "https://www.anthropic.com/news/claude-sonnet-5" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-11",
@@ -101,6 +160,14 @@ export const changelog: ChangelogEntry[] = [
       "llm-spend goes live: Kimi, DeepSeek, GLM, OpenAI / Azure OpenAI, Claude, Gemini, and embeddings, all in USD and CHF (reference 1 USD ≈ 0.805 CHF). Prices measured mostly on Azure AI Foundry, plus direct APIs.",
       "Includes the sticker-price methodology, the cache-economics case study, a workload cost calculator, and the RPM-vs-TPM explainer.",
     ],
+    sources: [
+      { label: "GitHub — Initial launch commit", href: "https://github.com/realgarit/llm-spend/commit/a87f1132216ba3ca1aff6964d76f61ef0741b4d3" },
+      { label: "GitHub — Initial provider catalog", href: "https://github.com/realgarit/llm-spend/commit/772c0f13700c7a5bf9cbe294d7ca3ebc0dd14ed4" },
+      { label: "llm-spend — Pricing catalog", href: "/" },
+      { label: "llm-spend — Cache economics", href: "/cache-economics" },
+      { label: "llm-spend — Rate limits explained", href: "/rate-limits" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-09",
@@ -110,6 +177,11 @@ export const changelog: ChangelogEntry[] = [
       "OpenAI's GPT-5.6 family hit GA: Sol (flagship), Terra (balanced), Luna (fast / cheap). Not on Azure's public page yet, so listed at OpenAI's direct rates as a high-confidence estimate for Azure via the 1:1 pattern.",
       "GPT-5.6 also bills cache writes at 1.25x the uncached input rate (was the standard input rate); reads stay ~90% off.",
     ],
+    sources: [
+      { label: "OpenAI — GPT-5.6 launch and pricing", href: "https://openai.com/index/gpt-5-6/" },
+      { label: "OpenAI — GPT-5.6 model documentation", href: "https://developers.openai.com/api/docs/models" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-07-01",
@@ -118,13 +190,24 @@ export const changelog: ChangelogEntry[] = [
     body: [
       "DeepSeek's direct API dropped V4 Pro to $0.435 / CHF 0.35 input, $0.87 / CHF 0.70 output, and V4 Flash to $0.14 / CHF 0.11 input, $0.28 / CHF 0.23 output. That widened the gap to cloud \"Global\" tiers, one reported at ~4.5x the direct price.",
     ],
+    sources: [
+      { label: "DeepSeek — Models and pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "Microsoft Azure — Foundry DeepSeek pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/deepseek/" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
   {
     date: "2026-06-15",
     title: "Hidden cache meters reconciled from billing exports",
     tag: "methodology",
     body: [
-      "Azure Cost Management exports grouped by meter revealed undocumented cached-input meters on DeepSeek V4 Pro / V4 Flash \"Global\" and Kimi K2.7 in Azure AI Foundry. Back-solving against known input/output rates gave derived cache rates (~$0.145/M for V4 Pro, ~$0.028/M for V4 Flash, ~$0.19/M for Kimi). Flagged derived pending official publication.",
+      "Internal Azure Cost Management exports grouped by meter revealed undocumented cached-input meters on DeepSeek V4 Pro / V4 Flash \"Global\" and Kimi K2.7 in Azure AI Foundry. Back-solving against known input/output rates gave derived cache rates (~$0.145/M for V4 Pro, ~$0.028/M for V4 Flash, ~$0.19/M for Kimi). The links below document the public export and pricing methodology; the customer billing export itself is private. Rates were flagged derived pending official publication.",
     ],
+    sources: [
+      { label: "Method reference — Export Cost Management data", href: "https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data" },
+      { label: "Microsoft Azure — Foundry DeepSeek pricing", href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/deepseek/" },
+      { label: "Azure Retail Prices API", href: "https://prices.azure.com/api/retail/prices" },
+    ],
+    sourcesVerifiedOn: "2026-07-21",
   },
 ];

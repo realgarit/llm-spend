@@ -78,6 +78,32 @@ export default function ChangelogPage() {
                 {p}
               </p>
             ))}
+            <footer
+              aria-label={`Sources for ${entry.title}`}
+              style={{
+                borderTop: "1px solid var(--border)",
+                marginTop: "0.9rem",
+                paddingTop: "0.65rem",
+                display: "flex",
+                alignItems: "baseline",
+                gap: "0.65rem",
+                flexWrap: "wrap",
+              }}
+            >
+              <h4 className="mono" style={{ color: "var(--text-muted)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 500 }}>
+                Sources · verified {formatDate(entry.sourcesVerifiedOn)}
+              </h4>
+              <ul style={{ display: "flex", alignItems: "baseline", gap: "0.65rem", flexWrap: "wrap", listStyle: "none", padding: 0, margin: 0 }}>
+                {entry.sources.map((source, i) => (
+                  <li key={source.href} style={{ display: "inline-flex", alignItems: "baseline", gap: "0.65rem" }}>
+                    {i > 0 && <span aria-hidden style={{ color: "var(--border)" }}>·</span>}
+                    <a className="link-underline" href={source.href} style={{ fontSize: "0.8rem" }}>
+                      {source.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </footer>
           </li>
         ))}
       </ol>
