@@ -14,6 +14,16 @@ export interface ChangelogEntry {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-21",
+    title: "GPT-5.6 Azure rates confirmed official; Sol Data Zone and Long Context added",
+    tag: "pricing",
+    body: [
+      "Azure's Retail Prices API now publishes Foundry meters for the whole GPT-5.6 family (effective 2026-07-01), confirming the 1:1 pattern: Sol $5/$30, Terra $2.50/$15, Luna $1/$6 per M tokens on Global, cached input at 10% of input, cache writes at 1.25x. All three entries upgraded from estimate to official.",
+      "Added two Sol rows now that the meters are public: Data Zone at $5.50/$0.55/$33 (~10% premium over Global) and Long Context Global at $10/$1/$45. Terra and Luna have matching Data Zone and long-context meters, noted on their entries.",
+      "Checked with no change needed: Grok 4.5 still has no Foundry meter (the retail catalog tops out at the Grok-4.x meters already tracked), and Qwen still has no serverless per-token Foundry meter (only Qwen3 32B fine-tuning hosting meters exist).",
+    ],
+  },
+  {
     date: "2026-07-20",
     title: "Qwen3.7 flagships added; Alibaba cache rule confirmed official",
     tag: "model",
