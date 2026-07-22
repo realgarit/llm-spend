@@ -24,6 +24,20 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-07-22",
+    title: "Gemini 3.6 Flash added; cached input now published for Flash line",
+    tag: "model",
+    body: [
+      "Added Gemini 3.6 Flash at $1.50/M input, $7.50/M output — the same input price as 3.5 Flash with ~17% cheaper output (50% batch discount: $0.75/$3.75). It's now the catalog's headline Gemini pick for coding and agentic workloads.",
+      "Google's pricing page now also publishes a cached-input rate of $0.15/M for both 3.6 and 3.5 Flash, previously untracked for 3.5. Cache storage bills separately at $1.00 per 1M tokens per hour, a dimension noted in the source but not modeled by this site's schema.",
+    ],
+    sources: [
+      { label: "Google — Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+      { label: "Google — Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber", href: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" },
+    ],
+    sourcesVerifiedOn: "2026-07-22",
+  },
+  {
+    date: "2026-07-22",
     title: "GLM 5.2 Data Zone cached input corrected to official $0.15/M",
     tag: "pricing",
     body: [
