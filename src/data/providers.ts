@@ -236,9 +236,9 @@ export const providers: Provider[] = [
     slug: "glm",
     name: "GLM",
     org: "Zhipu / Z.ai",
-    tagline: "GLM-5.2 adds a 1M-token window. Fireworks charges 5.1 and 5.2 the same, so the 5.2 Data Zone rate is a validated estimate.",
+    tagline: "GLM-5.2 adds a 1M-token window and now has its own officially published Foundry Data Zone rate, including $0.15/M cached input.",
     intro: [
-      "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Fireworks charges 5.1 and 5.2 the same, which is why the unlisted 5.2 Data Zone rate can be estimated (see below).",
+      "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
     ],
     entries: [
       {
@@ -258,15 +258,15 @@ export const providers: Provider[] = [
         host: "Fireworks-hosted",
         tier: "DataZone",
         inputUsd: 1.54,
-        cachedUsd: 0.286,
+        cachedUsd: 0.15,
         outputUsd: 4.84,
         contextWindow: 1_000_000,
         maxOutput: 131_000,
-        confidence: "estimate",
-        notes: "Estimated equal to GLM-5.1 Data Zone; later validated against real invoice data.",
+        confidence: "official",
+        notes: "Cached input is officially published at $0.15/M, ~48% below GLM 5.1's $0.286/M.",
         sourceNote:
-          "Not listed at capture time. Estimated equal to GLM-5.1's Data Zone rate (Fireworks charges 5.1 and 5.2 the same); later matched real invoice data almost exactly.",
-        effectiveDate: CAPTURED,
+          "Azure Retail Prices API 'FW GLM 5.2' meters, captured 2026-07-22 (effective 2026-07-01): input $0.00154/1K, output $0.00484/1K, cached input $0.00015/1K, uniform across regions. Earlier estimate (equal to GLM 5.1) was right on input/output but high on cache.",
+        effectiveDate: "2026-07-01",
       },
       {
         model: "GLM-5.1",
