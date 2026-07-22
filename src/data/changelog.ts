@@ -23,6 +23,19 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-22",
+    title: "GLM 5.2 Data Zone cached input corrected to official $0.15/M",
+    tag: "pricing",
+    body: [
+      "Azure now publishes dedicated 'FW GLM 5.2' Foundry meters (effective 2026-07-01), separate from GLM 5.1. Input and output are confirmed unchanged at $1.54/M and $4.84/M, but cached input is officially $0.15/M — well below the $0.286/M estimate the catalog had been carrying (inherited from GLM 5.1, since Fireworks previously charged both versions identically).",
+      "GLM 5.2 Data Zone upgraded from estimate to official across the board.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — GLM meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27glm%27)" },
+    ],
+    sourcesVerifiedOn: "2026-07-22",
+  },
+  {
     date: "2026-07-21",
     title: "GPT-5.6 Azure rates confirmed official; Sol Data Zone and Long Context added",
     tag: "pricing",
