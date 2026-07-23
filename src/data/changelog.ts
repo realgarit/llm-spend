@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-23",
+    title: "Mistral Medium 3.5 added — new Mistral lane on Foundry",
+    tag: "model",
+    body: [
+      "Added a Mistral provider lane with Mistral Medium 3.5. Under the Microsoft–Mistral partnership announced 2026-07-21, the model is now resold on Microsoft Foundry as a serverless listing. Azure's Retail Prices API publishes 'MM3.5' meters at $1.50/M input and $7.50/M output on the Global tier (effective 2026-07-01) — identical to Mistral's own direct API rate for mistral-medium-latest.",
+      "Foundry also publishes a Data Zone tier at $1.65/$8.25 per M (a clean 1.1x premium, effective 2026-06-01). No cached-input meter exists on any tier yet, so repeated-prompt workloads get no cache discount on this model. Mistral OCR 4, announced alongside it, bills per page rather than per token and is out of this catalog's scope.",
+    ],
+    sources: [
+      { label: "Microsoft–Mistral partnership announcement", href: "https://news.microsoft.com/source/2026/07/21/microsoft-and-mistral-expand-strategic-partnership-to-give-enterprises-and-regulated-industries-frontier-ai-they-can-control/" },
+      { label: "Mistral API pricing", href: "https://mistral.ai/pricing/api" },
+      { label: "Azure Retail Prices API — MM3.5 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27mm3.5%27)" },
+    ],
+    sourcesVerifiedOn: "2026-07-23",
+  },
+  {
+    date: "2026-07-23",
+    title: "Foundry cached-input meters now official for Kimi K2.5, K2.6, and Grok-4.3",
+    tag: "pricing",
+    body: [
+      "Azure's Retail Prices API now publishes dedicated cached-input meters (effective 2026-07-01 for Kimi, 2026-05-01 for Grok) that upgrade three catalog rows to official:",
+      "Kimi K2.5 Thinking (Global): cached input added at $0.10/M — previously untracked.",
+      "Kimi K2.6 (Global): cached input corrected to $0.16/M official, replacing the ~$0.19/M estimate that had been back-solved from a billing export.",
+      "Grok-4.3 (Global): cached input added at $0.20/M — previously listed as having no cache meter. The meter is named bare '4.3' in the retail API (a 'grok' search misses it) and matches xAI's direct Grok 4.3 cache rate; long-context (≥200K) requests bill cached input at 2x ($0.40/M).",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — K2.6 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27k2.6%27)" },
+      { label: "Azure Retail Prices API — K2.5 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27k2.5%27)" },
+      { label: "Azure Retail Prices API — Grok 4.3 meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%274.3%27)" },
+      { label: "xAI models & pricing docs", href: "https://docs.x.ai/docs/models" },
+    ],
+    sourcesVerifiedOn: "2026-07-23",
+  },
+  {
     date: "2026-07-22",
     title: "Gemini 3.6 Flash added; cached input now published for Flash line",
     tag: "model",
