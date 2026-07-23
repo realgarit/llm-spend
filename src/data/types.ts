@@ -17,6 +17,7 @@ export type ProviderSlug =
   | "gemini"
   | "xai"
   | "qwen"
+  | "mistral"
   | "embeddings";
 
 /**

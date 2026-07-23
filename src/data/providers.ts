@@ -42,14 +42,14 @@ export const providers: Provider[] = [
         model: "Kimi K2.6",
         tier: "Global",
         inputUsd: 0.95,
-        cachedUsd: 0.19,
-        cachedConfidence: "derived",
+        cachedUsd: 0.16,
+        cachedConfidence: "official",
         outputUsd: 4.0,
         confidence: "official",
-        notes: "Native Global tier.",
+        notes: "Native Global tier; cached input now officially metered.",
         sourceNote:
-          "Input and output are official. The public page shows no cached column, but a billing export revealed a cache meter; ~$0.19/M reconciled at ~81% hit rate.",
-        effectiveDate: CAPTURED,
+          "Input $0.95/M and output $4.00/M official. Azure Retail Prices API 'K2.6 cached glbl' meter now publishes cached input at $0.00016/1K ($0.16/M), effective 2026-07-01, captured 2026-07-23 — replacing the earlier ~$0.19/M billing-reconciled estimate.",
+        effectiveDate: "2026-07-23",
       },
       {
         model: "Kimi K2.7 Code",
@@ -66,11 +66,13 @@ export const providers: Provider[] = [
         model: "Kimi K2.5 Thinking",
         tier: "Global",
         inputUsd: 0.6,
-        cachedUsd: null,
+        cachedUsd: 0.1,
         outputUsd: 3.0,
         confidence: "official",
-        sourceNote: "Official pricing page.",
-        effectiveDate: CAPTURED,
+        notes: "Cached input now officially metered.",
+        sourceNote:
+          "Input $0.60/M and output $3.00/M official. Azure Retail Prices API 'K2.5 cached glbl' meter publishes cached input at $0.0001/1K ($0.10/M), effective 2026-07-01, captured 2026-07-23.",
+        effectiveDate: "2026-07-23",
       },
       {
         model: "Kimi K2.6",
@@ -87,10 +89,10 @@ export const providers: Provider[] = [
     ],
     quirks: [
       {
-        title: "The cache meter the pricing page omits",
-        tone: "warning",
+        title: "The cache meter the pricing page omitted — now published",
+        tone: "info",
         body: [
-          "Microsoft Foundry's public page shows no cached column for the K2.6 / K2.7 Thinking Global listings, but a Cost Management export had a billed cache meter. Reconciling token totals back-solved ~$0.19 / CHF 0.15 per M (about 81% hit rate). Derived, not published.",
+          "Microsoft Foundry's public page long showed no cached column for the K2.6 Global listing, so the rate was back-solved from a Cost Management export at ~$0.19 / CHF 0.15 per M (about 81% hit rate). As of 2026-07-01 Azure's Retail Prices API publishes a dedicated 'K2.6 cached glbl' meter at $0.16 / CHF 0.13 per M, so the catalog now carries the official figure instead of the reconciled estimate.",
         ],
       },
       {
@@ -636,9 +638,9 @@ export const providers: Provider[] = [
     slug: "xai",
     name: "Grok",
     org: "xAI",
-    tagline: "Grok 4.5 is direct-API only for now; Microsoft Foundry resells the 4.x line up to Grok-4.3 with no cache meter.",
+    tagline: "Grok 4.5 is direct-API only for now; Microsoft Foundry resells the 4.x line up to Grok-4.3, which now carries a published cache meter.",
     intro: [
-      "xAI's flagship Grok 4.5 (500K context, configurable reasoning) currently ships only on xAI's own API. Microsoft Foundry hosts the older Grok line as serverless listings — currently topping out at Grok-4.3 Global — with published input/output rates but no cached-input column on any Grok meter.",
+      "xAI's flagship Grok 4.5 (500K context, configurable reasoning) currently ships only on xAI's own API. Microsoft Foundry hosts the older Grok line as serverless listings — currently topping out at Grok-4.3 Global — with published input/output rates and, as of the 2026-07-23 recheck, a published cached-input meter on Grok-4.3 ($0.20/M).",
     ],
     entries: [
       {
@@ -659,12 +661,13 @@ export const providers: Provider[] = [
         model: "Grok-4.3",
         tier: "Global",
         inputUsd: 1.25,
-        cachedUsd: null,
+        cachedUsd: 0.2,
         outputUsd: 2.5,
         confidence: "official",
-        notes: "Newest Grok on Foundry; no cached-input meter published.",
-        sourceNote: "Microsoft Foundry Models pricing page (Grok tab), captured 2026-07-19.",
-        effectiveDate: "2026-07-19",
+        notes: "Newest Grok on Foundry; cached-input meter now published. Long-context (≥200K prompt) meters bill at 2x, including cached input at $0.40/M.",
+        sourceNote:
+          "Input $1.25/M and output $2.50/M from the Foundry Models pricing page. Cached input from the Azure Retail Prices API meter named bare '4.3' — a 'grok' meterName search misses it — 'Cached Inp Glbl' at $0.0002/1K ($0.20/M), effective 2026-05-01, captured 2026-07-23; matches xAI's direct Grok 4.3 docs. Long-context 'L' meters exist at 2x ($2.50 in / $5.00 out / $0.40 cached).",
+        effectiveDate: "2026-07-23",
       },
       {
         model: "Grok 4.1 Fast",
@@ -687,10 +690,10 @@ export const providers: Provider[] = [
         ],
       },
       {
-        title: "No cache meter on any Foundry Grok listing",
+        title: "Grok-4.3 now has a Foundry cache meter",
         tone: "info",
         body: [
-          "Foundry's Grok table publishes only input and output columns — no cached input on any tier. xAI's direct API discounts cache hits to $0.30/M, so cache-heavy workloads currently favor the direct API even before comparing base rates.",
+          "The Azure Retail Prices API now publishes a cached-input meter for Grok-4.3 at $0.20 / CHF 0.16 per M (effective 2026-05-01, surfaced on the 2026-07-23 recheck), matching xAI's direct Grok 4.3 cache rate. The meter is named bare '4.3', so a 'grok' search misses it. Grok 4.1 Fast still shows no cached column on Foundry.",
         ],
       },
       {
@@ -815,6 +818,71 @@ export const providers: Provider[] = [
         tone: "warning",
         body: [
           "Qwen3.7 Max ($1.25 / CHF 1.01 input, $3.75 / CHF 3.02 output effective) and Qwen3.7 Plus ($0.32 / CHF 0.26 input, $1.28 / CHF 1.03 output effective, ≤256K) are billed under limited-time discounts of 50% and 20% off list — with no published end date. If the promos lapse, Max reverts to $2.50/$7.50 and Plus to $0.40/$1.60. Budget against list price for anything long-lived.",
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "mistral",
+    name: "Mistral",
+    org: "Mistral AI",
+    tagline: "Mistral Medium 3.5 is now on Microsoft Foundry at the same rate as Mistral's own API.",
+    intro: [
+      "Under the expanded Microsoft–Mistral partnership announced 2026-07-21, Mistral Medium 3.5 is now resold on Microsoft Foundry as a serverless listing, priced identically to Mistral's first-party API. Foundry publishes Global and Data Zone meters; no cached-input meter exists on either tier yet, so cache-heavy workloads get no discount on this model. (Mistral OCR 4 is billed per page rather than per token, so it is out of this catalog's scope.)",
+    ],
+    entries: [
+      {
+        model: "Mistral Medium 3.5",
+        tier: "Global",
+        inputUsd: 1.5,
+        cachedUsd: null,
+        outputUsd: 7.5,
+        confidence: "official",
+        notes: "Foundry serverless Global tier; no cached-input meter published.",
+        sourceNote:
+          "Azure Retail Prices API 'MM3.5 Inp/Outp glbl' meters at $0.0015/1K and $0.0075/1K ($1.50/M and $7.50/M), effective 2026-07-01, captured 2026-07-23. Announced via the Microsoft–Mistral partnership on 2026-07-21. No cached-input meter published on any tier.",
+        effectiveDate: "2026-07-23",
+      },
+      {
+        model: "Mistral Medium 3.5",
+        tier: "DataZone",
+        inputUsd: 1.65,
+        cachedUsd: null,
+        outputUsd: 8.25,
+        confidence: "official",
+        notes: "Data Zone tier at the usual ~10% premium over Global; no cached-input meter.",
+        sourceNote:
+          "Azure Retail Prices API 'MM3.5 Inp/Outp DZ' meters at $0.00165/1K and $0.00825/1K ($1.65/M and $8.25/M) — a clean 1.1x the Global rate — effective 2026-06-01, captured 2026-07-23. No cached-input meter published.",
+        effectiveDate: "2026-07-23",
+      },
+      {
+        model: "Mistral Medium 3.5",
+        host: "Mistral direct API",
+        tier: "Direct",
+        inputUsd: 1.5,
+        cachedUsd: null,
+        outputUsd: 7.5,
+        confidence: "official",
+        notes: "mistral-medium-latest; identical to the Foundry Global rate.",
+        sourceNote:
+          "Mistral's official API pricing page (mistral.ai/pricing/api) lists mistral-medium-latest at $1.50/M input and $7.50/M output, captured 2026-07-23.",
+        effectiveDate: "2026-07-23",
+      },
+    ],
+    quirks: [
+      {
+        title: "Foundry Global matches Mistral's direct API",
+        tone: "info",
+        body: [
+          "Mistral Medium 3.5 costs the same on Microsoft Foundry Global ($1.50 / CHF 1.21 input, $7.50 / CHF 6.04 output) as on Mistral's own API — no Foundry resale markup at the Global tier. The Data Zone tier adds the usual ~10% ($1.65 / $8.25).",
+        ],
+      },
+      {
+        title: "No cache discount yet",
+        tone: "warning",
+        body: [
+          "Neither Foundry nor Mistral's direct API publishes a cached-input meter for Mistral Medium 3.5, so repeated-prompt workloads pay full input price on every call. Models like Grok-4.3 ($0.20/M cached) or the Kimi K2 line ($0.10–$0.16/M cached) are cheaper for cache-heavy use.",
         ],
       },
     ],
