@@ -241,8 +241,24 @@ export const providers: Provider[] = [
     tagline: "GLM-5.2 adds a 1M-token window and now has its own officially published Foundry Data Zone rate, including $0.15/M cached input.",
     intro: [
       "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
+      "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
     ],
     entries: [
+      {
+        model: "GLM 5",
+        host: "Fireworks-hosted",
+        tier: "DataZone",
+        inputUsd: 1.1,
+        cachedUsd: 0.22,
+        outputUsd: 3.52,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
+        confidence: "official",
+        notes: "The cheapest GLM lane on Foundry: ~29% below 5.1/5.2 on input and ~27% below on output, for the same 200K window as 5.1.",
+        sourceNote:
+          "Azure Retail Prices API 'FW GLM 5' meters, captured 2026-07-25 (effective 2026-06-01): input $0.0011/1K, output $0.00352/1K, cached input $0.00022/1K. Each is exactly 1.1x the Z.ai direct rate, the standard Data Zone premium. No Global-tier meter is published for GLM 5, matching 5.1 and 5.2.",
+        effectiveDate: "2026-06-01",
+      },
       {
         model: "GLM 5.1",
         host: "Fireworks-hosted",
@@ -269,6 +285,21 @@ export const providers: Provider[] = [
         sourceNote:
           "Azure Retail Prices API 'FW GLM 5.2' meters, captured 2026-07-22 (effective 2026-07-01): input $0.00154/1K, output $0.00484/1K, cached input $0.00015/1K, uniform across regions. Earlier estimate (equal to GLM 5.1) was right on input/output but high on cache.",
         effectiveDate: "2026-07-01",
+      },
+      {
+        model: "GLM-5",
+        host: "Z.ai direct API",
+        tier: "Direct",
+        inputUsd: 1.0,
+        cachedUsd: 0.2,
+        outputUsd: 3.2,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
+        confidence: "official",
+        notes: "Z.ai publishes a cached-input rate for GLM-5 ($0.20/M). Cached-input storage is currently free for a limited time, a billing dimension this catalog does not model.",
+        sourceNote:
+          "Z.ai official pricing page, captured 2026-07-25: input $1, cached input $0.2, output $3.2 per 1M tokens. Model page lists a 200K window and 128K max output. The 'Limited-time Free' marker on that page applies only to the separate Cached Input Storage column, not to these rates.",
+        effectiveDate: CAPTURED,
       },
       {
         model: "GLM-5.1",
@@ -298,6 +329,13 @@ export const providers: Provider[] = [
       },
     ],
     quirks: [
+      {
+        title: "GLM 5's Data Zone rate is a clean 1.1x",
+        tone: "insight",
+        body: [
+          "All three of GLM 5's Foundry Data Zone meters land at exactly 1.1x the Z.ai direct rate: $1.00 to $1.10 input, $0.20 to $0.22 cached, $3.20 to $3.52 output. Two independently published sources agreeing on all three dimensions is the strongest confirmation this catalog gets that both numbers are right.",
+        ],
+      },
       {
         title: "5.2 Data Zone: an estimate that held up",
         tone: "insight",
