@@ -23,6 +23,22 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-25",
+    title: "GLM-5 added — the cheapest lane in the GLM family",
+    tag: "model",
+    body: [
+      "Added the original GLM-5, which had been missing from the catalog even though it is still generally available and undercuts both GLM-5.1 and GLM-5.2. On Microsoft Foundry's Data Zone tier it bills $1.10/M input, $0.22/M cached input, and $3.52/M output — about 29% below 5.1/5.2 on input and 27% below on output, with the same 200K context window as 5.1 and 128K max output.",
+      "Z.ai's own API lists it at $1.00/M input, $0.20/M cached input, and $3.20/M output. Every Foundry Data Zone meter is exactly 1.1x the corresponding direct rate, the standard Data Zone premium, so both sets of numbers corroborate each other on all three dimensions. As with GLM-5.1 and 5.2, no Global-tier meter is published — Data Zone is the only Foundry tier for this family.",
+      "If you do not need GLM-5.2's 1M-token window, GLM-5 is the value pick in this family rather than a superseded model. Note that Z.ai's 'Limited-time Free' marker applies to cached-input storage, a per-hour billing dimension this catalog does not model, and not to the per-token rates above.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — FW GLM meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(tolower(meterName),%27glm%27)" },
+      { label: "Z.ai official pricing", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Z.ai GLM-5 model documentation", href: "https://docs.z.ai/guides/llm/glm-5" },
+    ],
+    sourcesVerifiedOn: "2026-07-25",
+  },
+  {
     date: "2026-07-23",
     title: "Mistral Medium 3.5 added — new Mistral lane on Foundry",
     tag: "model",
