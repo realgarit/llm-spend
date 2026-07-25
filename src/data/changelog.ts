@@ -24,6 +24,19 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-07-25",
+    title: "Claude Opus 5 added — new Anthropic flagship, same pricing as Opus 4.8",
+    tag: "model",
+    body: [
+      "Added Claude Opus 5, now GA per Anthropic's official Claude API pricing page. It prices identically to Opus 4.8 at $5/M base input, $0.50/M cache-hit input, and $25/M output, with the same 1M-token context window — no launch premium.",
+      "Opus 5 uses the same newer tokenizer introduced with Claude 4.7-and-later models (and Claude Mythos Preview), which can use roughly 30% more tokens for the same text versus pre-4.7 models. As with Opus 4.8, there is no separate Foundry/Global listing for Opus 5 in this catalog yet — only the direct-API rate is tracked.",
+    ],
+    sources: [
+      { label: "Anthropic — Claude API pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-07-25",
+  },
+  {
+    date: "2026-07-25",
     title: "GLM-5 added — the cheapest lane in the GLM family",
     tag: "model",
     body: [

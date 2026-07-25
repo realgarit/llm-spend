@@ -524,10 +524,23 @@ export const providers: Provider[] = [
     org: "Anthropic",
     tagline: "1M-token Opus, intro pricing through August, caching priced as a multiplier, and now natively hosted on Microsoft Foundry with Azure billing.",
     intro: [
-      "Opus 4.8 has a 1M-token window. Intro pricing runs through 2026-08-31 for Sonnet 5; standard rate starts 2026-09-01.",
+      "Claude Opus 5 is now GA and prices identically to Opus 4.8 — both carry a 1M-token window. Intro pricing runs through 2026-08-31 for Sonnet 5; standard rate starts 2026-09-01.",
       "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters.",
     ],
     entries: [
+      {
+        model: "Claude Opus 5",
+        tier: "Direct",
+        inputUsd: 5.0,
+        cachedUsd: 0.50,
+        outputUsd: 25.0,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes: "Anthropic's new flagship Opus; prices identically to Opus 4.8 (no launch premium).",
+        sourceNote:
+          "Verified on Anthropic's official Claude API pricing page on 2026-07-25. Uses the same newer tokenizer as Opus 4.8 (~30% more tokens for the same text vs. pre-4.7 models).",
+        effectiveDate: "2026-07-25",
+      },
       {
         model: "Claude Opus 4.8 (Standard)",
         tier: "Direct",
