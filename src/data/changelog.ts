@@ -23,6 +23,25 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-26",
+    title: "MiniMax added, new Qwen and Grok/GPT-5.6 Foundry lanes, GLM and Mistral cache rates, corrected GPT-5.2/5.3 cache figures",
+    tag: "pricing",
+    body: [
+      "Added a new MiniMax provider lane: MiniMax M2.5 and MiniMax 3 are resold on Microsoft Foundry as Data Zone-only serverless listings ($0.33/M input, $1.32/M output on both; cached input $0.033/M for M2.5 and $0.066/M for MiniMax 3), the same Data Zone-only situation as the GLM family — no Global-tier meter is published for either model.",
+      "Added Qwen3.7 Flash, a new cheapest Qwen lane, at $0.10/M input and $0.40/M output (the 32K–256K context band, chosen to match the band already tracked for the existing Qwen3.6 Flash row so the two are directly comparable; the full published ladder runs $0.03/$0.13 at ≤32K up to $0.20/$0.80 at 256K–1M). Cached input is derived at 10% of input ($0.01/M), the same convention used across the rest of the Qwen family.",
+      "Added two new official Foundry lanes for already-tracked models: Grok-4.3 Data Zone ($1.375/M input, $0.22/M cached, $2.75/M output — a clean 1.1x the tracked Global rate), and GPT-5.6 Terra Long Context ($5.00/$0.50/$22.50) and GPT-5.6 Luna Long Context ($2.00/$0.20/$9.00) on the Global tier, both previously only mentioned in a sibling row's notes.",
+      "GLM-5.1 and GLM-5.2's Direct-lane rows now carry Z.ai's officially published cached-input rate ($0.26/M) and are relabeled 'Z.ai direct API' (from 'Fireworks direct API'), making the family's Direct lane internally consistent — Z.ai is the developer's own first-party API and its input/output rates already matched exactly. Mistral Medium 3.5's direct-API row now carries a derived cached-input rate ($0.15/M) based on Mistral's published -90%-off-input cache rule; both Foundry tiers remain uncached, confirmed against the Azure Retail Prices API.",
+      "Corrected three rounded cached/input figures to their exact Azure meter values: GPT-5.3 Codex/Chat and GPT-5.2/Codex (Global) cached input from $0.18/M to $0.175/M, and GPT-5.2/Codex (Data Zone) input from $1.93/M to $1.925/M and cached input from $0.20/M to $0.1925/M.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — Foundry Models query", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Foundry Models'" },
+      { label: "Alibaba Cloud Model Studio pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "Z.ai official pricing", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Mistral API pricing", href: "https://mistral.ai/pricing/api" },
+    ],
+    sourcesVerifiedOn: "2026-07-26",
+  },
+  {
     date: "2026-07-25",
     title: "Claude Opus 5 added — new Anthropic flagship, same pricing as Opus 4.8",
     tag: "model",

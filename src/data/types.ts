@@ -18,6 +18,7 @@ export type ProviderSlug =
   | "xai"
   | "qwen"
   | "mistral"
+  | "minimax"
   | "embeddings";
 
 /**
