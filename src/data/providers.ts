@@ -181,13 +181,26 @@ export const providers: Provider[] = [
       },
       {
         model: "DeepSeek-V4 Pro",
+        tier: "DataZone",
+        inputUsd: 1.91,
+        cachedUsd: 0.16,
+        outputUsd: 3.83,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes: "First-party Foundry Data Zone deployment — slightly cheaper than the Fireworks-hosted Data Zone lane below ($1.925/$0.165/$3.828).",
+        sourceNote:
+          "Azure Retail Prices API, product \"Azure Deepseek Models\": 'V4 Pro Inp DZ Tokens' $0.00191/1K, 'V4 Pro cached DZ Tokens' $0.00016/1K (effective 2026-07-01), 'V4 Pro Outp DZ Tokens' $0.00383/1K, consistent across 22 commercial regions. Captured 2026-07-27.",
+        effectiveDate: "2026-07-27",
+      },
+      {
+        model: "DeepSeek-V4 Pro",
         host: "Fireworks-hosted",
         tier: "DataZone",
         inputUsd: 1.925,
         cachedUsd: 0.165,
         outputUsd: 3.828,
         confidence: "official",
-        notes: "~10% above the Fireworks direct rate: the Data Zone premium.",
+        notes: "~10% above the Fireworks direct rate: the Data Zone premium. This is the Fireworks-hosted lane; a cheaper first-party Foundry Data Zone deployment also exists (see above).",
         sourceNote: "Fireworks official live pricing page.",
         effectiveDate: CAPTURED,
       },
@@ -465,7 +478,7 @@ export const providers: Provider[] = [
         cachedUsd: 0.55,
         outputUsd: 33.0,
         confidence: "official",
-        notes: "~10% Data Zone premium over Global.",
+        notes: "This is the US/EU data zone rate (1.10x Global). APAC data-zone regions (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) price higher, at 1.20x Global: $6.00/M input, $0.60/M cached, $36.00/M output.",
         sourceNote: "Azure OpenAI pricing page.",
         effectiveDate: CAPTURED,
       },
@@ -511,6 +524,7 @@ export const providers: Provider[] = [
         cachedUsd: 0.1925,
         outputUsd: 15.4,
         confidence: "official",
+        notes: "This is the US/EU data zone rate (1.10x Global). APAC data-zone regions (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) price higher, at 1.20x Global: $2.10/M input, $0.21/M cached, $16.80/M output.",
         sourceNote:
           "Azure OpenAI pricing page. Input and cached input re-verified against the Azure Retail Prices API (serviceName 'Foundry Models'), captured 2026-07-26: exact meter values are $1.925/M input and $0.1925/M cached input, correcting the earlier rounded $1.93/$0.2. Output ($15.40/M) was already exact.",
         effectiveDate: CAPTURED,
@@ -522,6 +536,15 @@ export const providers: Provider[] = [
         tone: "info",
         body: [
           "Global routes to any datacenter: cheapest, highest throughput. Data Zone pins routing to US or EU and adds ~10%. Regional pins to one region and is the most restrictive and priciest. Pick Global unless data residency forces otherwise. The premium buys geography, not capability.",
+        ],
+      },
+      {
+        title: "Data Zone is two prices, not one — APAC costs more",
+        tone: "warning",
+        body: [
+          "For Microsoft's first-party OpenAI lines, \"Data Zone\" isn't a single premium. Two disjoint region sets carry different rates: US/EU data zone (centralus, eastus, eastus2, francecentral, germanywestcentral, northcentralus, polandcentral, southcentralus, spaincentral, swedencentral, westeurope, westus, westus3, and on some models northeurope) bills at exactly 1.10x Global, while APAC data zone (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) bills at exactly 1.20x Global. The APAC rows are effective 2026-06-01, added roughly six months after the US/EU rows for GPT-5.2.",
+          "Concretely: GPT-5.2 Data Zone runs $1.925/$0.1925/$15.40 in US/EU but $2.10/$0.21/$16.80 in APAC; GPT-5.5 short-context runs $5.50/$0.55/$33.00 in US/EU but $6.00/$0.60/$36.00 in APAC (long-context scales the same way). A customer deploying in an APAC region pays a real 20% premium over Global, not the 10% the catalog's single Data Zone row implies — budget accordingly.",
+          "GPT-5.3 chat and the entire GPT-5.6 family (Sol/Terra/Luna) have no APAC data-zone rows at all yet — Data Zone there is still a single US/EU-only price. And this split is exclusive to Microsoft's first-party OpenAI-hosted lines: Grok, Kimi, GLM, MiniMax, Mistral, and DeepSeek (both native and Fireworks-hosted) all publish a single Data Zone rate with no APAC surcharge. Captured from the Azure Retail Prices API on 2026-07-27.",
         ],
       },
       {
@@ -1109,6 +1132,13 @@ export const providers: Provider[] = [
         tone: "info",
         body: [
           "For code indexing plus RAG: a dedicated embedding model (Cohere embed-v4), a vector store (LanceDB), then a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) over the retrieved chunks.",
+        ],
+      },
+      {
+        title: "Foundry Data Zone for embeddings is also two prices",
+        tone: "warning",
+        body: [
+          "The rows above are OpenAI's Global rate. On Microsoft Foundry, text-embedding-3-large and text-embedding-3-small each carry two Data Zone prices, not one: US/EU regions bill 1.10x Global ($0.143/M and $0.022/M), APAC regions (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) bill 1.20x Global ($0.156/M and $0.024/M). Same split seen across Microsoft's first-party OpenAI lines; captured from the Azure Retail Prices API on 2026-07-27.",
         ],
       },
     ],
