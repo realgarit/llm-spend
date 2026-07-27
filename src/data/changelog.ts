@@ -23,6 +23,26 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-27",
+    title: "APAC Data Zone carries a 1.20x premium, not 1.10x, on first-party OpenAI lines",
+    tag: "pricing",
+    body: [
+      "A full sweep of the Azure Retail Prices API turned up a region split the catalog's single Data Zone row per model had been hiding: for Microsoft's first-party OpenAI lines, Data Zone is two prices, not one. US/EU data-zone regions bill the already-tracked 1.10x Global premium, but APAC data-zone regions (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) bill a separate 1.20x Global premium, effective 2026-06-01. Concretely: GPT-5.2 Data Zone runs $1.925/$0.1925/$15.40 per M in US/EU but $2.10/$0.21/$16.80 in APAC; GPT-5.5 runs $5.50/$0.55/$33.00 in US/EU but $6.00/$0.60/$36.00 in APAC (long-context and the text-embedding-3-large/small rows scale the same way). GPT-5.3 chat and the whole GPT-5.6 family (Sol/Terra/Luna) have no APAC data-zone rows yet, and no third-party family (Grok, Kimi, GLM, MiniMax, Mistral, DeepSeek) shows this split at all — it's exclusive to Microsoft's first-party OpenAI-hosted lines. A customer deploying in an APAC region should budget for a real 20% Foundry premium, not the 10% a single Data Zone number implies.",
+      "Added a new native DeepSeek-V4 Pro Data Zone lane at $1.91/M input, $0.16/M cached, $3.83/M output — a first-party Foundry deployment distinct from the Fireworks-hosted Data Zone lane already listed, and slightly cheaper than it ($1.925/$0.165/$3.828).",
+      "Everything else re-verified unchanged: a full sweep of the Foundry price feed plus the direct-API pricing pages for every tracked provider found no rate changes. Grok 4.5, any Qwen serverless per-token meter, and any Claude/Anthropic meter still have no Foundry listing at all, and no meter in the feed carries an effective date on or after 2026-08-01 — the anticipated non-Global price increase has not yet appeared. Qwen3.7 Max and Plus's promotional discounts are still live, and Claude Sonnet 5's introductory pricing still runs through 2026-08-31.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — Foundry Models", href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27" },
+      { label: "Anthropic — model pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
+      { label: "DeepSeek — API pricing", href: "https://api-docs.deepseek.com/quick_start/pricing/" },
+      { label: "Z.ai — pricing", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Alibaba Model Studio — model pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "xAI — models and pricing", href: "https://docs.x.ai/docs/models" },
+      { label: "Google — Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-07-27",
+  },
+  {
     date: "2026-07-26",
     title: "MiniMax added, new Qwen and Grok/GPT-5.6 Foundry lanes, GLM and Mistral cache rates, corrected GPT-5.2/5.3 cache figures",
     tag: "pricing",
