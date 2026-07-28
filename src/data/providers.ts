@@ -780,9 +780,9 @@ export const providers: Provider[] = [
         cachedUsd: 0.22,
         outputUsd: 2.75,
         confidence: "official",
-        notes: "Data Zone premium: exactly 1.1x the Global rate on all three meters.",
+        notes: "Data Zone premium: exactly 1.1x the Global rate on all three meters. Long-context (≥200K prompt) DZ meters also exist, billing at $2.75 in / $5.50 out / $0.44 cached per M.",
         sourceNote:
-          "Azure Retail Prices API '4.3 Inp/Cached Inp/Outp DZ' meters, effective 2026-05-01, captured 2026-07-26: $1.375/M input, $0.22/M cached input, $2.75/M output — a clean 1.1x the tracked Global rate ($1.25/$0.20/$2.50).",
+          "Azure Retail Prices API '4.3 Inp/Cached Inp/Outp DZ' meters, effective 2026-05-01, captured 2026-07-26: $1.375/M input, $0.22/M cached input, $2.75/M output — a clean 1.1x the tracked Global rate ($1.25/$0.20/$2.50). Long-context 'L' DZ meters re-verified 2026-07-28: '4.3 Inp DZ L Tokens' $0.00275/1K ($2.75/M), '4.3 Cached Inp DZ L Tokens' $0.00044/1K ($0.44/M), '4.3 Outp DZ L Tokens' $0.0055/1K ($5.50/M) — matching the Global long-context row's 2x pattern at the same 1.1x DZ premium.",
         effectiveDate: "2026-07-26",
       },
       {
@@ -972,7 +972,7 @@ export const providers: Provider[] = [
         confidence: "official",
         notes: "Foundry serverless Global tier; no cached-input meter published.",
         sourceNote:
-          "Azure Retail Prices API 'MM3.5 Inp/Outp glbl' meters at $0.0015/1K and $0.0075/1K ($1.50/M and $7.50/M), effective 2026-07-01, captured 2026-07-23. Announced via the Microsoft–Mistral partnership on 2026-07-21. No cached-input meter published on any tier.",
+          "Azure Retail Prices API 'MM3.5 Inp/Outp glbl' meters at $0.0015/1K and $0.0075/1K ($1.50/M and $7.50/M), effective 2026-06-01 across 44 regions (including all 9 APAC regions); the only 2026-07-01 Global row is the malaysiawest region onboarding at the same price. Captured 2026-07-23, date corrected 2026-07-28. Announced via the Microsoft–Mistral partnership on 2026-07-21. No cached-input meter published on any tier.",
         effectiveDate: "2026-07-23",
       },
       {
