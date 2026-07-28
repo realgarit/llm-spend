@@ -23,6 +23,22 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-28",
+    title: "Provenance fixes: Mistral Medium 3.5 Global effective date, Grok-4.3 Data Zone long-context rates documented",
+    tag: "methodology",
+    body: [
+      "Corrected the Mistral Medium 3.5 Foundry Global row's sourceNote: the 'MM3.5 Inp/Outp glbl' meters are effective 2026-06-01 across 44 regions (including all 9 APAC regions), not 2026-07-01 as previously stated — the only 2026-07-01 Global row is the malaysiawest region onboarding at the same price. No prices changed; this is a documentation-only correction.",
+      "Documented the Grok-4.3 Data Zone long-context rates, which exist alongside the already-tracked Global long-context note but had no Data Zone equivalent: $2.75/M input, $0.44/M cached input, $5.50/M output — a clean 1.1x the Global long-context rate ($2.50/$0.40/$5.00), consistent with the headline Data Zone premium. Headline Grok-4.3 Data Zone prices ($1.375/$0.22/$2.75) are unchanged.",
+      "A full sweep of the Azure Retail Prices API found no new models and no price changes: Grok 4.5, any Qwen serverless per-token meter, and any Claude/Anthropic meter are all still absent from Foundry, and no meter carries an effectiveStartDate on or after 2026-08-01 — the anticipated non-Global price increase has not yet appeared.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — Foundry Models sweep (2026-07-28)", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27" },
+      { label: "xAI pricing (Grok lineup: 4.3 → 4.5, no 4.4)", href: "https://docs.x.ai/developers/pricing" },
+      { label: "Mistral pricing", href: "https://mistral.ai/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-07-28",
+  },
+  {
     date: "2026-07-27",
     title: "APAC Data Zone carries a 1.20x premium, not 1.10x, on first-party OpenAI lines",
     tag: "pricing",
