@@ -23,6 +23,27 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-07-29",
+    title: "Cohere Embed v4 gains officially metered Foundry lanes; GLM-5-Turbo and MiniMax's current lineup added",
+    tag: "pricing",
+    body: [
+      "Cohere Embed v4 is now shown on Microsoft Foundry Global ($0.12/M) and Data Zone ($0.132/M), both officially metered. Cohere itself no longer publishes a per-token Embed rate — its own pricing page now shows only dedicated Model Vault instances — so the direct-lane figure is marked derived rather than official; Azure's meter is currently the only published source for the $0.12/M rate.",
+      "Added GLM-5-Turbo at $1.20/M input, $0.24/M cached input, $4.00/M output — priced between GLM-5 and GLM-5.1/5.2, with a 200K context window. It is Z.ai direct only; no Foundry meter exists for it.",
+      "Added MiniMax M3 and MiniMax M2.7 as new direct-API lanes, both at $0.30/M input, $0.06/M cached input, $1.20/M output. MiniMax M2.5, already tracked on Foundry, is now listed as a legacy model on MiniMax's own pricing page. M3's rate carries a 'Permanent 50% off' label with the list price struck through at exactly 2x and no stated end date.",
+      "A full Foundry sweep on 2026-07-29 found no price change to any of the roughly 43 already-tracked rows, and no meter with an effective date on or after 2026-08-01.",
+    ],
+    sources: [
+      { label: "Azure Retail Prices API — Foundry Models meters", href: "https://prices.azure.com/api/retail/prices" },
+      { label: "Z.ai pricing", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Z.ai GLM-5-Turbo model docs", href: "https://docs.z.ai/guides/llm/glm-5-turbo" },
+      { label: "MiniMax pay-as-you-go pricing", href: "https://platform.minimax.io/docs/guides/pricing-paygo" },
+      { label: "Cohere pricing", href: "https://cohere.com/pricing" },
+      { label: "Cohere pricing FAQ", href: "https://docs.cohere.com/docs/how-does-cohere-pricing-work" },
+      { label: "Internet Archive — Cohere pricing, 2025-07-16", href: "https://web.archive.org/web/20250716175654/https://cohere.com/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-07-29",
+  },
+  {
     date: "2026-07-28",
     title: "Provenance fixes: Mistral Medium 3.5 Global effective date, Grok-4.3 Data Zone long-context rates documented",
     tag: "methodology",

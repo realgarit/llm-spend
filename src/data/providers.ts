@@ -255,6 +255,7 @@ export const providers: Provider[] = [
     intro: [
       "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
       "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
+      "GLM-5-Turbo sits between GLM-5 and 5.1/5.2 at $1.20/M input and $4.00/M output, and is Z.ai-direct only with no Foundry meter.",
     ],
     entries: [
       {
@@ -313,6 +314,21 @@ export const providers: Provider[] = [
         sourceNote:
           "Z.ai official pricing page, captured 2026-07-25: input $1, cached input $0.2, output $3.2 per 1M tokens. Model page lists a 200K window and 128K max output. The 'Limited-time Free' marker on that page applies only to the separate Cached Input Storage column, not to these rates.",
         effectiveDate: CAPTURED,
+      },
+      {
+        model: "GLM-5-Turbo",
+        host: "Z.ai direct API",
+        tier: "Direct",
+        inputUsd: 1.2,
+        cachedUsd: 0.24,
+        outputUsd: 4.0,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
+        confidence: "official",
+        notes: "Agentic / tool-calling variant priced between GLM-5 and GLM-5.1/5.2; no Foundry meter, so Z.ai direct is the only lane.",
+        sourceNote:
+          "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-07-29: $1.20/M input, $0.24/M cached input, $4.00/M output. The model page (docs.z.ai/guides/llm/glm-5-turbo) lists a 200K window and 128K max output and positions it as optimized for agentic long-chain execution and high-throughput tool calling. A full sweep of Azure's Foundry catalog on 2026-07-29 found no GLM-5-Turbo meter — only GLM 5, 5.1 and 5.2 are resold there.",
+        effectiveDate: "2026-07-29",
       },
       {
         model: "GLM-5.1",
@@ -1024,9 +1040,10 @@ export const providers: Provider[] = [
     slug: "minimax",
     name: "MiniMax",
     org: "MiniMax AI",
-    tagline: "MiniMax M2.5 and MiniMax 3 are resold on Microsoft Foundry as Data Zone-only serverless listings, the same situation as the GLM family.",
+    tagline: "MiniMax M2.5 and MiniMax 3 are resold on Microsoft Foundry as Data Zone-only serverless listings; the direct API adds M2.7 and M3 as the current lineup for comparison.",
     intro: [
       "MiniMax's M2.5 and MiniMax 3 models are resold on Microsoft Foundry exclusively as Data Zone serverless listings — there is no published Global-tier meter for either model, the same situation as the GLM family. Both carry an officially published cached-input meter.",
+      "MiniMax's own direct API is now shown alongside those Foundry lanes as the comparison baseline. On MiniMax's pricing page, M2.5 has moved to a collapsed 'Legacy Models' section, while M2.7 and MiniMax M3 are the current generation.",
     ],
     entries: [
       {
@@ -1037,9 +1054,10 @@ export const providers: Provider[] = [
         cachedUsd: 0.033,
         outputUsd: 1.32,
         confidence: "official",
-        notes: "Foundry Data Zone-only listing; no Global-tier meter published.",
+        notes:
+          "Foundry Data Zone-only listing; no Global-tier meter published. MiniMax now lists M2.5 under 'Legacy Models' on its own pricing page, with M2.7 and MiniMax M3 as the current generation.",
         sourceNote:
-          "Azure Retail Prices API 'FW MiniMax M2.5 Inp/Cache/Outp DZ' meters at $0.00033/1K, $0.000033/1K, and $0.00132/1K ($0.33/M, $0.033/M, and $1.32/M), effective 2026-06-01, captured 2026-07-26.",
+          "Azure Retail Prices API 'FW MiniMax M2.5 Inp/Cache/Outp DZ' meters at $0.00033/1K, $0.000033/1K, and $0.00132/1K ($0.33/M, $0.033/M, and $1.32/M), effective 2026-06-01, captured 2026-07-26. MiniMax's own pricing page (platform.minimax.io/docs/guides/pricing-paygo), checked 2026-07-29, moved M2.5 into a collapsed 'Legacy Models' section; the Foundry meter is unchanged.",
         effectiveDate: "2026-07-26",
       },
       {
@@ -1055,6 +1073,34 @@ export const providers: Provider[] = [
           "Azure Retail Prices API 'FW MiniMax 3 Inp/Cache/Outp DZ' meters at $0.00033/1K, $0.000066/1K, and $0.00132/1K ($0.33/M, $0.066/M, and $1.32/M), effective 2026-06-01, captured 2026-07-26.",
         effectiveDate: "2026-07-26",
       },
+      {
+        model: "MiniMax M3",
+        host: "MiniMax direct API",
+        tier: "Direct",
+        inputUsd: 0.3,
+        cachedUsd: 0.06,
+        outputUsd: 1.2,
+        confidence: "official",
+        notes:
+          "Current flagship; rates shown are the ≤512K input band — above 512K it bills $0.60/M input, $0.12/M cached, $2.40/M output. The Foundry Data Zone lane is exactly 1.1x these rates. A 'priority' service tier bills 1.5x.",
+        sourceNote:
+          "MiniMax official pricing page (platform.minimax.io/docs/guides/pricing-paygo), captured 2026-07-29: ≤512K input band $0.30/M input, $0.06/M cache read, $1.20/M output; >512K band $0.60/$0.12/$2.40. The page labels these rates 'Permanent 50% off' with the struck-through list price at exactly 2x ($0.60/$0.12/$2.40 for the ≤512K band) and states no end date. Foundry's 'FW MiniMax 3' Data Zone meters are 1.1x the discounted rate, not the list rate. No cache-write dimension is published for M3.",
+        effectiveDate: "2026-07-29",
+      },
+      {
+        model: "MiniMax M2.7",
+        host: "MiniMax direct API",
+        tier: "Direct",
+        inputUsd: 0.3,
+        cachedUsd: 0.06,
+        outputUsd: 1.2,
+        confidence: "official",
+        notes:
+          "Current-generation model with no Foundry meter — direct API only. A '-highspeed' variant bills $0.60/M input and $2.40/M output at the same $0.06/M cache read.",
+        sourceNote:
+          "MiniMax official pricing page (platform.minimax.io/docs/guides/pricing-paygo), captured 2026-07-29: $0.30/M input, $0.06/M cache read, $1.20/M output, plus a $0.375/M cache-write charge this catalog's schema does not model. Unlike M3, M2.7 carries no 'Permanent 50% off' label. A full Azure Foundry sweep on 2026-07-29 found no MiniMax M2.7 meter on any tier.",
+        effectiveDate: "2026-07-29",
+      },
     ],
     quirks: [
       {
@@ -1062,6 +1108,13 @@ export const providers: Provider[] = [
         tone: "info",
         body: [
           "Neither MiniMax M2.5 nor MiniMax 3 has a published Global-tier meter on Microsoft Foundry — Data Zone is the only serverless tier, matching the pattern already seen with the GLM family. Both share the same $0.33/M input and $1.32/M output; MiniMax 3 doubles the cached-input rate to $0.066/M versus M2.5's $0.033/M.",
+        ],
+      },
+      {
+        title: "'Permanent 50% off' is still a promo label",
+        tone: "warning",
+        body: [
+          "MiniMax presents M3's rates as a permanent 50% discount, with the list price shown struck through at exactly 2x and no stated end date. Foundry's Data Zone meters track the discounted rate at 1.1x, so if the discount ever lapses, both lanes would move together.",
         ],
       },
     ],
@@ -1081,10 +1134,37 @@ export const providers: Provider[] = [
         inputUsd: 0.12,
         cachedUsd: null,
         outputUsd: 0,
+        confidence: "derived",
+        notes:
+          "Best RAG / code-retrieval pick. Matryoshka dims 256/512/1024/1536 (default 1536); input_type query/document distinction. Cohere no longer publishes a per-token Embed rate on its own pricing page; the figure is corroborated by Microsoft's live Foundry meter, which reads exactly $0.12/M.",
+        sourceNote:
+          "Cohere delisted per-token Embed pricing from cohere.com/pricing between 2025-07-16 and 2025-08-09; the 2025-07-16 Internet Archive snapshot still shows $0.12 per 1M tokens for Embed 4. cohere.com/pricing now lists only Model Vault dedicated-instance rates (Embed 4 Small $4.00/hr, Embed 4 Medium $5.00/hr) and docs.cohere.com points back to that page. Rate retained because Azure's 'Embed v4 Txt Glbl Tokens' meter reads exactly $0.00012/1K ($0.12/M), captured 2026-07-29. Downgraded from official to derived: no first-party Cohere page publishes this rate today.",
+        effectiveDate: "2026-07-29",
+      },
+      {
+        model: "Cohere Embed v4",
+        tier: "Global",
+        inputUsd: 0.12,
+        cachedUsd: null,
+        outputUsd: 0,
         confidence: "official",
-        notes: "Best RAG / code-retrieval pick. Matryoshka dims 256/512/1024/1536 (default 1536); input_type query/document distinction.",
-        sourceNote: "Approximate published rate (~$0.12/M).",
-        effectiveDate: CAPTURED,
+        notes:
+          "Same $0.12/M as the direct lane but officially metered — currently the only published source for this rate; image embeddings bill separately at $0.47/M image tokens.",
+        sourceNote:
+          "Azure Retail Prices API 'Embed v4 Txt Glbl Tokens' at $0.00012/1K ($0.12/M) across 39 commercial regions, effective 2026-02-01, captured 2026-07-29. Companion 'Embed v4 Img Glbl Tokens' meter is $0.00047/1K ($0.47/M). US Gov regions price higher ($0.15/M) and are excluded per the commercial-majority convention.",
+        effectiveDate: "2026-02-01",
+      },
+      {
+        model: "Cohere Embed v4",
+        tier: "DataZone",
+        inputUsd: 0.132,
+        cachedUsd: null,
+        outputUsd: 0,
+        confidence: "official",
+        notes: "Exactly 1.1x the Global rate, the standard Data Zone premium.",
+        sourceNote:
+          "Azure Retail Prices API 'Embed v4 Txt DZ Tokens' at $0.000132/1K ($0.132/M) across 21 commercial regions, effective 2025-11-01, captured 2026-07-29. Companion 'Embed v4 Img DZ Tokens' meter is $0.000517/1K ($0.517/M). US Gov regions ($0.165/M) excluded.",
+        effectiveDate: "2025-11-01",
       },
       {
         model: "OpenAI text-embedding-3-large",
