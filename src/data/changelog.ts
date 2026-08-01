@@ -23,6 +23,20 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-01",
+    title: "Qwen3.6 Max Preview receives an official deprecation date",
+    tag: "model",
+    body: [
+      "Alibaba Model Studio now schedules the tracked qwen3.6-max-preview model for deprecation on October 10, 2026, with qwen3.7-max as the documented replacement. The catalog keeps the existing preview row for the time being and flags the deadline rather than removing a still-available model early.",
+      "The current International pricing is unchanged: $1.30/M input and $7.80/M output for the ≤128K band tracked here (128K–256K remains $2/$12). No new Microsoft Foundry serverless token meter was found for Qwen in the 2026-08-01 sweep.",
+    ],
+    sources: [
+      { label: "Alibaba Model Studio model lifecycle", href: "https://www.alibabacloud.com/help/en/model-studio/model-depreciation" },
+      { label: "Alibaba Model Studio model pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-01",
+  },
+  {
     date: "2026-07-29",
     title: "Cohere Embed v4 gains officially metered Foundry lanes; GLM-5-Turbo and MiniMax's current lineup added",
     tag: "pricing",
