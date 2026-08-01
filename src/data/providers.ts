@@ -932,9 +932,10 @@ export const providers: Provider[] = [
         cachedConfidence: "derived",
         outputUsd: 7.8,
         confidence: "official",
-        notes: "Thinking-only preview; rates shown are the ≤128K tier (128K-256K bills $2/$12). Superseded as flagship by Qwen3.7 Max.",
+        notes:
+          "Thinking-only preview; rates shown are the ≤128K tier (128K-256K bills $2/$12). Scheduled for deprecation on 2026-10-10; Alibaba lists Qwen3.7 Max as the replacement.",
         sourceNote:
-          "Alibaba Cloud Model Studio pricing page, International endpoint. Cached input derived as 10% of input per the official context-cache doc, which lists this model as supported.",
+          "Alibaba Cloud Model Studio pricing page, International endpoint, re-verified 2026-08-01. Cached input derived as 10% of input per the official context-cache doc, which lists this model as supported. Alibaba's official model-lifecycle page schedules qwen3.6-max-preview for deprecation on 2026-10-10 and names qwen3.7-max as the replacement.",
         effectiveDate: "2026-07-19",
       },
     ],
