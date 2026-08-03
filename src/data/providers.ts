@@ -391,6 +391,7 @@ export const providers: Provider[] = [
     tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type and Responses-API-only variants.",
     intro: [
       "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and now has official Azure Foundry meters confirming the 1:1 pattern, including cached-input and cache-write meters plus Data Zone (+10%) and long-context tiers.",
+      "That 1:1 parity broke for two of the three GPT-5.6 variants on 2026-07-30, when OpenAI cut its direct-API rates for Terra by 20% (to $2.00/$0.20/$12.00) and Luna by 80% (to $0.20/$0.02/$1.20). As of the 2026-08-04 sweep, the corresponding Azure Foundry Global meters had not moved, so Foundry now runs at a premium over direct for those two variants — about 1.25x on Terra and roughly 5x on Luna. Sol is unaffected; both its direct and Foundry rates remain $5.00/$0.50/$30.00.",
     ],
     entries: [
       {
@@ -579,6 +580,13 @@ export const providers: Provider[] = [
         tone: "warning",
         body: [
           "GPT-5.6 bills cache writes at 1.25x the uncached input rate (was the standard input rate). Reads stay ~90% off. Factor the write premium into high-churn prompts.",
+        ],
+      },
+      {
+        title: "Terra and Luna: Foundry now costs more than direct",
+        tone: "warning",
+        body: [
+          "OpenAI cut GPT-5.6 Terra and Luna's direct-API rates on 2026-07-30 — Terra by 20% (to $2.00/$0.20/$12.00), Luna by 80% (to $0.20/$0.02/$1.20) — but the matching Azure Foundry Global meters had not moved as of the 2026-08-04 sweep. The 1:1 parity that held since GA now only holds for Sol ($5.00/$0.50/$30.00 either way); Foundry runs about 1.25x direct on Terra and roughly 5x direct on Luna. Watch the Foundry meters for a matching cut before assuming parity again.",
         ],
       },
       {
@@ -846,9 +854,10 @@ export const providers: Provider[] = [
     slug: "qwen",
     name: "Qwen",
     org: "Alibaba",
-    tagline: "Qwen3.7 flagships under limited-time promo rates, an officially documented cache rule — but on Microsoft Foundry it's GPU-hour managed compute only, no per-token meter.",
+    tagline: "Qwen3.8 Max is now the flagship at a plain $2/$6 per-token rate, above Qwen3.7 Max's 50%-off promo — but on Microsoft Foundry it's still GPU-hour managed compute only, no per-token meter.",
     intro: [
-      "Alibaba's current flagships are the Qwen3.7 family (Max and Plus), currently sold at limited-time promotional discounts with no published end date; the Qwen 3.6 line (Plus, Flash, Max preview) remains listed at stable rates. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
+      "Qwen3.8 Max is now Alibaba's flagship, GA with a plain $2/M input, $6/M output rate — no promotional discount. Qwen3.7 Max remains available just below it at a limited-time 50%-off promo rate ($1.25/$3.75 effective) with no published end date, alongside Qwen3.7 Plus at 20% off; the Qwen3.6 line (Plus, Flash) remains listed at stable rates. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint.",
+      "Qwen3.6 Max Preview is scheduled for deprecation on 2026-10-10, with Qwen3.7 Max named as its replacement. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
     ],
     entries: [
       {
