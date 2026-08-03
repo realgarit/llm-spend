@@ -436,9 +436,10 @@ export const providers: Provider[] = [
         cachedUsd: 0.25,
         outputUsd: 15.0,
         confidence: "official",
-        notes: "Balanced production tier. GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
+        notes:
+          "Balanced production tier. GA 2026-07-09. OpenAI cut the direct-API rate 20% on 2026-07-30 (now $2.00/$0.20/$12.00 direct); this Foundry meter had not followed as of the 2026-08-04 sweep, so Azure now runs about 1.25x direct.",
         sourceNote:
-          "Azure Retail Prices API 'Foundry Models' meters (5.6 terra Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($5/$0.50/$22.50) meters also published.",
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 terra Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($5/$0.50/$22.50) meters also published. Re-swept 2026-08-04: meter unchanged at $2.50/$0.25/$15.00, still effective 2026-07-01. OpenAI's changelog confirms a direct-API cut effective 2026-07-30 to $2.00/$0.20/$12.00 (developers.openai.com/api/docs/pricing, developers.openai.com/api/docs/changelog) — breaks the Foundry=direct 1:1 parity that had held since 2026-07-21.",
         effectiveDate: "2026-07-21",
       },
       {
@@ -448,9 +449,10 @@ export const providers: Provider[] = [
         cachedUsd: 0.5,
         outputUsd: 22.5,
         confidence: "official",
-        notes: "Long Context tier; all meters roughly double the short-context rates.",
+        notes:
+          "Long Context tier; all meters roughly double the short-context rates. OpenAI cut the direct-API long-context rate 20% on 2026-07-30 (now $4.00/$0.40/$18.00 direct); this Foundry meter had not followed as of the 2026-08-04 sweep.",
         sourceNote:
-          "Azure Retail Prices API 'Foundry Models' meters (5.6 terra LongCo Std Gl, effective 2026-07-01; captured 2026-07-26).",
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 terra LongCo Std Gl, effective 2026-07-01; captured 2026-07-26). Re-swept 2026-08-04: meter unchanged at $5.00/$0.50/$22.50, still effective 2026-07-01. OpenAI's changelog confirms a direct-API cut effective 2026-07-30 to $4.00/$0.40/$18.00 (developers.openai.com/api/docs/pricing) — same 20% cut as the short-context Terra row; Foundry has not followed as of this sweep.",
         effectiveDate: "2026-07-26",
       },
       {
@@ -460,9 +462,10 @@ export const providers: Provider[] = [
         cachedUsd: 0.1,
         outputUsd: 6.0,
         confidence: "official",
-        notes: "Fast / cheap, high-volume. GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
+        notes:
+          "Fast / cheap, high-volume. GA 2026-07-09. OpenAI cut the direct-API rate 80% on 2026-07-30 (now $0.20/$0.02/$1.20 direct); this Foundry meter had not followed as of the 2026-08-04 sweep, so Azure now runs about 5x direct.",
         sourceNote:
-          "Azure Retail Prices API 'Foundry Models' meters (5.6 luna Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($2/$0.20/$9) meters also published.",
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 luna Std Gl, effective 2026-07-01; captured 2026-07-21). Data Zone +10% and long-context ($2/$0.20/$9) meters also published. Re-swept 2026-08-04: meter unchanged at $1.00/$0.10/$6.00, still effective 2026-07-01. OpenAI's changelog confirms a direct-API cut effective 2026-07-30 to $0.20/$0.02/$1.20 (developers.openai.com/api/docs/pricing, developers.openai.com/api/docs/changelog) — breaks the Foundry=direct 1:1 parity that had held since 2026-07-21.",
         effectiveDate: "2026-07-21",
       },
       {
@@ -472,9 +475,10 @@ export const providers: Provider[] = [
         cachedUsd: 0.2,
         outputUsd: 9.0,
         confidence: "official",
-        notes: "Long Context tier; all meters roughly double the short-context rates.",
+        notes:
+          "Long Context tier; all meters roughly double the short-context rates. OpenAI cut the direct-API long-context rate 80% on 2026-07-30 (now $0.40/$0.04/$1.80 direct); this Foundry meter had not followed as of the 2026-08-04 sweep.",
         sourceNote:
-          "Azure Retail Prices API 'Foundry Models' meters (5.6 luna LongCo Std Gl, effective 2026-07-01; captured 2026-07-26).",
+          "Azure Retail Prices API 'Foundry Models' meters (5.6 luna LongCo Std Gl, effective 2026-07-01; captured 2026-07-26). Re-swept 2026-08-04: meter unchanged at $2.00/$0.20/$9.00, still effective 2026-07-01. OpenAI's changelog confirms a direct-API cut effective 2026-07-30 to $0.40/$0.04/$1.80 (developers.openai.com/api/docs/pricing) — same 80% cut as the short-context Luna row; Foundry has not followed as of this sweep.",
         effectiveDate: "2026-07-26",
       },
       {
@@ -847,6 +851,22 @@ export const providers: Provider[] = [
       "Alibaba's current flagships are the Qwen3.7 family (Max and Plus), currently sold at limited-time promotional discounts with no published end date; the Qwen 3.6 line (Plus, Flash, Max preview) remains listed at stable rates. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
     ],
     entries: [
+      {
+        model: "Qwen3.8 Max",
+        host: "Model Studio (Intl)",
+        tier: "Direct",
+        inputUsd: 2.0,
+        cachedUsd: 0.2,
+        cachedConfidence: "derived",
+        outputUsd: 6.0,
+        contextWindow: 1_000_000,
+        confidence: "official",
+        notes:
+          "New flagship, GA (not preview); text plus image/video understanding. Single price tier across the full 1M window; thinking and non-thinking modes priced the same. Plain rate — no promotional discount, unlike Qwen3.7 Max. 1M-token free quota for 90 days.",
+        sourceNote:
+          "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-08-04 (confirmed via direct DOM inspection, not WebFetch's summarizer, per the established gotcha on this page): $2/M input, $6/M output, single 0<Token≤1M band, Non-Thinking and Thinking modes priced identically, no 'List price / Limited-time off' label. Cached input derived as 10% of input per the official context-cache rule (explicit cache hits), the same convention used across the rest of the Qwen family. A separate Global deployment-scope table on the same page prices this model lower, at $1.65/M input and $4.951/M output; the tracked lane is International, matching every other Qwen row here. Resolves the qwen3.8-max per-token-pricing watch item open since 2026-07-23.",
+        effectiveDate: "2026-08-04",
+      },
       {
         model: "Qwen3.7 Max (Promo)",
         host: "Model Studio (Intl)",
