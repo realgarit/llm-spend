@@ -23,6 +23,37 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-04",
+    title: "Qwen3.8 Max added — Alibaba's new flagship gets a per-token price",
+    tag: "model",
+    body: [
+      "Alibaba's new flagship qwen3.8-max now has published per-token pricing on Model Studio's International endpoint: $2.00/M input and $6.00/M output, a single price tier across the full 0–1M token window with Non-Thinking and Thinking modes priced identically. It is GA, not a preview label. This closes a watch item open since 2026-07-23 — until today the model was reachable only via Token Plan credits, with no published per-token rate.",
+      "Cached input is derived at 10% of input ($0.20/M) per Model Studio's published context-cache rule, the same convention used across the rest of the Qwen family. The model also carries a 1M-token free quota valid for 90 days. A separate Global deployment scope prices the model lower, at $1.65/M input and $4.951/M output; the tracked lane stays International, matching every other Qwen row in this catalog.",
+      "Qwen3.7 Max and Plus's limited-time promotional discounts remain live, and qwen3.6-max-preview's 2026-10-10 deprecation (with qwen3.7-max as the named replacement) is unaffected by this addition.",
+    ],
+    sources: [
+      { label: "Alibaba Model Studio — model pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "Alibaba Model Studio — supported models", href: "https://www.alibabacloud.com/help/en/model-studio/models" },
+    ],
+    sourcesVerifiedOn: "2026-08-04",
+  },
+  {
+    date: "2026-08-04",
+    title: "OpenAI cuts GPT-5.6 Terra and Luna direct-API prices; Microsoft Foundry has not followed",
+    tag: "pricing",
+    body: [
+      "OpenAI's official changelog confirms a direct-API price cut effective 2026-07-30: GPT-5.6 Terra costs 20% less (now $2.00/M input, $0.20/M cached, $12.00/M output; long context $4.00/$0.40/$18.00), and GPT-5.6 Luna costs 80% less (now $0.20/M input, $0.02/M cached, $1.20/M output; long context $0.40/$0.04/$1.80). Sol is unchanged at $5.00/$0.50/$30.00.",
+      "A full Azure Retail Prices API sweep run today found the Foundry serverless meters for both models unchanged: Terra Global is still $2.50/$0.25/$15.00 (long context $5.00/$0.50/$22.50) and Luna Global is still $1.00/$0.10/$6.00 (long context $2.00/$0.20/$9.00), both still effective 2026-07-01. That breaks the Foundry-matches-direct 1:1 parity that had held since 2026-07-21: Azure now runs about 1.25x direct on Terra and about 5x direct on Luna. Sol's parity is unaffected since its direct price didn't move.",
+      "No catalog rate numbers changed as part of this entry — the Foundry rows still reflect the live Foundry meters. The four affected rows' notes and sourceNotes were updated to record the direct-API cut and flag the gap; watch for the Foundry meters to follow.",
+    ],
+    sources: [
+      { label: "OpenAI — API pricing", href: "https://developers.openai.com/api/docs/pricing" },
+      { label: "OpenAI — API changelog", href: "https://developers.openai.com/api/docs/changelog" },
+      { label: "Azure Retail Prices API — GPT-5.6 Terra meters", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(meterName,%20%275.6%20terra%27)" },
+    ],
+    sourcesVerifiedOn: "2026-08-04",
+  },
+  {
     date: "2026-08-01",
     title: "Qwen3.6 Max Preview receives an official deprecation date",
     tag: "model",
