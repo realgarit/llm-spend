@@ -23,6 +23,25 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-07",
+    title: "Provenance fix: OpenAI embedding rows now cite their Foundry meter, not OpenAI's pricing page",
+    tag: "methodology",
+    body: [
+      "The three OpenAI embedding rows (text-embedding-3-large, text-embedding-3-small, text-embedding-ada-002) are Foundry Global-tier entries, but each carried a sourceNote reading only \"OpenAI pricing page.\" That citation was wrong on two counts: a Foundry Global row should cite the Azure meter that actually publishes the rate, and OpenAI's own pricing page no longer lists per-token embeddings pricing at all — confirmed by a raw DOM dump (15 pricing tables, none with an embeddings row; \"ada-002\" appears 0 times) and by Internet Archive snapshots from 2026-06-05 through 2026-08-04, none of which show an embeddings row either.",
+      "Each sourceNote now cites the live Azure Retail Prices API meter instead: 'text-embedding-3-large-glbl Tokens' at $0.00013/1K ($0.13/M) across 17 commercial regions, 'text-embedding-3-small-glbl Tokens' at $0.00002/1K ($0.02/M) across 17 regions, and 'embedding-ada-glbl Tokens' at $0.0001/1K ($0.10/M) across 15 regions — all effective 2024-06-01, captured 2026-08-07. The figures are independently corroborated by OpenAI's embeddings guide, which publishes pages-per-dollar at roughly 800 tokens/page (62,500 for -3-small, 9,615 for -3-large, 12,500 for ada-002) that invert to exactly these three rates.",
+      "Rates are unchanged — still $0.13 / $0.02 / $0.10 per M input, no output or cached price — and confidence stays official on all three rows, the same treatment already given the Cohere Embed v4 Foundry rows: the Azure meter is itself an official published per-token rate. Only the provenance shown on the site changed.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — Foundry Models embedding meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains(meterName%2C%27embedding%27)",
+      },
+      { label: "OpenAI — API pricing (no embeddings row)", href: "https://developers.openai.com/api/docs/pricing" },
+      { label: "OpenAI — embeddings guide (pages-per-dollar figures)", href: "https://developers.openai.com/api/docs/guides/embeddings" },
+    ],
+    sourcesVerifiedOn: "2026-08-07",
+  },
+  {
     date: "2026-08-04",
     title: "Qwen3.8 Max added — Alibaba's new flagship gets a per-token price",
     tag: "model",

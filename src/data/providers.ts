@@ -1203,8 +1203,9 @@ export const providers: Provider[] = [
         cachedUsd: null,
         outputUsd: 0,
         confidence: "official",
-        sourceNote: "OpenAI pricing page.",
-        effectiveDate: CAPTURED,
+        sourceNote:
+          "Azure Retail Prices API 'text-embedding-3-large-glbl Tokens' meter: $0.00013/1K ($0.13/M) across 17 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 9,615 pages per USD at ~800 tokens/page — inverting to exactly $0.13/M. US Gov Cloud bills this model under a separate 'text-embedding-3-large-regional Tokens' meter at $0.163/M, excluded per the commercial-majority convention.",
+        effectiveDate: "2024-06-01",
       },
       {
         model: "OpenAI text-embedding-3-small",
@@ -1214,8 +1215,9 @@ export const providers: Provider[] = [
         outputUsd: 0,
         confidence: "official",
         notes: "Cheapest solid option.",
-        sourceNote: "OpenAI pricing page.",
-        effectiveDate: CAPTURED,
+        sourceNote:
+          "Azure Retail Prices API 'text-embedding-3-small-glbl Tokens' meter: $0.00002/1K ($0.02/M) across 17 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 62,500 pages per USD at ~800 tokens/page — inverting to exactly $0.02/M. US Gov Cloud bills this model under a separate 'text-embedding-3-small-regional Tokens' meter at $0.025/M, excluded per the commercial-majority convention.",
+        effectiveDate: "2024-06-01",
       },
       {
         model: "OpenAI text-embedding-ada-002",
@@ -1225,8 +1227,9 @@ export const providers: Provider[] = [
         outputUsd: 0,
         confidence: "official",
         notes: "Legacy: worse than 3-small on cost and quality. Avoid.",
-        sourceNote: "OpenAI pricing page.",
-        effectiveDate: CAPTURED,
+        sourceNote:
+          "Azure Retail Prices API 'embedding-ada-glbl Tokens' meter: $0.0001/1K ($0.10/M) across 15 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 12,500 pages per USD at ~800 tokens/page — inverting to exactly $0.10/M. US Gov Cloud bills this model under a separate 'embedding-ada-regional Tokens' meter at $0.125/M, excluded per the commercial-majority convention.",
+        effectiveDate: "2024-06-01",
       },
     ],
     quirks: [
