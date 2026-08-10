@@ -23,6 +23,24 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-10",
+    title: "Qwen3.7 Max's 50% discount now has an official end date: August 31, 2026",
+    tag: "pricing",
+    body: [
+      "Alibaba Cloud's campaign page for Qwen3.8-Max (\"Qwen3.8-Max is Here\") states, in two places, that the Qwen3.7-Max limited-time 50% discount \"runs until August 31, 2026,\" and that it \"applies to all 4 billing items: Input, Output, Explicit Cache Creation, and Explicit Cache Hit.\" This is the first official end date published for a promo that has been open-ended since it launched — Model Studio's own pricing page still shows only the undated \"Limited-time 50% off\" label.",
+      "No rate change today: the tracked promo rate ($1.25/M input, $0.125/M cached, $3.75/M output) stays in effect through 2026-08-31. From 2026-09-01 it reverts to list price ($2.50/M input, $0.25/M cached, $7.50/M output) — the same day Claude Sonnet 5's introductory pricing ends.",
+      "Qwen3.7 Plus's separate 20%-off discount is unaffected by this and still carries no published end date anywhere.",
+    ],
+    sources: [
+      {
+        label: "Alibaba Cloud campaign: Qwen3.8-Max is Here (Qwen3.7-Max 50% off until Aug 31, 2026)",
+        href: "https://www.alibabacloud.com/en/campaign/qwen-discount",
+      },
+      { label: "Alibaba Model Studio — model pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-10",
+  },
+  {
     date: "2026-08-07",
     title: "Provenance fix: OpenAI embedding rows now cite their Foundry meter, not OpenAI's pricing page",
     tag: "methodology",
