@@ -887,9 +887,9 @@ export const providers: Provider[] = [
         contextWindow: 1_000_000,
         confidence: "official",
         notes:
-          "Current flagship. Effective rate under a limited-time 50% discount (list $2.50/M in, $7.50/M out); no promo end date published. Single price tier across the full 1M window; thinking and non-thinking modes priced the same.",
+          "Current flagship. Effective rate under a limited-time 50% discount (list $2.50/M in, $7.50/M out) covering all four billing items — input, output, explicit cache creation, and explicit cache hits. Discount is officially scheduled to end 2026-08-31; reverts to list ($2.50 in / $0.25 cached / $7.50 out) from 2026-09-01, the same day Claude Sonnet 5's introductory pricing ends. Single price tier across the full 1M window; thinking and non-thinking modes priced the same.",
         sourceNote:
-          "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list $2.5/$7.5 marked 'Limited-time 50% off'. Cached input derived as 10% of effective input per the official context-cache rule (explicit cache hits).",
+          "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list $2.5/$7.5 marked 'Limited-time 50% off', still with no end-date text as of a 2026-08-10 re-check. Cached input derived as 10% of effective input per the official context-cache rule (explicit cache hits). Alibaba Cloud's campaign page ('Qwen3.8-Max is Here') states, in two places, that the discount 'runs until August 31, 2026' and applies to all 4 billing items — input, output, explicit cache creation, and explicit cache hit; captured 2026-08-10.",
         effectiveDate: "2026-07-20",
       },
       {
