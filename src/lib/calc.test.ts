@@ -52,6 +52,10 @@ test("omits models that are no longer relevant to the catalog", () => {
     "Kimi K2 Thinking",
     "Gemini 3 Pro",
     "Claude Opus 4.8 (Fast Mode)",
+    "Claude Sonnet 5 (Intro)",
+    "Claude Sonnet 5 (Standard)",
+    "Claude Sonnet 5 (Foundry, Intro)",
+    "Claude Sonnet 5 (Foundry, Standard)",
   ]);
 
   const listedModels = providers.flatMap((provider) => provider.entries.map((entry) => entry.model));

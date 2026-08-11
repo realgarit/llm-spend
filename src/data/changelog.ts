@@ -23,6 +23,27 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-11",
+    title: "Claude Sonnet 5's introductory pricing made permanent — planned Sept 1 increase cancelled",
+    tag: "pricing",
+    body: [
+      "Anthropic's official @claudeai account announced on X at 9:03pm on 2026-08-10 that Claude Sonnet 5's introductory pricing — $2/M input, $0.20/M cached input, $10/M output — is now permanent: \"We launched Sonnet 5 in June at $2 per million input tokens and $10 per million output tokens through August 31, and that price will remain unchanged.\" This reverses the previously-published plan for the rate to rise to $3/M input, $0.30/M cached, $15/M output on 2026-09-01.",
+      "The catalog's separate \"Standard\" rows (Direct and the Foundry CCU estimate) have been removed, since that $3/$0.30/$15 rate will now never take effect. The two \"Intro\" rows are renamed to plain \"Claude Sonnet 5\" — the rate was never actually time-limited after all, it just stopped rising — and their notes/sourceNote now record the cancellation. Rates are unchanged: $2/M input, $0.20/M cached, $10/M output on both the Direct row and the Foundry (Global, estimate) row.",
+      "Anthropic's own pricing page had not been updated as of 2026-08-11 and still shows the old two-tier structure — \"$2/$10 through August 31, 2026\" and \"$3/$15 starting September 1, 2026\" as separate rows. Treat that as the page not having caught up to the X announcement yet, not as a contradiction; the X post is the authoritative current source until the docs page is revised.",
+    ],
+    sources: [
+      {
+        label: "Anthropic (@claudeai) on X — Claude Sonnet 5 introductory pricing made permanent",
+        href: "https://x.com/claudeai/status/2086891169217122586",
+      },
+      {
+        label: "Anthropic — Claude API pricing (not yet updated to reflect the announcement as of 2026-08-11)",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-11",
+  },
+  {
     date: "2026-08-10",
     title: "Qwen3.7 Max's 50% discount now has an official end date: August 31, 2026",
     tag: "pricing",

@@ -603,9 +603,9 @@ export const providers: Provider[] = [
     slug: "claude",
     name: "Claude",
     org: "Anthropic",
-    tagline: "1M-token Opus, intro pricing through August, caching priced as a multiplier, and now natively hosted on Microsoft Foundry with Azure billing.",
+    tagline: "1M-token Opus, Sonnet 5's launch pricing now permanent, caching priced as a multiplier, and now natively hosted on Microsoft Foundry with Azure billing.",
     intro: [
-      "Claude Opus 5 is now GA and prices identically to Opus 4.8 — both carry a 1M-token window. Intro pricing runs through 2026-08-31 for Sonnet 5; standard rate starts 2026-09-01.",
+      "Claude Opus 5 is now GA and prices identically to Opus 4.8 — both carry a 1M-token window. Sonnet 5 launched in June 2026 at $2/$0.20/$10 per M as introductory pricing through 2026-08-31, with a rise to $3/$0.30/$15 planned for 2026-09-01; Anthropic cancelled that increase on 2026-08-10, so the launch rate is now permanent.",
       "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters.",
     ],
     entries: [
@@ -630,55 +630,35 @@ export const providers: Provider[] = [
         outputUsd: 25.0,
         contextWindow: 1_000_000,
         confidence: "official",
-        notes: "Published rate (no separate intro tier — only Sonnet 5 has intro pricing).",
+        notes: "Published rate.",
         sourceNote: "Anthropic pricing page now publishes explicit cache-read rates per model.",
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Sonnet 5 (Intro)",
+        model: "Claude Sonnet 5",
         tier: "Direct",
         inputUsd: 2.0,
         cachedUsd: 0.20,
         outputUsd: 10.0,
         confidence: "official",
-        notes: "Introductory pricing through 2026-08-31.",
-        sourceNote: "Anthropic promotional pricing window. Cache hit rate explicitly $0.20/MTok.",
+        notes:
+          "Launched June 2026 at this rate as introductory pricing through 2026-08-31, with a rise to $3/$0.30/$15 planned for 2026-09-01. Anthropic cancelled that increase on 2026-08-10 and confirmed this rate is now permanent.",
+        sourceNote:
+          "Anthropic (@claudeai) on X, 2026-08-10 9:03pm: \"We're making Claude Sonnet 5's introductory pricing permanent ... that price will remain unchanged.\" (https://x.com/claudeai/status/2086891169217122586, captured 2026-08-11). Anthropic's pricing page (platform.claude.com/docs/en/about-claude/pricing) still showed the old two-tier '$2/$10 through August 31' / '$3/$15 starting September 1' structure as of this capture — the docs page hasn't caught up to the announcement yet, which is publication lag, not a contradiction. Cache hit rate explicitly $0.20/MTok.",
         effectiveDate: CAPTURED,
       },
       {
-        model: "Claude Sonnet 5 (Standard)",
-        tier: "Direct",
-        inputUsd: 3.0,
-        cachedUsd: 0.30,
-        outputUsd: 15.0,
-        confidence: "official",
-        notes: "Standard rate from 2026-09-01.",
-        sourceNote: "Anthropic pricing page. Cache hit rate explicitly $0.30/MTok. New tokenizer can inflate code token counts 1.0-1.35x vs Sonnet 4.6.",
-        effectiveDate: "2026-09-01",
-      },
-      {
-        model: "Claude Sonnet 5 (Foundry, Intro)",
+        model: "Claude Sonnet 5",
         tier: "Global",
         inputUsd: 2.0,
         cachedUsd: 0.20,
         outputUsd: 10.0,
         confidence: "estimate",
-        notes: "Hosted-on-Azure Foundry deployment, billed via CCU. Promo runs through 2026-08-31.",
+        notes:
+          "Hosted-on-Azure Foundry deployment, billed via CCU. Launched at this rate as introductory pricing through 2026-08-31; Anthropic cancelled the planned 2026-09-01 rise to $3/$0.30/$15 and confirmed this rate is now permanent.",
         sourceNote:
-          "Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates. Cache hit rate inherited from Anthropic's direct pricing ($0.20/MTok).",
+          "Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates; no Anthropic per-token meter exists in Azure's Retail Prices API, so this stays an estimate. Anthropic (@claudeai) on X, 2026-08-10: introductory pricing made permanent (see the Direct row above for the exact quote and URL), captured 2026-08-11. Cache hit rate inherited from Anthropic's direct pricing ($0.20/MTok).",
         effectiveDate: CAPTURED,
-      },
-      {
-        model: "Claude Sonnet 5 (Foundry, Standard)",
-        tier: "Global",
-        inputUsd: 3.0,
-        cachedUsd: 0.30,
-        outputUsd: 15.0,
-        confidence: "estimate",
-        notes: "Hosted-on-Azure Foundry deployment, billed via CCU. Standard rate from 2026-09-01.",
-        sourceNote:
-          "CCU price converts Anthropic's per-model rates. Cache hit rate inherited from Anthropic's direct pricing ($0.30/MTok).",
-        effectiveDate: "2026-09-01",
       },
       {
         model: "Claude Fable 5",
@@ -710,7 +690,7 @@ export const providers: Provider[] = [
         title: "Cache read rates now explicitly published",
         tone: "info",
         body: [
-          "Anthropic's pricing page now publishes explicit per-model cache hit rates (e.g., $0.50/MTok for Opus 4.8, $0.20/MTok for Sonnet 5 intro). These replace the earlier multiplier model (~10% of input). Cache writes still follow the 1.25x (5-min) / 2x (1-hour) multiplier pattern relative to base input.",
+          "Anthropic's pricing page now publishes explicit per-model cache hit rates (e.g., $0.50/MTok for Opus 4.8, $0.20/MTok for Sonnet 5). These replace the earlier multiplier model (~10% of input). Cache writes still follow the 1.25x (5-min) / 2x (1-hour) multiplier pattern relative to base input.",
         ],
       },
       {
@@ -887,7 +867,7 @@ export const providers: Provider[] = [
         contextWindow: 1_000_000,
         confidence: "official",
         notes:
-          "Current flagship. Effective rate under a limited-time 50% discount (list $2.50/M in, $7.50/M out) covering all four billing items — input, output, explicit cache creation, and explicit cache hits. Discount is officially scheduled to end 2026-08-31; reverts to list ($2.50 in / $0.25 cached / $7.50 out) from 2026-09-01, the same day Claude Sonnet 5's introductory pricing ends. Single price tier across the full 1M window; thinking and non-thinking modes priced the same.",
+          "Current flagship. Effective rate under a limited-time 50% discount (list $2.50/M in, $7.50/M out) covering all four billing items — input, output, explicit cache creation, and explicit cache hits. Discount is officially scheduled to end 2026-08-31; reverts to list ($2.50 in / $0.25 cached / $7.50 out) from 2026-09-01. Single price tier across the full 1M window; thinking and non-thinking modes priced the same.",
         sourceNote:
           "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list $2.5/$7.5 marked 'Limited-time 50% off', still with no end-date text as of a 2026-08-10 re-check. Cached input derived as 10% of effective input per the official context-cache rule (explicit cache hits). Alibaba Cloud's campaign page ('Qwen3.8-Max is Here') states, in two places, that the discount 'runs until August 31, 2026' and applies to all 4 billing items — input, output, explicit cache creation, and explicit cache hit; captured 2026-08-10.",
         effectiveDate: "2026-07-20",
