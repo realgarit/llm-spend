@@ -23,6 +23,35 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-12",
+    title: "Grok 4.6 added — xAI's new flagship, direct API only",
+    tag: "model",
+    body: [
+      "xAI released Grok 4.6 today, its new flagship model, labeled \"Latest\" in xAI's docs and superseding Grok 4.5 as the headline model. On xAI's direct API it prices at $2.00/M input, $0.50/M cached input, and $6.00/M output for prompts under 200K tokens, doubling to $4.00/M, $1.00/M, and $12.00/M above that threshold — the same long-context doubling pattern as Grok 4.5. Input and output prices are identical to Grok 4.5's, but cached input is higher ($0.50/M vs. $0.30/M).",
+      "Grok 4.6 has a 500K-token context window and accepts text and image input with text output. It is direct-API only: a full Azure Retail Prices API sweep on 2026-08-12 found zero meters referencing \"4.6\", so it is not yet available on Microsoft Foundry. The existing Grok 4.5 row is unchanged and stays listed for comparison ($2.00/$0.30/$6.00, re-verified today).",
+      "Separately, Anthropic's pricing docs page has caught up to the permanent-pricing announcement covered in the 2026-08-11 entry below: it now shows a single Claude Sonnet 5 row and states verbatim that the $2/$10 per-million rate \"is now the standard price\" and the planned September 1 increase \"will not occur.\" This closes the docs-page-lag caveat that had been carried in both Sonnet 5 sourceNotes.",
+    ],
+    sources: [
+      {
+        label: "xAI — Grok API pricing (Grok 4.6: $2.00/$0.50/$6.00 per M, doubling above 200K prompt tokens)",
+        href: "https://docs.x.ai/developers/pricing",
+      },
+      {
+        label: "xAI — API release notes (Grok 4.6 entry dated August 12, 2026)",
+        href: "https://docs.x.ai/developers/release-notes",
+      },
+      {
+        label: "xAI — models overview (Grok 4.6 listed as \"Latest\")",
+        href: "https://docs.x.ai/developers/models",
+      },
+      {
+        label: "Anthropic — Claude API pricing (Sonnet 5's $2/$10 rate now shown as standard, not introductory)",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-12",
+  },
+  {
     date: "2026-08-11",
     title: "Claude Sonnet 5's introductory pricing made permanent — planned Sept 1 increase cancelled",
     tag: "pricing",
