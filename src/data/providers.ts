@@ -644,7 +644,7 @@ export const providers: Provider[] = [
         notes:
           "Launched June 2026 at this rate as introductory pricing through 2026-08-31, with a rise to $3/$0.30/$15 planned for 2026-09-01. Anthropic cancelled that increase on 2026-08-10 and confirmed this rate is now permanent.",
         sourceNote:
-          "Anthropic (@claudeai) on X, 2026-08-10 9:03pm: \"We're making Claude Sonnet 5's introductory pricing permanent ... that price will remain unchanged.\" (https://x.com/claudeai/status/2086891169217122586, captured 2026-08-11). Anthropic's pricing page (platform.claude.com/docs/en/about-claude/pricing) still showed the old two-tier '$2/$10 through August 31' / '$3/$15 starting September 1' structure as of this capture — the docs page hasn't caught up to the announcement yet, which is publication lag, not a contradiction. Cache hit rate explicitly $0.20/MTok.",
+          "Anthropic (@claudeai) on X, 2026-08-10 9:03pm: \"We're making Claude Sonnet 5's introductory pricing permanent ... that price will remain unchanged.\" (https://x.com/claudeai/status/2086891169217122586, captured 2026-08-11) — the original announcement. Anthropic's pricing page (platform.claude.com/docs/en/about-claude/pricing) has since caught up: a 2026-08-12 raw-DOM read shows a single Sonnet 5 row ($2/M input, $2.50 5-minute cache write, $4 1-hour cache write, $0.20 cache hit, $10/M output; batch $1/$5) and states verbatim, \"The $2/$10 per million input/output token pricing for Claude Sonnet 5, announced at launch as introductory pricing through August 31, 2026, is now the standard price. The previously scheduled increase to $3/$15 per million input/output tokens on September 1, 2026 will not occur.\" Cache hit rate explicitly $0.20/MTok.",
         effectiveDate: CAPTURED,
       },
       {
@@ -657,7 +657,7 @@ export const providers: Provider[] = [
         notes:
           "Hosted-on-Azure Foundry deployment, billed via CCU. Launched at this rate as introductory pricing through 2026-08-31; Anthropic cancelled the planned 2026-09-01 rise to $3/$0.30/$15 and confirmed this rate is now permanent.",
         sourceNote:
-          "Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates; no Anthropic per-token meter exists in Azure's Retail Prices API, so this stays an estimate. Anthropic (@claudeai) on X, 2026-08-10: introductory pricing made permanent (see the Direct row above for the exact quote and URL), captured 2026-08-11. Cache hit rate inherited from Anthropic's direct pricing ($0.20/MTok).",
+          "Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates; no Anthropic per-token meter exists in Azure's Retail Prices API, so this stays an estimate. Anthropic (@claudeai) on X, 2026-08-10: introductory pricing made permanent (see the Direct row above for the exact quote and URL) — the original announcement. Anthropic's pricing page (platform.claude.com/docs/en/about-claude/pricing) has since caught up: a 2026-08-12 raw-DOM read confirms the $2/$10 rate is now the standard price and the planned September 1 increase will not occur (see the Direct row above for the verbatim quote), captured 2026-08-12. Cache hit rate inherited from Anthropic's direct pricing ($0.20/MTok).",
         effectiveDate: CAPTURED,
       },
       {
@@ -750,11 +750,26 @@ export const providers: Provider[] = [
     slug: "xai",
     name: "Grok",
     org: "xAI",
-    tagline: "Grok 4.5 is direct-API only for now; Microsoft Foundry resells the 4.x line up to Grok-4.3, which now carries a published cache meter.",
+    tagline: "Grok 4.6 is direct-API only for now; Microsoft Foundry resells the 4.x line up to Grok-4.3, which now carries a published cache meter.",
     intro: [
-      "xAI's flagship Grok 4.5 (500K context, configurable reasoning) currently ships only on xAI's own API. Microsoft Foundry hosts the older Grok line as serverless listings — currently topping out at Grok-4.3 Global — with published input/output rates and, as of the 2026-07-23 recheck, a published cached-input meter on Grok-4.3 ($0.20/M).",
+      "xAI's flagship Grok 4.6 (500K context), released 2026-08-12, currently ships only on xAI's own API, superseding Grok 4.5 as the headline model. Microsoft Foundry hosts the older Grok line as serverless listings — currently topping out at Grok-4.3 Global — with published input/output rates and, as of the 2026-07-23 recheck, a published cached-input meter on Grok-4.3 ($0.20/M).",
     ],
     entries: [
+      {
+        model: "Grok 4.6",
+        host: "xAI direct API",
+        tier: "Direct",
+        inputUsd: 2.0,
+        cachedUsd: 0.5,
+        outputUsd: 6.0,
+        contextWindow: 500_000,
+        confidence: "official",
+        notes:
+          "xAI's new flagship, released 2026-08-12 and labeled 'Latest' in xAI's docs, superseding Grok 4.5 as the headline model. 500K context; text+image input, text output. All rates double for requests with ≥200K prompt tokens ($4 input / $1 cached / $12 output). Cached input is higher than Grok 4.5's ($0.50 vs $0.30); input and output prices are identical.",
+        sourceNote:
+          "xAI's official pricing page (docs.x.ai/developers/pricing): $2/M input, $0.50/M cached input, $6/M output, 500K context, doubling to $4/$1/$12 for prompts ≥200K tokens. Release confirmed by docs.x.ai/developers/release-notes, entry dated August 12, 2026. Both pages read via raw DOM, captured 2026-08-12. No Microsoft Foundry/Azure meter exists for Grok 4.6 as of a full Azure Retail Prices API sweep the same day — 0 hits for '4.6'.",
+        effectiveDate: "2026-08-12",
+      },
       {
         model: "Grok 4.5",
         host: "xAI direct API",
