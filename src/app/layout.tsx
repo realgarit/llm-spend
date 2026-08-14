@@ -1,28 +1,38 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/site";
 
-const ibmSans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Self-hosted via next/font/local: the Azure Static Web Apps build container
+// cannot reach fonts.gstatic.com, so fetching these at build time (which the
+// Google-Fonts-backed next/font loader does) fails there even though it
+// works locally and in CI. These woff2 files are the same Google Fonts
+// assets, vendored under ./fonts and bundled directly with no network call.
+const ibmSans = localFont({
+  src: "./fonts/IBMPlexSans-Variable.woff2",
+  weight: "100 700",
+  style: "normal",
   variable: "--font-ibm-sans",
   display: "swap",
 });
 
-const ibmMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const ibmMono = localFont({
+  src: [
+    { path: "./fonts/IBMPlexMono-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/IBMPlexMono-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/IBMPlexMono-SemiBold.woff2", weight: "600", style: "normal" },
+  ],
   variable: "--font-ibm-mono",
   display: "swap",
 });
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["italic", "normal"],
+const newsreader = localFont({
+  src: [
+    { path: "./fonts/Newsreader-Variable.woff2", weight: "200 800", style: "normal" },
+    { path: "./fonts/Newsreader-Variable-Italic.woff2", weight: "200 800", style: "italic" },
+  ],
   variable: "--font-newsreader",
   display: "swap",
 });
