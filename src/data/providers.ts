@@ -150,7 +150,8 @@ export const providers: Provider[] = [
         outputUsd: 0.87,
         contextWindow: 1_000_000,
         confidence: "official",
-        notes: "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut.",
+        notes:
+          "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail.",
         sourceNote: "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate.",
         effectiveDate: CAPTURED,
       },
@@ -163,7 +164,8 @@ export const providers: Provider[] = [
         outputUsd: 0.28,
         contextWindow: 1_000_000,
         confidence: "official",
-        notes: "First-party published cache-hit, cache-miss, and output rates.",
+        notes:
+          "First-party published cache-hit, cache-miss, and output rates. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.007/$0.22/$0.66, peak $0.014/$0.44/$1.32 — see the changelog for detail.",
         sourceNote: "DeepSeek's own direct API pricing, including the published cached-input rate.",
         effectiveDate: CAPTURED,
       },
@@ -714,22 +716,36 @@ export const providers: Provider[] = [
     slug: "gemini",
     name: "Gemini",
     org: "Google",
-    tagline: "Gemini 3.6 Flash headlines the catalog's low-cost coding and agentic lane, succeeding 3.5 Flash at a lower output price.",
+    tagline: "Gemini 3.7 Flash is the new flagship, and Gemini 3.6 Flash's price is halved to match it — both $0.75/$0.075/$3.75 per M through year-end.",
     intro: [
-      "Gemini 3.6 Flash is now the catalog's headline Gemini option for lower-cost coding and agentic workloads, replacing 3.5 Flash as the primary pick at the same input price and a lower output rate. 3.5 Flash remains listed for comparison.",
+      "Gemini 3.7 Flash is now the catalog's flagship Gemini model for agentic and multimodal work. The same pricing update halved Gemini 3.6 Flash to match it exactly: both now $0.75/M input, $0.075/M cached, $3.75/M output, a promotional rate published through 2026-12-31 that reverts to $1.50/$0.15/$7.50 on 2027-01-01. Gemini 3.5 Flash remains listed for comparison, unchanged at $1.50/$0.15/$9.00.",
     ],
     entries: [
       {
+        model: "Gemini 3.7 Flash",
+        tier: "Global",
+        inputUsd: 0.75,
+        cachedUsd: 0.075,
+        outputUsd: 3.75,
+        confidence: "official",
+        notes:
+          "New flagship Flash model; same promotional structure as 3.6 Flash — $0.75/$0.075/$3.75 through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Priced identically to 3.6 Flash on every dimension.",
+        sourceNote:
+          "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14; page stamped \"Last updated 2026-08-13 UTC\", same page as the 3.6 Flash row below. Google describes it as \"Our most capable Flash model for agentic workflows and multimodal reasoning.\" The reversion date is published inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\" Batch/Flex bill at 50% of standard, Priority at 1.8x — tiers this schema does not model.",
+        effectiveDate: "2026-08-14",
+      },
+      {
         model: "Gemini 3.6 Flash",
         tier: "Global",
-        inputUsd: 1.5,
-        cachedUsd: 0.15,
-        outputUsd: 7.5,
+        inputUsd: 0.75,
+        cachedUsd: 0.075,
+        outputUsd: 3.75,
         confidence: "official",
-        notes: "Succeeds 3.5 Flash at the same input price with ~17% cheaper output.",
+        notes:
+          "Promotional rate (50% off standard pricing) through 2026-12-31; reverts to $1.50/$0.15/$7.50 per M on 2027-01-01.",
         sourceNote:
-          "Google pricing page (last updated 2026-07-21 UTC, captured 2026-07-22). Also bills a separate cache-storage dimension at $1.00 per 1M tokens per hour, not modeled by this schema.",
-        effectiveDate: "2026-07-21",
+          "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14; page stamped \"Last updated 2026-08-13 UTC\" and publishes the reversion date inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\" Also bills a separate cache-storage dimension at $1.00 per 1M tokens per hour, not modeled by this schema.",
+        effectiveDate: "2026-08-14",
       },
       {
         model: "Gemini 3.5 Flash",
@@ -1034,12 +1050,11 @@ export const providers: Provider[] = [
         tier: "Direct",
         inputUsd: 1.5,
         cachedUsd: 0.15,
-        cachedConfidence: "derived",
         outputUsd: 7.5,
         confidence: "official",
-        notes: "mistral-medium-latest; identical to the Foundry Global rate. Cached input derived from the published -90% cache discount rule (no dollar figure published).",
+        notes: "mistral-medium-latest; identical to the Foundry Global rate. Cached input now officially published at $0.15/M (previously derived from Mistral's -90% cache discount rule).",
         sourceNote:
-          "Mistral's official API pricing page (mistral.ai/pricing/api) lists mistral-medium-latest at $1.50/M input and $7.50/M output, captured 2026-07-23. That same page publishes a cache rule of -90% on input tokens with no dollar figure, so cached input is derived as 10% of the $1.50 input rate ($0.15/M), captured 2026-07-26. Neither Foundry tier publishes a cached-input meter at all (confirmed against the Azure Retail Prices API), so those rows stay null.",
+          "Mistral's consolidated inference pricing page (docs.mistral.ai/inference/pricing), captured 2026-08-14: Mistral Medium 3.5 lists Input $1.5, Cached input $0.15, Output $7.5 per M (mode STANDARD/USD) — the cached rate is now a directly published dollar figure, superseding the earlier -90%-rule derivation from mistral.ai/pricing/api. Model card (docs.mistral.ai/models/mistral-medium-3-5-26-04) corroborates the $1.50/$7.50 input/output rate. Neither Foundry tier publishes a cached-input meter at all (re-confirmed against the Azure Retail Prices API in today's sweep), so those rows stay null.",
         effectiveDate: "2026-07-23",
       },
     ],
@@ -1052,10 +1067,10 @@ export const providers: Provider[] = [
         ],
       },
       {
-        title: "Foundry has no cache meter; the direct API's discount is derived",
+        title: "Foundry has no cache meter; the direct API's $0.15/M cache rate is now official",
         tone: "warning",
         body: [
-          "Neither Foundry tier publishes a cached-input meter for Mistral Medium 3.5, so Foundry workloads pay full input price on every call. Mistral's own API pricing page does publish a cache rule (-90% on input tokens) but no dollar figure, so the direct-API cached rate here ($0.15/M) is derived as 10% of the $1.50 input price rather than an official published number. Models like Grok-4.3 ($0.20/M cached, official) or the Kimi K2 line ($0.10–$0.16/M cached, official) remain cheaper for cache-heavy use on Foundry.",
+          "Neither Foundry tier publishes a cached-input meter for Mistral Medium 3.5, so Foundry workloads pay full input price on every call. The direct-API cached rate ($0.15/M) used to be derived as 10% of the $1.50 input price from a published -90% discount rule with no dollar figure; Mistral's new consolidated inference pricing page now publishes $0.15/M directly, so the number is unchanged but the confidence is upgraded to official. Models like Grok-4.3 ($0.20/M cached, official) or the Kimi K2 line ($0.10–$0.16/M cached, official) remain cheaper for cache-heavy use on Foundry.",
         ],
       },
     ],

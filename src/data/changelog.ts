@@ -23,6 +23,49 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-14",
+    title: "Gemini 3.7 Flash added; Gemini 3.6 Flash's price halved through year-end",
+    tag: "model",
+    body: [
+      "Google's Gemini API pricing page now shows Gemini 3.6 Flash at $0.75/M input, $0.075/M cached input, and $3.75/M output — half its previous $1.50/$0.15/$7.50 rate. The page publishes this as a promotional rate running through December 31, 2026, reverting to $1.50/$0.15/$7.50 on January 1, 2027; each price cell states this inline (\"$0.75 through December 31, 2026. $1.50 starting January 1, 2027.\").",
+      "A new Gemini 3.7 Flash — Google's own description: \"our most capable Flash model for agentic workflows and multimodal reasoning\" — is added to the catalog as the new flagship, tracked at the identical promotional rate: $0.75/M input, $0.075/M cached, $3.75/M output, with the same reversion terms on 2027-01-01.",
+      "Gemini 3.5 Flash is unaffected and stays listed for comparison at $1.50/M input, $0.15/M cached, $9.00/M output. Google also publishes Batch and Flex pricing at 50% of the standard rate and a Priority tier at 1.8x, but this site's schema does not model those tiers.",
+    ],
+    sources: [{ label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" }],
+    sourcesVerifiedOn: "2026-08-14",
+  },
+  {
+    date: "2026-08-14",
+    title: "DeepSeek's price increase gets a date: peak/off-peak billing from August 16",
+    tag: "pricing",
+    body: [
+      "DeepSeek's pricing page footnote — previously undated — now gives an exact effective time for the API's long-signalled price increase: peak / off-peak billing begins at 16:00 UTC on August 16, 2026. Off-peak rates are set at exactly half of peak. Peak hours are 01:00–04:00 and 06:00–10:00 UTC; every other hour is off-peak.",
+      "Current flat rates ($0.435/M input, $0.003625/M cached, $0.87/M output for V4 Pro; $0.14/M input, $0.0028/M cached, $0.28/M output for V4 Flash) remain in force until that moment, and the catalog's two DeepSeek Direct rows are unchanged for now.",
+      "From 2026-08-16 16:00 UTC, the new rates (per 1M tokens, cache hit / cache miss / output) are: DeepSeek-V4 Flash off-peak $0.007 / $0.22 / $0.66, peak $0.014 / $0.44 / $1.32. DeepSeek-V4 Pro off-peak $0.022 / $0.66 / $1.98, peak $0.044 / $1.32 / $3.96.",
+      "Even the off-peak rate is an increase on every dimension versus today's flat rate — e.g. V4 Pro output rises 2.28x ($0.87 to $1.98), V4 Flash output rises 2.36x ($0.28 to $0.66), and V4 Pro's cache-hit rate rises from $0.003625/M to $0.022/M. Peak-hour rates run roughly double the off-peak figures again.",
+      "This affects only DeepSeek's first-party direct API. The Microsoft Foundry (Global/DataZone) and Fireworks-hosted DeepSeek rows are Azure/Fireworks meters and are unaffected. This site's schema does not model time-of-day pricing, so the change taking effect will require a scope decision on how to represent it.",
+    ],
+    sources: [
+      { label: "DeepSeek pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "DeepSeek API updates", href: "https://api-docs.deepseek.com/updates" },
+    ],
+    sourcesVerifiedOn: "2026-08-14",
+  },
+  {
+    date: "2026-08-14",
+    title: "Mistral Medium 3.5's cached input rate is now officially published",
+    tag: "methodology",
+    body: [
+      "Mistral now publishes Mistral Medium 3.5's cached-input rate as an explicit dollar figure — $0.15/M — on its new consolidated inference pricing page, alongside Input ($1.50/M) and Output ($7.50/M). No rate changed: this is the same $0.15/M figure the catalog already carried, previously back-derived from Mistral's published -90%-off cache discount rule rather than read directly off a price list. The Direct row's cached-input confidence is upgraded from derived to official to reflect the new first-party source, which supersedes the previously-cited mistral.ai/pricing/api page.",
+      "The two Mistral Foundry rows (Global and DataZone) are unchanged and still correctly show no cached rate — no Azure cache meter exists for Mistral Medium 3.5 on either tier, re-confirmed in today's full Foundry sweep.",
+    ],
+    sources: [
+      { label: "Mistral inference pricing", href: "https://docs.mistral.ai/inference/pricing" },
+      { label: "Mistral Medium 3.5 model card", href: "https://docs.mistral.ai/models/mistral-medium-3-5-26-04" },
+    ],
+    sourcesVerifiedOn: "2026-08-14",
+  },
+  {
     date: "2026-08-12",
     title: "Grok 4.6 added — xAI's new flagship, direct API only",
     tag: "model",
