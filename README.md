@@ -34,6 +34,8 @@ All pricing lives in `src/data/`. Provider tables are in `src/data/providers.ts`
 }
 ```
 
+A row can also carry a `variants` array for prices that are not one flat number forever — promo windows, peak/off-peak hours, context bands, service tiers (see `RateVariant` in `src/data/types.ts` and the resolver in `src/lib/rates.ts`). The flat `inputUsd`/`cachedUsd`/`outputUsd` above must always stay today's correct rate; variants describe future or conditional states only, never today's — `src/data/providers.variants.test.ts` guards this.
+
 Then add a line to `src/data/changelog.ts`.
 
 ## Local dev
