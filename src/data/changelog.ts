@@ -24,6 +24,19 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-08-15",
+    title: "DeepSeek V3 removed from the catalog",
+    tag: "model",
+    body: [
+      "Removed the standalone DeepSeek V3 row (Global tier, $1.14/M input, $4.56/M output, no cache meter) from the catalog. It's a pre-V3.1/V3.2/V4 generation model that no longer appears anywhere on DeepSeek's own pricing page — only deepseek-v4-flash and deepseek-v4-pro are listed today — and the V3.1 and V3.2 point releases that superseded it were already removed from this catalog previously.",
+      "This does not affect the actively-tracked DeepSeek-V4 Pro and DeepSeek-V4 Flash rows (Direct, Global, and Data Zone lanes), which remain current and unchanged.",
+    ],
+    sources: [
+      { label: "DeepSeek — Models and pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-15",
+  },
+  {
+    date: "2026-08-15",
     title: "The compare page now prices every model under a chosen scenario, not just today's flat rate",
     tag: "methodology",
     body: [

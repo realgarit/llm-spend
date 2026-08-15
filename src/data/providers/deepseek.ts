@@ -159,16 +159,6 @@ export const deepseek: Provider = {
       sourceNote: "Fireworks official live pricing page.",
       effectiveDate: CAPTURED,
     },
-    {
-      model: "DeepSeek V3",
-      tier: "Global",
-      inputUsd: 1.14,
-      cachedUsd: null,
-      outputUsd: 4.56,
-      confidence: "official",
-      sourceNote: "Official pricing page.",
-      effectiveDate: CAPTURED,
-    },
   ],
   quirks: [
     {
