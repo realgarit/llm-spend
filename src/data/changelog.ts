@@ -23,7 +23,22 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
-    date: "2026-08-14",
+    date: "2026-08-15",
+    title: "The compare page now prices every model under a chosen scenario, not just today's flat rate",
+    tag: "methodology",
+    body: [
+      "The compare / cost-calculator page gains scenario controls alongside the existing workload calculator: a Time picker (Now — live; Off-peak / Peak — representative hours; or any specific UTC hour) and a Service tier picker (standard / batch / flex / priority / highspeed). Every row's Input, Cached, Output, blended, and workload-cost figures — and the sort order — are now computed by resolving each model's rate under the selected scenario, via the same resolver added in the last two methodology updates, instead of always reading a row's flat base fields. The workload calculator's existing input-token control doubles as the prompt/context size fed into the resolver, since the compare page has no other notion of 'how big is this call' and no catalog row defines a context-band variant yet.",
+      "This is what keeps the comparison honest once a scheduled rate change lands: today, picking any time or tier changes nothing, because DeepSeek's peak/off-peak split (2026-08-16T16:00:00Z), Qwen3.7 Max's promo reversion (2026-09-01), and Gemini 3.6/3.7 Flash's promo reversion (2027-01-01) haven't started yet — every row still resolves to its base rate, and the table, sort order and every displayed number are unchanged from before this update. From 2026-08-16 16:00 UTC onward, though, 'Now' will correctly show DeepSeek's actual peak or off-peak price instead of a stale flat rate, and picking 'Peak' or a specific UTC hour lets a visitor preview the other side of that split at any time. A small brand-colored label appears under a model's name whenever the selected scenario resolves it to a rate that differs from its base — restrained on purpose, since on most rows, most of the time, nothing differs.",
+      "Time scenarios preview an hour of the day on the real current calendar date; they are not a time machine. Picking 'Peak' today does not make DeepSeek's not-yet-effective peak rate appear early, because the resolver's published effective date still gates it — the preview only overrides which hour is being asked about, never which day. No underlying rate changed in this update; it is comparison-tool methodology only, the same class of change as the two rate-variant updates that came before it.",
+    ],
+    sources: [
+      { label: "DeepSeek pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-15",
+  },
+  {
+    date: "2026-08-15",
     title: "Rate-variant rows now render the price actually in effect, not just the base rate",
     tag: "methodology",
     body: [
@@ -35,7 +50,7 @@ export const changelog: ChangelogEntry[] = [
       { label: "DeepSeek pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
       { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
     ],
-    sourcesVerifiedOn: "2026-08-14",
+    sourcesVerifiedOn: "2026-08-15",
   },
   {
     date: "2026-08-14",

@@ -14,12 +14,25 @@ function directDeepSeek(model: string) {
   return entry;
 }
 
+// Both direct DeepSeek entries now carry Peak/Off-peak variants effective
+// 2026-08-16T16:00:00Z (see providers.ts), so computeCost's default `ctx.now`
+// (the real clock) would otherwise make these two tests' expectations flip
+// from base to variant pricing the moment that instant passes — a failure
+// with nothing to do with any code change. Pin `now` to a date safely before
+// that boundary so these stay the "base rate" assertions they're named for,
+// forever, regardless of when the suite runs.
+const BEFORE_DEEPSEEK_PEAK_SPLIT = { now: new Date("2026-08-15T00:00:00Z") };
+
 test("uses DeepSeek's published V4 Pro direct cache-hit rate", () => {
-  const result = computeCost(directDeepSeek("DeepSeek-V4 Pro"), {
-    inputTokens: 60_000_000,
-    outputTokens: 0,
-    cacheHitRate: 0.9,
-  });
+  const result = computeCost(
+    directDeepSeek("DeepSeek-V4 Pro"),
+    {
+      inputTokens: 60_000_000,
+      outputTokens: 0,
+      cacheHitRate: 0.9,
+    },
+    BEFORE_DEEPSEEK_PEAK_SPLIT,
+  );
 
   assert.equal(result.cacheApplied, true);
   assert.equal(result.cachedInputUsd, 0.19575);
@@ -28,14 +41,33 @@ test("uses DeepSeek's published V4 Pro direct cache-hit rate", () => {
 });
 
 test("uses DeepSeek's published V4 Flash direct cache-hit rate", () => {
-  const result = computeCost(directDeepSeek("DeepSeek-V4 Flash"), {
-    inputTokens: 1_000_000,
-    outputTokens: 0,
-    cacheHitRate: 1,
-  });
+  const result = computeCost(
+    directDeepSeek("DeepSeek-V4 Flash"),
+    {
+      inputTokens: 1_000_000,
+      outputTokens: 0,
+      cacheHitRate: 1,
+    },
+    BEFORE_DEEPSEEK_PEAK_SPLIT,
+  );
 
   assert.equal(result.cacheApplied, true);
   assert.equal(result.totalUsd, 0.0028);
+});
+
+test("prices DeepSeek's direct V4 Pro at its Peak variant once that regime is in force", () => {
+  // 2026-08-20T02:00Z is within the published 01:00-04:00 UTC peak window,
+  // well after the 2026-08-16T16:00:00Z split takes effect.
+  const result = computeCost(
+    directDeepSeek("DeepSeek-V4 Pro"),
+    { inputTokens: 1_000_000, outputTokens: 0, cacheHitRate: 0 },
+    { now: new Date("2026-08-20T02:00:00Z") },
+  );
+
+  // Peak input is $1.32/M (vs the base/off-peak $0.435 and $0.66), so this
+  // only passes if computeCost actually resolves through the variant instead
+  // of always pricing off the entry's flat fields.
+  assert.equal(result.totalUsd, 1.32);
 });
 
 test("omits models that are no longer relevant to the catalog", () => {

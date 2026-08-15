@@ -14,6 +14,10 @@ export const metadata: Metadata = {
 
 export default function ComparePage() {
   const rows = buildCompareRows();
+  // Build-time basis for resolving scenario-aware rates — same pattern as
+  // pricing-table.tsx's buildAtMs (see rate-cell.tsx / lib/use-now.ts). The
+  // client component re-resolves on the visitor's real clock after mount.
+  const buildAtMs = Date.now();
   return (
     <div className="container-page" style={{ paddingBlock: "3rem" }}>
       <header className="rise" style={{ maxWidth: "48rem", marginBottom: "2.5rem" }}>
@@ -26,7 +30,7 @@ export default function ComparePage() {
           sort every chat model by what it would actually bill. Prices per 1M tokens; totals in USD and CHF.
         </p>
       </header>
-      <CompareExplorer rows={rows} />
+      <CompareExplorer rows={rows} buildAtMs={buildAtMs} />
     </div>
   );
 }
