@@ -24,6 +24,27 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-08-14",
+    title: "DeepSeek, Gemini and Qwen's scheduled rate changes are now modeled as data",
+    tag: "methodology",
+    body: [
+      "No displayed rate changes today. This is a methodology update: the catalog can now record a rate that changes at a known future instant as structured data (an exact effective timestamp plus its own published numbers), instead of only describing the upcoming change in a row's notes text. Three rows that already carried this kind of prose description are the first to move onto the new structure.",
+      "DeepSeek-V4 Pro (Direct) and DeepSeek-V4 Flash (Direct) each gain two scheduled variants, both effective 2026-08-16T16:00:00Z: a Peak rate for 01:00-04:00 and 06:00-10:00 UTC, and an Off-peak rate — exactly half of Peak on every dimension — for every other hour. Per 1M tokens (cache miss / cache hit / output): V4 Pro peak $1.32 / $0.044 / $3.96, off-peak $0.66 / $0.022 / $1.98; V4 Flash peak $0.44 / $0.014 / $1.32, off-peak $0.22 / $0.007 / $0.66. Today's flat rates ($0.435/$0.003625/$0.87 and $0.14/$0.0028/$0.28) are unaffected until that instant.",
+      "Gemini 3.6 Flash and Gemini 3.7 Flash each gain one scheduled variant reverting to list price — $1.50/M input, $0.15/M cached, $7.50/M output — effective 2027-01-01T00:00:00Z, matching the reversion Google already publishes inline on its pricing page. Both rows keep showing today's promotional rate ($0.75/$0.075/$3.75) until then.",
+      "Qwen3.7 Max (Promo) gains one scheduled variant reverting to list price — $2.50/M input, $0.25/M cached, $7.50/M output — effective 2026-09-01T00:00:00Z, the date Alibaba Cloud's campaign page states the discount 'runs until.' The row keeps showing today's discounted rate ($1.25/$0.125/$3.75) until then.",
+      "The site still renders each row's flat rate directly, so none of this is visible on the pages yet — it is data plumbing for a later phase that will make the displayed price switch automatically at these instants.",
+    ],
+    sources: [
+      { label: "DeepSeek pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+      {
+        label: "Alibaba Cloud — Qwen discount campaign page",
+        href: "https://www.alibabacloud.com/en/campaign/qwen-discount",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-14",
+  },
+  {
+    date: "2026-08-14",
     title: "Gemini 3.7 Flash added; Gemini 3.6 Flash's price halved through year-end",
     tag: "model",
     body: [

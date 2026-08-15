@@ -154,6 +154,34 @@ export const providers: Provider[] = [
           "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail.",
         sourceNote: "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate.",
         effectiveDate: CAPTURED,
+        variants: [
+          {
+            label: "Peak",
+            conditions: {
+              from: "2026-08-16T16:00:00Z",
+              utcHourWindows: [
+                { startHourUtc: 1, endHourUtc: 4 },
+                { startHourUtc: 6, endHourUtc: 10 },
+              ],
+            },
+            inputUsd: 1.32,
+            cachedUsd: 0.044,
+            outputUsd: 3.96,
+            confidence: "official",
+            sourceNote:
+              "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+          },
+          {
+            label: "Off-peak",
+            conditions: { from: "2026-08-16T16:00:00Z" },
+            inputUsd: 0.66,
+            cachedUsd: 0.022,
+            outputUsd: 1.98,
+            confidence: "official",
+            sourceNote:
+              "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+          },
+        ],
       },
       {
         model: "DeepSeek-V4 Flash",
@@ -168,6 +196,34 @@ export const providers: Provider[] = [
           "First-party published cache-hit, cache-miss, and output rates. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.007/$0.22/$0.66, peak $0.014/$0.44/$1.32 — see the changelog for detail.",
         sourceNote: "DeepSeek's own direct API pricing, including the published cached-input rate.",
         effectiveDate: CAPTURED,
+        variants: [
+          {
+            label: "Peak",
+            conditions: {
+              from: "2026-08-16T16:00:00Z",
+              utcHourWindows: [
+                { startHourUtc: 1, endHourUtc: 4 },
+                { startHourUtc: 6, endHourUtc: 10 },
+              ],
+            },
+            inputUsd: 0.44,
+            cachedUsd: 0.014,
+            outputUsd: 1.32,
+            confidence: "official",
+            sourceNote:
+              "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+          },
+          {
+            label: "Off-peak",
+            conditions: { from: "2026-08-16T16:00:00Z" },
+            inputUsd: 0.22,
+            cachedUsd: 0.007,
+            outputUsd: 0.66,
+            confidence: "official",
+            sourceNote:
+              "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+          },
+        ],
       },
       {
         model: "DeepSeek-V4 Pro",
@@ -733,6 +789,18 @@ export const providers: Provider[] = [
         sourceNote:
           "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14; page stamped \"Last updated 2026-08-13 UTC\", same page as the 3.6 Flash row below. Google describes it as \"Our most capable Flash model for agentic workflows and multimodal reasoning.\" The reversion date is published inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\" Batch/Flex bill at 50% of standard, Priority at 1.8x — tiers this schema does not model.",
         effectiveDate: "2026-08-14",
+        variants: [
+          {
+            label: "Standard (from 2027)",
+            conditions: { from: "2027-01-01T00:00:00Z" },
+            inputUsd: 1.5,
+            cachedUsd: 0.15,
+            outputUsd: 7.5,
+            confidence: "official",
+            sourceNote:
+              "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14. The page publishes this reversion inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\"",
+          },
+        ],
       },
       {
         model: "Gemini 3.6 Flash",
@@ -746,6 +814,18 @@ export const providers: Provider[] = [
         sourceNote:
           "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14; page stamped \"Last updated 2026-08-13 UTC\" and publishes the reversion date inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\" Also bills a separate cache-storage dimension at $1.00 per 1M tokens per hour, not modeled by this schema.",
         effectiveDate: "2026-08-14",
+        variants: [
+          {
+            label: "Standard (from 2027)",
+            conditions: { from: "2027-01-01T00:00:00Z" },
+            inputUsd: 1.5,
+            cachedUsd: 0.15,
+            outputUsd: 7.5,
+            confidence: "official",
+            sourceNote:
+              "Gemini API pricing page (ai.google.dev/gemini-api/docs/pricing), captured 2026-08-14. The page publishes this reversion inline per price cell, verbatim: \"$0.75 through December 31, 2026.$1.50 starting January 1, 2027.\"",
+          },
+        ],
       },
       {
         model: "Gemini 3.5 Flash",
@@ -902,6 +982,19 @@ export const providers: Provider[] = [
         sourceNote:
           "Alibaba Cloud Model Studio pricing page, International endpoint, captured 2026-07-20: list $2.5/$7.5 marked 'Limited-time 50% off', still with no end-date text as of a 2026-08-10 re-check. Cached input derived as 10% of effective input per the official context-cache rule (explicit cache hits). Alibaba Cloud's campaign page ('Qwen3.8-Max is Here') states, in two places, that the discount 'runs until August 31, 2026' and applies to all 4 billing items — input, output, explicit cache creation, and explicit cache hit; captured 2026-08-10.",
         effectiveDate: "2026-07-20",
+        variants: [
+          {
+            label: "List price (from September)",
+            conditions: { from: "2026-09-01T00:00:00Z" },
+            inputUsd: 2.5,
+            cachedUsd: 0.25,
+            outputUsd: 7.5,
+            confidence: "official",
+            cachedConfidence: "derived",
+            sourceNote:
+              "Alibaba Cloud campaign page (alibabacloud.com/en/campaign/qwen-discount), captured 2026-08-14: the discount 'runs until August 31, 2026'. Cached input derived as 10% of input per Alibaba's published context-cache rule, mirroring the row's cachedConfidence.",
+          },
+        ],
       },
       {
         model: "Qwen3.7 Plus (Promo)",
