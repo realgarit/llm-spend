@@ -420,6 +420,38 @@ for (const { model, base, priority } of GPT56_PRIORITY_CASES) {
 // equal its base rate exactly.
 // ---------------------------------------------------------------------------
 
+// Rows that are EXPECTED to resolve to a non-null variant once the pinned
+// `now` above is bumped forward past a certain instant — a periodic
+// maintenance task done by hand (see AGENTS.md working notes). Each row below
+// has a variant whose `conditions` contain only `from` (no `until`, no
+// `serviceTier`, no `contextBand`): once real time crosses that `from`
+// instant, the variant matches forever and the row can never go back to
+// `variant: null`. Without this allowlist, the first `now` bump past that
+// instant would fail the guard even though nothing is actually wrong — the
+// variant is doing exactly what it was authored to do.
+//
+// Before adding a row here, confirm its active variant is intentional (not an
+// authoring mistake, e.g. a `from` date wrongly set in the past) by checking
+// the variant's own `sourceNote`.
+const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
+  // DeepSeek's Peak/Off-peak pair partitions all time from 2026-08-16 16:00Z
+  // onward with no gap: Off-peak's conditions are `{ from }` only, so once
+  // `now` reaches that instant, Peak or Off-peak always matches.
+  "deepseek / DeepSeek-V4 Pro (DeepSeek direct API)",
+  "deepseek / DeepSeek-V4 Flash (DeepSeek direct API)",
+  // Qwen3.7 Max's promo reverts to list price via a "List price (from
+  // September)" variant with `{ from: "2026-09-01T00:00:00Z" }` and no
+  // `until` — permanently active from that instant on.
+  "qwen / Qwen3.7 Max (Promo) (Model Studio (Intl))",
+  // Gemini 3.6/3.7 Flash's "Standard (from 2027)" variant reverts the promo
+  // rate via `{ from: "2027-01-01T00:00:00Z" }` with no `until` or
+  // `serviceTier` — permanently active from that instant on. (Their other
+  // Batch/Flex/Priority variants are `serviceTier`-scoped and never match
+  // this guard's plain `{ now }` context, so they need no allowlist entry.)
+  "gemini / Gemini 3.6 Flash",
+  "gemini / Gemini 3.7 Flash",
+]);
+
 test("guard: every catalog row resolves to its own base rate as of today", () => {
   const now = new Date("2026-08-14T12:00:00Z");
 
@@ -428,10 +460,21 @@ test("guard: every catalog row resolves to its own base rate as of today", () =>
       const resolved = resolveRate(row, { now });
       const label = `${provider.slug} / ${row.model}${row.host ? ` (${row.host})` : ""}`;
 
-      assert.equal(resolved.variant, null, `${label} should have no matching variant today`);
-      assert.equal(resolved.inputUsd, row.inputUsd, `${label} inputUsd`);
-      assert.equal(resolved.cachedUsd, row.cachedUsd, `${label} cachedUsd`);
-      assert.equal(resolved.outputUsd, row.outputUsd, `${label} outputUsd`);
+      if (resolved.variant === null) {
+        assert.equal(resolved.variant, null, `${label} should have no matching variant today`);
+        assert.equal(resolved.inputUsd, row.inputUsd, `${label} inputUsd`);
+        assert.equal(resolved.cachedUsd, row.cachedUsd, `${label} cachedUsd`);
+        assert.equal(resolved.outputUsd, row.outputUsd, `${label} outputUsd`);
+        continue;
+      }
+
+      assert.ok(
+        ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS.has(label),
+        `${label} resolved to a non-null variant ("${resolved.label}") today, but is not on the ` +
+          `allowlist of rows with a known permanently-active variant. This usually means a variant's ` +
+          `\`from\`/\`until\` was authored incorrectly (e.g. a date wrongly set in the past) — check its ` +
+          `\`sourceNote\` before adding it to the allowlist.`,
+      );
     }
   }
 });
