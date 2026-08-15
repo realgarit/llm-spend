@@ -24,6 +24,23 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-08-15",
+    title: "Compare page's Service tier picker now returns real prices for seven rows, not a no-op",
+    tag: "methodology",
+    body: [
+      "The compare / cost-calculator page's Service tier control (Standard / Batch / Flex / Priority / Highspeed), added in an earlier methodology update, has been structurally present but functionally inert: no catalog row defined a serviceTier-scoped rate variant, so picking anything but Standard silently degraded every row back to its base rate. Seven rows across four providers now carry real, officially published service-tier pricing (17 new variants total), so selecting a tier actually changes the numbers for these rows.",
+      "Kimi K2.7 Code (Global) gains a Highspeed variant at exactly 2x standard on every dimension: $1.90/M input, $0.38/M cached, $8.00/M output versus the base $0.95/$0.19/$4.00 — Moonshot's own kimi-k2.7-code-highspeed listing. Gemini 3.6 Flash and Gemini 3.7 Flash (both Global) each gain Batch, Flex, and Priority variants, every one paired with the row's existing 2027-01-01 promo-reversion date so the right numbers show on both sides of that switch: Batch and Flex are both exactly 50% of Standard ($0.375/$0.0375/$1.875 now, $0.75/$0.075/$3.75 from 2027) and Priority is exactly 1.8x ($1.35/$0.135/$6.75 now, $2.70/$0.27/$13.50 from 2027) — Batch and Flex are numerically identical but billed as distinct service tiers, so both are modeled separately. MiniMax M3 (Direct) gains a Priority variant at exactly 1.5x standard: $0.45/M input, $0.09/M cached, $1.80/M output versus $0.30/$0.06/$1.20 — confirmed live against a distinct \"Priority\" tab on MiniMax's own pricing page; the same page shows no such tab for MiniMax M2.7, so no variant was added there. GPT-5.6 Sol, Terra, and Luna (all Foundry Global) each gain a Priority variant — Azure's own \"PP\" (priority processing) meters, exactly 2x each row's Standard Global rate: Sol $10.00/$1.00/$60.00, Terra $5.00/$0.50/$30.00, Luna $2.00/$0.20/$12.00. Azure's PP meters exist only for the short-context (ShortCo) listings; a full sweep found no matching Long Context PP meter for any GPT-5.6 variant.",
+      "No base or Standard rate changed in this update, and picking \"Standard\" — the default — continues to show exactly what it showed before. This only makes the existing tier picker report real numbers for the rows above; every other row still correctly degrades to its base rate under a tier it doesn't publish.",
+    ],
+    sources: [
+      { label: "Kimi — K2.7 Code pricing", href: "https://platform.kimi.ai/docs/pricing/chat-k27-code" },
+      { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+      { label: "MiniMax — Pay as You Go pricing", href: "https://platform.minimax.io/docs/guides/pricing-paygo" },
+      { label: "Azure Retail Prices API", href: "https://prices.azure.com/api/retail/prices" },
+    ],
+    sourcesVerifiedOn: "2026-08-15",
+  },
+  {
+    date: "2026-08-15",
     title: "DeepSeek V3 removed from the catalog",
     tag: "model",
     body: [

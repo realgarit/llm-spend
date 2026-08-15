@@ -44,9 +44,22 @@ export const kimi: Provider = {
       cachedUsd: 0.19,
       outputUsd: 4.0,
       confidence: "official",
-      notes: "Cached rate officially published for this tier.",
+      notes:
+        "Cached rate officially published for this tier. A 'highspeed' service tier bills exactly 2x on every dimension.",
       sourceNote: "Official page (input, cached, and output all listed).",
       effectiveDate: CAPTURED,
+      variants: [
+        {
+          label: "Highspeed",
+          conditions: { serviceTier: "highspeed" },
+          inputUsd: 1.9,
+          cachedUsd: 0.38,
+          outputUsd: 8.0,
+          confidence: "official",
+          sourceNote:
+            "Moonshot's official pricing page (platform.kimi.ai/docs/pricing/chat-k27-code), captured 2026-08-15 via direct DOM table read: kimi-k2.7-code-highspeed lists $1.90/M input (cache miss), $0.38/M cached input (cache hit), $8.00/M output — exactly 2x kimi-k2.7-code on every dimension, same 262,144-token context window. The page describes it as 'the high-speed version of Kimi K2.7 Code, the same model... but with an output speed of approximately 180 Tokens/s.' Selected via the API's service_tier parameter, matching this schema's 'highspeed' tier.",
+        },
+      ],
     },
     {
       model: "Kimi K2.5 Thinking",
