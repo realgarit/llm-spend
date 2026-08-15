@@ -46,10 +46,22 @@ export const minimax: Provider = {
       outputUsd: 1.2,
       confidence: "official",
       notes:
-        "Current flagship; rates shown are the ≤512K input band — above 512K it bills $0.60/M input, $0.12/M cached, $2.40/M output. The Foundry Data Zone lane is exactly 1.1x these rates. A 'priority' service tier bills 1.5x.",
+        "Current flagship; rates shown are the ≤512K input band — above 512K it bills $0.60/M input, $0.12/M cached, $2.40/M output. The Foundry Data Zone lane is exactly 1.1x these rates. A 'priority' service tier bills 1.5x standard, now modeled below.",
       sourceNote:
         "MiniMax official pricing page (platform.minimax.io/docs/guides/pricing-paygo), captured 2026-07-29: ≤512K input band $0.30/M input, $0.06/M cache read, $1.20/M output; >512K band $0.60/$0.12/$2.40. The page labels these rates 'Permanent 50% off' with the struck-through list price at exactly 2x ($0.60/$0.12/$2.40 for the ≤512K band) and states no end date. Foundry's 'FW MiniMax 3' Data Zone meters are 1.1x the discounted rate, not the list rate. No cache-write dimension is published for M3.",
       effectiveDate: "2026-07-29",
+      variants: [
+        {
+          label: "Priority",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 0.45,
+          cachedUsd: 0.09,
+          outputUsd: 1.8,
+          confidence: "official",
+          sourceNote:
+            "MiniMax official pricing page (platform.minimax.io/docs/guides/pricing-paygo), captured 2026-08-15 via direct DOM table read of the page's \"Priority\" tab — a distinct <Tab title=\"Priority*\" id=\"priority\"> panel alongside \"Standard\", confirmed against the page's own embedded source. ≤512K input band: $0.45/M input, $0.09/M cache read, $1.80/M output — exactly 1.5x the current discounted Standard rate, matching the page's own footnote verbatim: \"Priority provides priority admission for faster response times and improved request reliability. Set service_tier to priority to enable it. Pricing is 1.5x standard.\" This Priority tab exists only for MiniMax M3; the MiniMax M2.7 table on the same page has no tab split and no Priority option, so no variant is added to the M2.7 row.",
+        },
+      ],
     },
     {
       model: "MiniMax M2.7",

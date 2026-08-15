@@ -39,6 +39,32 @@ function qwenMaxPromo(): PricingEntry {
   return entry;
 }
 
+function kimiK27Code(): PricingEntry {
+  const provider = getProvider("kimi");
+  const entry = provider?.entries.find((candidate) => candidate.model === "Kimi K2.7 Code");
+
+  assert.ok(entry, "Expected the Kimi K2.7 Code entry");
+  return entry;
+}
+
+function minimaxM3(): PricingEntry {
+  const provider = getProvider("minimax");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === "MiniMax M3" && candidate.host === "MiniMax direct API",
+  );
+
+  assert.ok(entry, "Expected the MiniMax M3 (direct API) entry");
+  return entry;
+}
+
+function gpt56Global(model: string): PricingEntry {
+  const provider = getProvider("openai-azure");
+  const entry = provider?.entries.find((candidate) => candidate.model === model && candidate.tier === "Global");
+
+  assert.ok(entry, `Expected a Global ${model} entry`);
+  return entry;
+}
+
 const at = (iso: string) => ({ now: new Date(iso) });
 
 // ---------------------------------------------------------------------------
@@ -209,6 +235,183 @@ test("Qwen3.7 Max (Promo) reverts to list price at the first instant of Septembe
   // than left to fall back to the row's overall (official) confidence.
   assert.equal(resolved.cachedConfidence, "derived");
 });
+
+// ---------------------------------------------------------------------------
+// Kimi K2.7 Code — Highspeed service tier (Moonshot's naming; 2x standard)
+// ---------------------------------------------------------------------------
+
+test("Kimi K2.7 Code resolves the Highspeed variant under the highspeed service tier", () => {
+  const resolved = resolveRate(kimiK27Code(), { now: new Date("2026-08-20T12:00:00Z"), serviceTier: "highspeed" });
+
+  assert.equal(resolved.label, "Highspeed");
+  assert.equal(resolved.inputUsd, 1.9);
+  assert.equal(resolved.cachedUsd, 0.38);
+  assert.equal(resolved.outputUsd, 8.0);
+  assert.equal(resolved.confidence, "official");
+});
+
+test("Kimi K2.7 Code stays on its base rate without a service tier (defaults to standard)", () => {
+  const standard = resolveRate(kimiK27Code(), { now: new Date("2026-08-20T12:00:00Z") });
+  const explicitStandard = resolveRate(kimiK27Code(), {
+    now: new Date("2026-08-20T12:00:00Z"),
+    serviceTier: "standard",
+  });
+
+  for (const resolved of [standard, explicitStandard]) {
+    assert.equal(resolved.variant, null);
+    assert.equal(resolved.inputUsd, 0.95);
+    assert.equal(resolved.cachedUsd, 0.19);
+    assert.equal(resolved.outputUsd, 4.0);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Gemini 3.6 / 3.7 Flash — Batch, Flex, Priority, each combined with the
+// existing 2027-01-01 promo-reversion date. Batch and Flex are numerically
+// identical (both exactly 50% of Standard) but are distinct ServiceTier
+// values, so both are asserted independently rather than assumed equal.
+// ---------------------------------------------------------------------------
+
+const GEMINI_TIER_CASES = [
+  {
+    tier: "batch" as const,
+    label: "Batch",
+    labelAfter: "Batch (from 2027)",
+    before: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+    after: { inputUsd: 0.75, cachedUsd: 0.075, outputUsd: 3.75 },
+  },
+  {
+    tier: "flex" as const,
+    label: "Flex",
+    labelAfter: "Flex (from 2027)",
+    before: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+    after: { inputUsd: 0.75, cachedUsd: 0.075, outputUsd: 3.75 },
+  },
+  {
+    tier: "priority" as const,
+    label: "Priority",
+    labelAfter: "Priority (from 2027)",
+    before: { inputUsd: 1.35, cachedUsd: 0.135, outputUsd: 6.75 },
+    after: { inputUsd: 2.7, cachedUsd: 0.27, outputUsd: 13.5 },
+  },
+];
+
+for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash"]) {
+  for (const { tier, label, labelAfter, before, after } of GEMINI_TIER_CASES) {
+    test(`${model} resolves ${label}'s promo-period numbers before 2027`, () => {
+      const resolved = resolveRate(geminiFlash(model), {
+        now: new Date("2026-12-31T23:59:59Z"),
+        serviceTier: tier,
+      });
+
+      assert.equal(resolved.label, label);
+      assert.equal(resolved.inputUsd, before.inputUsd);
+      assert.equal(resolved.cachedUsd, before.cachedUsd);
+      assert.equal(resolved.outputUsd, before.outputUsd);
+      assert.equal(resolved.confidence, "official");
+    });
+
+    test(`${model} resolves ${label}'s post-reversion numbers from 2027-01-01`, () => {
+      const resolved = resolveRate(geminiFlash(model), {
+        now: new Date("2027-01-01T00:00:00Z"),
+        serviceTier: tier,
+      });
+
+      assert.equal(resolved.label, labelAfter);
+      assert.equal(resolved.inputUsd, after.inputUsd);
+      assert.equal(resolved.cachedUsd, after.cachedUsd);
+      assert.equal(resolved.outputUsd, after.outputUsd);
+      assert.equal(resolved.confidence, "official");
+    });
+  }
+
+  test(`${model} is unaffected by the new tier variants when no service tier is given`, () => {
+    const before = resolveRate(geminiFlash(model), { now: new Date("2026-12-31T23:59:59Z") });
+    assert.equal(before.variant, null);
+    assert.equal(before.inputUsd, 0.75);
+    assert.equal(before.cachedUsd, 0.075);
+    assert.equal(before.outputUsd, 3.75);
+
+    const after = resolveRate(geminiFlash(model), { now: new Date("2027-01-01T00:00:00Z") });
+    assert.equal(after.label, "Standard (from 2027)");
+    assert.equal(after.inputUsd, 1.5);
+    assert.equal(after.cachedUsd, 0.15);
+    assert.equal(after.outputUsd, 7.5);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// MiniMax M3 (Direct) — Priority service tier (exactly 1.5x standard)
+// ---------------------------------------------------------------------------
+
+test("MiniMax M3 (Direct) resolves the Priority variant under the priority service tier", () => {
+  const resolved = resolveRate(minimaxM3(), { now: new Date("2026-08-20T12:00:00Z"), serviceTier: "priority" });
+
+  assert.equal(resolved.label, "Priority");
+  assert.equal(resolved.inputUsd, 0.45);
+  assert.equal(resolved.cachedUsd, 0.09);
+  assert.equal(resolved.outputUsd, 1.8);
+  assert.equal(resolved.confidence, "official");
+});
+
+test("MiniMax M3 (Direct) stays on its base rate without a service tier", () => {
+  const resolved = resolveRate(minimaxM3(), { now: new Date("2026-08-20T12:00:00Z") });
+
+  assert.equal(resolved.variant, null);
+  assert.equal(resolved.inputUsd, 0.3);
+  assert.equal(resolved.cachedUsd, 0.06);
+  assert.equal(resolved.outputUsd, 1.2);
+});
+
+// ---------------------------------------------------------------------------
+// GPT-5.6 Sol / Terra / Luna (Global) — Priority ("PP" in Azure's own meter
+// names) service tier, exactly 2x each row's own Standard Global rate.
+// ---------------------------------------------------------------------------
+
+const GPT56_PRIORITY_CASES = [
+  {
+    model: "GPT-5.6 Sol",
+    base: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 30.0 },
+    priority: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 60.0 },
+  },
+  {
+    model: "GPT-5.6 Terra",
+    base: { inputUsd: 2.5, cachedUsd: 0.25, outputUsd: 15.0 },
+    priority: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 30.0 },
+  },
+  {
+    model: "GPT-5.6 Luna",
+    base: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 6.0 },
+    priority: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 12.0 },
+  },
+];
+
+for (const { model, base, priority } of GPT56_PRIORITY_CASES) {
+  test(`${model} (Global) resolves the Priority variant at exactly 2x its Standard rate`, () => {
+    const resolved = resolveRate(gpt56Global(model), {
+      now: new Date("2026-08-20T12:00:00Z"),
+      serviceTier: "priority",
+    });
+
+    assert.equal(resolved.label, "Priority");
+    assert.equal(resolved.inputUsd, priority.inputUsd);
+    assert.equal(resolved.cachedUsd, priority.cachedUsd);
+    assert.equal(resolved.outputUsd, priority.outputUsd);
+    assert.equal(resolved.inputUsd, base.inputUsd * 2);
+    assert.equal(resolved.cachedUsd, (base.cachedUsd as number) * 2);
+    assert.equal(resolved.outputUsd, base.outputUsd * 2);
+    assert.equal(resolved.confidence, "official");
+  });
+
+  test(`${model} (Global) stays on its base rate without a service tier`, () => {
+    const resolved = resolveRate(gpt56Global(model), { now: new Date("2026-08-20T12:00:00Z") });
+
+    assert.equal(resolved.variant, null);
+    assert.equal(resolved.inputUsd, base.inputUsd);
+    assert.equal(resolved.cachedUsd, base.cachedUsd);
+    assert.equal(resolved.outputUsd, base.outputUsd);
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Guard: this migration must not change what the site shows today. Rendering

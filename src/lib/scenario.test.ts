@@ -417,7 +417,83 @@ test("regression: every compare row costs the same under the default scenario at
   }
 });
 
-test("an unsupported service tier degrades every row to its base rate (no catalog row defines a tiered variant yet)", () => {
+/**
+ * The exact set of real catalog rows that publish a serviceTier-scoped
+ * variant, keyed by (providerSlug, model, tier, host) since several models
+ * (e.g. GPT-5.6 Sol) have both a Global and a DataZone row sharing the same
+ * model name and no host — tier alone disambiguates them here. Each entry's
+ * `tiers` map is the exact published numbers for that ServiceTier, asserted
+ * below against the live resolver so this test fails the moment a variant's
+ * numbers drift from what was verified against the official source (see
+ * providers.ts for the sourceNotes) — not just whether *a* variant matched.
+ */
+const TIERED_ROWS: {
+  providerSlug: string;
+  model: string;
+  tier: string;
+  host?: string;
+  tiers: Partial<Record<"batch" | "flex" | "priority" | "highspeed", { inputUsd: number; cachedUsd: number | null; outputUsd: number }>>;
+}[] = [
+  {
+    providerSlug: "kimi",
+    model: "Kimi K2.7 Code",
+    tier: "Global",
+    tiers: { highspeed: { inputUsd: 1.9, cachedUsd: 0.38, outputUsd: 8.0 } },
+  },
+  {
+    providerSlug: "gemini",
+    model: "Gemini 3.7 Flash",
+    tier: "Global",
+    tiers: {
+      batch: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      flex: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      priority: { inputUsd: 1.35, cachedUsd: 0.135, outputUsd: 6.75 },
+    },
+  },
+  {
+    providerSlug: "gemini",
+    model: "Gemini 3.6 Flash",
+    tier: "Global",
+    tiers: {
+      batch: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      flex: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      priority: { inputUsd: 1.35, cachedUsd: 0.135, outputUsd: 6.75 },
+    },
+  },
+  {
+    providerSlug: "minimax",
+    model: "MiniMax M3",
+    tier: "Direct",
+    host: "MiniMax direct API",
+    tiers: { priority: { inputUsd: 0.45, cachedUsd: 0.09, outputUsd: 1.8 } },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-5.6 Sol",
+    tier: "Global",
+    tiers: { priority: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 60.0 } },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-5.6 Terra",
+    tier: "Global",
+    tiers: { priority: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 30.0 } },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-5.6 Luna",
+    tier: "Global",
+    tiers: { priority: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 12.0 } },
+  },
+];
+
+function findTieredRow(row: CompareRow) {
+  return TIERED_ROWS.find(
+    (t) => t.providerSlug === row.providerSlug && t.model === row.model && t.tier === row.tier && t.host === row.host,
+  );
+}
+
+test("a service tier resolves real numbers only on the rows that publish it, and degrades every other row to its base rate", () => {
   const rows = buildCompareRows();
   const today = new Date("2026-08-15T12:00:00Z");
 
@@ -425,8 +501,35 @@ test("an unsupported service tier degrades every row to its base rate (no catalo
     const ctxs = scenarioContexts({ time: { mode: "now" }, serviceTier: tier }, today, DEFAULT_WORKLOAD.inputTokens);
     for (const row of rows) {
       const { resolved } = compareRowUnderScenario(row, DEFAULT_WORKLOAD, ctxs);
-      assert.equal(resolved.variant, null, `${row.id} unexpectedly matched a variant under tier "${tier}"`);
+      const expected = findTieredRow(row)?.tiers[tier];
+
+      if (expected) {
+        assert.notEqual(resolved.variant, null, `${row.id} should match tier "${tier}"`);
+        assert.equal(resolved.inputUsd, expected.inputUsd, `${row.id} ${tier} inputUsd`);
+        assert.equal(resolved.cachedUsd, expected.cachedUsd, `${row.id} ${tier} cachedUsd`);
+        assert.equal(resolved.outputUsd, expected.outputUsd, `${row.id} ${tier} outputUsd`);
+      } else {
+        assert.equal(resolved.variant, null, `${row.id} unexpectedly matched a variant under tier "${tier}"`);
+      }
     }
+  }
+});
+
+test("every row that publishes a service-tier variant still resolves to its own base rate under the default 'standard' tier", () => {
+  const rows = buildCompareRows();
+  const today = new Date("2026-08-15T12:00:00Z");
+  const ctxs = scenarioContexts(DEFAULT_SCENARIO, today, DEFAULT_WORKLOAD.inputTokens);
+
+  const tieredRows = rows.filter((row) => findTieredRow(row));
+  assert.ok(tieredRows.length >= TIERED_ROWS.length, "expected to find every catalog row listed in TIERED_ROWS");
+
+  for (const row of tieredRows) {
+    const { resolved } = compareRowUnderScenario(row, DEFAULT_WORKLOAD, ctxs);
+
+    assert.equal(resolved.variant, null, `${row.id} should resolve to its base rate under "standard"`);
+    assert.equal(resolved.inputUsd, row.inputUsd, `${row.id} standard inputUsd`);
+    assert.equal(resolved.cachedUsd, row.cachedUsd, `${row.id} standard cachedUsd`);
+    assert.equal(resolved.outputUsd, row.outputUsd, `${row.id} standard outputUsd`);
   }
 });
 
