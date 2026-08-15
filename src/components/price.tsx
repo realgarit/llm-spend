@@ -40,10 +40,19 @@ export function PriceStacked({
   usd,
   confidence = "official",
   muted = false,
+  live = false,
 }: {
   usd: number | null;
   confidence?: Confidence;
   muted?: boolean;
+  /**
+   * Set when `usd`/`confidence` can change after mount, e.g. a rate-variant
+   * cell that re-resolves on the visitor's real clock (see use-now.ts). Adds
+   * `suppressHydrationWarning` to the text nodes that may legitimately differ
+   * between the server's build-time render and the client's live one. Leave
+   * false (the default) for ordinary, never-changing rates.
+   */
+  live?: boolean;
 }) {
   if (usd === null) {
     return <span className="mono" style={{ color: "var(--text-faint)" }}>—</span>;
@@ -53,11 +62,16 @@ export function PriceStacked({
       <span
         className="mono tnum"
         style={{ fontWeight: 500, color: muted ? "var(--text-muted)" : "var(--text)" }}
+        suppressHydrationWarning={live}
       >
         {formatUsd(usd)}
         <Mark confidence={confidence} />
       </span>
-      <span className="mono tnum" style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>
+      <span
+        className="mono tnum"
+        style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}
+        suppressHydrationWarning={live}
+      >
         {formatChf(usd)}
       </span>
     </span>

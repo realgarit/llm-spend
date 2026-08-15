@@ -24,6 +24,21 @@ export interface ChangelogSource {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-08-14",
+    title: "Rate-variant rows now render the price actually in effect, not just the base rate",
+    tag: "methodology",
+    body: [
+      "The five rows carrying a scheduled rate variant — DeepSeek-V4 Pro (Direct), DeepSeek-V4 Flash (Direct), Gemini 3.6 Flash, Gemini 3.7 Flash, and Qwen3.7 Max (Promo) — now display whichever rate is actually in force right now, resolved with the same logic added in the previous methodology update, instead of always showing the row's flat base fields. Each also gets a small badge naming the active variant when one applies, a note on when the price next changes (a plain countdown once a variant regime is under way, or a '<label> begins <date>, UTC' announcement while it is still pending — none of today's five regimes has started yet), and every published variant's own numbers laid out underneath the row, so the full rate card is visible without clicking anything.",
+      "No rate changed today. DeepSeek's peak/off-peak split still takes effect 2026-08-16T16:00:00Z, Qwen3.7 Max's promo still reverts 2026-09-01T00:00:00Z, and Gemini 3.6/3.7 Flash still revert 2027-01-01T00:00:00Z — this entry is the page catching up to data the catalog already had. The practical effect is that the DeepSeek rows stop showing a stale flat rate the moment the peak/off-peak switch lands: the displayed price now self-corrects in the visitor's browser, without waiting on a rebuild.",
+      "All variant numbers are present in the server-rendered page, since they are static published facts; only which variant is marked 'active' and the countdown text depend on the reader's clock, and both refresh automatically every 30 seconds so a boundary crossed while the page is left open updates on its own.",
+    ],
+    sources: [
+      { label: "DeepSeek pricing", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-14",
+  },
+  {
+    date: "2026-08-14",
     title: "DeepSeek, Gemini and Qwen's scheduled rate changes are now modeled as data",
     tag: "methodology",
     body: [
