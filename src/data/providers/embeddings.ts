@@ -1,0 +1,108 @@
+import type { Provider } from "../types";
+
+export const embeddings: Provider = {
+  slug: "embeddings",
+  name: "Embeddings",
+  tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
+  intro: [
+    "Embedding models bill per million input tokens only, no output meter. The DeepSeek and Kimi chat models are generation-only; DeepSeek has a separate deepseek-embedding-v2 (768-dim) for retrieval.",
+  ],
+  entries: [
+    {
+      model: "Cohere embed-v-4-0",
+      tier: "Direct",
+      inputUsd: 0.12,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "derived",
+      notes:
+        "Best RAG / code-retrieval pick. Matryoshka dims 256/512/1024/1536 (default 1536); input_type query/document distinction. Cohere no longer publishes a per-token Embed rate on its own pricing page; the figure is corroborated by Microsoft's live Foundry meter, which reads exactly $0.12/M.",
+      sourceNote:
+        "Cohere delisted per-token Embed pricing from cohere.com/pricing between 2025-07-16 and 2025-08-09; the 2025-07-16 Internet Archive snapshot still shows $0.12 per 1M tokens for Embed 4. cohere.com/pricing now lists only Model Vault dedicated-instance rates (Embed 4 Small $4.00/hr, Embed 4 Medium $5.00/hr) and docs.cohere.com points back to that page. Rate retained because Azure's 'Embed v4 Txt Glbl Tokens' meter reads exactly $0.00012/1K ($0.12/M), captured 2026-07-29. Downgraded from official to derived: no first-party Cohere page publishes this rate today.",
+      effectiveDate: "2026-07-29",
+    },
+    {
+      model: "Cohere Embed v4",
+      tier: "Global",
+      inputUsd: 0.12,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "official",
+      notes:
+        "Same $0.12/M as the direct lane but officially metered — currently the only published source for this rate; image embeddings bill separately at $0.47/M image tokens.",
+      sourceNote:
+        "Azure Retail Prices API 'Embed v4 Txt Glbl Tokens' at $0.00012/1K ($0.12/M) across 39 commercial regions, effective 2026-02-01, captured 2026-07-29. Companion 'Embed v4 Img Glbl Tokens' meter is $0.00047/1K ($0.47/M). US Gov regions price higher ($0.15/M) and are excluded per the commercial-majority convention.",
+      effectiveDate: "2026-02-01",
+    },
+    {
+      model: "Cohere Embed v4",
+      tier: "DataZone",
+      inputUsd: 0.132,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "official",
+      notes: "Exactly 1.1x the Global rate, the standard Data Zone premium.",
+      sourceNote:
+        "Azure Retail Prices API 'Embed v4 Txt DZ Tokens' at $0.000132/1K ($0.132/M) across 21 commercial regions, effective 2025-11-01, captured 2026-07-29. Companion 'Embed v4 Img DZ Tokens' meter is $0.000517/1K ($0.517/M). US Gov regions ($0.165/M) excluded.",
+      effectiveDate: "2025-11-01",
+    },
+    {
+      model: "OpenAI text-embedding-3-large",
+      tier: "Global",
+      inputUsd: 0.13,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "official",
+      sourceNote:
+        "Azure Retail Prices API 'text-embedding-3-large-glbl Tokens' meter: $0.00013/1K ($0.13/M) across 17 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 9,615 pages per USD at ~800 tokens/page — inverting to exactly $0.13/M. US Gov Cloud bills this model under a separate 'text-embedding-3-large-regional Tokens' meter at $0.163/M, excluded per the commercial-majority convention.",
+      effectiveDate: "2024-06-01",
+    },
+    {
+      model: "OpenAI text-embedding-3-small",
+      tier: "Global",
+      inputUsd: 0.02,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "official",
+      notes: "Cheapest solid option.",
+      sourceNote:
+        "Azure Retail Prices API 'text-embedding-3-small-glbl Tokens' meter: $0.00002/1K ($0.02/M) across 17 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 62,500 pages per USD at ~800 tokens/page — inverting to exactly $0.02/M. US Gov Cloud bills this model under a separate 'text-embedding-3-small-regional Tokens' meter at $0.025/M, excluded per the commercial-majority convention.",
+      effectiveDate: "2024-06-01",
+    },
+    {
+      model: "OpenAI text-embedding-ada-002",
+      tier: "Global",
+      inputUsd: 0.1,
+      cachedUsd: null,
+      outputUsd: 0,
+      confidence: "official",
+      notes: "Legacy: worse than 3-small on cost and quality. Avoid.",
+      sourceNote:
+        "Azure Retail Prices API 'embedding-ada-glbl Tokens' meter: $0.0001/1K ($0.10/M) across 15 commercial regions, effective 2024-06-01, captured 2026-08-07. developers.openai.com/api/docs/pricing no longer lists per-token embeddings rates. Corroborated by developers.openai.com/api/docs/guides/embeddings, which quotes 12,500 pages per USD at ~800 tokens/page — inverting to exactly $0.10/M. US Gov Cloud bills this model under a separate 'embedding-ada-regional Tokens' meter at $0.125/M, excluded per the commercial-majority convention.",
+      effectiveDate: "2024-06-01",
+    },
+  ],
+  quirks: [
+    {
+      title: "Cheapest isn't best for code retrieval",
+      tone: "insight",
+      body: [
+        "text-embedding-3-small is cheapest at $0.02 / CHF 0.016 per M, but for code RAG Cohere embed-v4 ($0.12 / CHF 0.097 per M) wins on retrieval quality (query/document input_type, Matryoshka dims 256/512/1024/1536). ada-002 ($0.10 / CHF 0.081) is legacy: worse than 3-small on price and quality. No reason to pick it for new work.",
+      ],
+    },
+    {
+      title: "A reference retrieval stack",
+      tone: "info",
+      body: [
+        "For code indexing plus RAG: a dedicated embedding model (Cohere embed-v4), a vector store (LanceDB), then a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) over the retrieved chunks.",
+      ],
+    },
+    {
+      title: "Foundry Data Zone for embeddings is also two prices",
+      tone: "warning",
+      body: [
+        "The rows above are OpenAI's Global rate. On Microsoft Foundry, text-embedding-3-large and text-embedding-3-small each carry two Data Zone prices, not one: US/EU regions bill 1.10x Global ($0.143/M and $0.022/M), APAC regions (australiaeast, centralindia, eastasia, japaneast, japanwest, jioindiawest, koreacentral, southeastasia, southindia) bill 1.20x Global ($0.156/M and $0.024/M). Same split seen across Microsoft's first-party OpenAI lines; captured from the Azure Retail Prices API on 2026-07-27.",
+      ],
+    },
+  ],
+};
