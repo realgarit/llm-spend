@@ -30,6 +30,26 @@ export interface RateContext {
   contextTokens?: number;
   /** Service tier being priced. Defaults to "standard". */
   serviceTier?: ServiceTier;
+  /**
+   * Opt-in preview of scheduled rates: waive the `from`/`until` gate so a
+   * variant that has not started yet (or has already ended) can still be
+   * resolved and shown.
+   *
+   * **Off by default, and it must stay that way for every "what does this cost
+   * right now" caller.** A resolution made with this set is NOT a billable
+   * rate — it answers "what will this cost once the schedule reaches it",
+   * which is only ever a legitimate thing to show when the reader explicitly
+   * asked to look ahead and the UI says so in as many words. The compare
+   * page's non-"Now" time scenarios are the only caller that sets it (see
+   * lib/scenario.ts, which also owns the "is this a preview or is it really
+   * true" test that drives the label).
+   *
+   * Everything else still applies: `utcHourWindows`, `contextBand` and
+   * `serviceTier` are enforced exactly as normal, and a `from`/`until` that
+   * does not parse still drops the variant rather than quoting a price off a
+   * typo.
+   */
+  previewScheduledRates?: boolean;
 }
 
 /** The rate that actually applies, plus which variant produced it. */
@@ -69,7 +89,10 @@ const HOUR_SCAN_LIMIT = 48;
  * Semantics, all ANDed:
  * - `from` is inclusive, `until` is exclusive, so back-to-back variants can
  *   share an instant without overlapping. An unparseable date never matches —
- *   we would rather drop a variant than quote a price on a typo.
+ *   we would rather drop a variant than quote a price on a typo. When
+ *   `ctx.previewScheduledRates` is set, the in/out-of-window comparison is
+ *   waived (the parse check is not); see {@link RateContext} for when that is
+ *   allowed.
  * - `utcHourWindows` matches when the current UTC hour is in any one window;
  *   windows are half-open `[start, end)` and may wrap midnight.
  * - `contextBand`'s `minTokens` is inclusive and `maxTokens` exclusive; an
@@ -169,6 +192,11 @@ export function rateRange(entry: PricingEntry, ctx: RateContext): RateRange {
  *
  * Returns null when nothing is scheduled to change — no variants, or none whose
  * boundaries are ahead of `ctx.now`.
+ *
+ * `ctx.previewScheduledRates` is deliberately ignored here: "when does the
+ * price next change" is a question about the real schedule, and answering it
+ * from a context that waives the schedule would report that nothing ever
+ * changes.
  */
 export function nextRateChange(
   entry: PricingEntry,
@@ -180,7 +208,10 @@ export function nextRateChange(
   const nowMs = ctx.now.getTime();
   if (!Number.isFinite(nowMs)) return null;
 
-  const current = resolveRate(entry, ctx).variant;
+  const scheduled: RateContext = ctx.previewScheduledRates
+    ? { ...ctx, previewScheduledRates: false }
+    : ctx;
+  const current = resolveRate(entry, scheduled).variant;
   const candidates = new Set<number>();
 
   let hourScoped = false;
@@ -203,7 +234,7 @@ export function nextRateChange(
   }
 
   for (const at of [...candidates].sort((a, b) => a - b)) {
-    const next = resolveRate(entry, { ...ctx, now: new Date(at) }).variant;
+    const next = resolveRate(entry, { ...scheduled, now: new Date(at) }).variant;
     if (next !== current) {
       return { at: new Date(at), label: next?.label ?? BASE_RATE_LABEL };
     }
@@ -216,14 +247,21 @@ function matches(c: RateConditions, ctx: RateContext, ignoreHourWindows: boolean
   const nowMs = ctx.now.getTime();
   if (!Number.isFinite(nowMs)) return false;
 
+  // The schedule gate. `previewScheduledRates` waives only the comparison
+  // against `now` — an unparseable instant still drops the variant, because a
+  // typo is a typo whether or not we are previewing.
+  const previewing = ctx.previewScheduledRates === true;
+
   if (c.from !== undefined) {
     const fromMs = Date.parse(c.from);
-    if (Number.isNaN(fromMs) || nowMs < fromMs) return false;
+    if (Number.isNaN(fromMs)) return false;
+    if (!previewing && nowMs < fromMs) return false;
   }
 
   if (c.until !== undefined) {
     const untilMs = Date.parse(c.until);
-    if (Number.isNaN(untilMs) || nowMs >= untilMs) return false;
+    if (Number.isNaN(untilMs)) return false;
+    if (!previewing && nowMs >= untilMs) return false;
   }
 
   if (!ignoreHourWindows && c.utcHourWindows && c.utcHourWindows.length > 0) {

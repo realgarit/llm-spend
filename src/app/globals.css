@@ -383,6 +383,19 @@ tr.variant-row:hover td {
   color: var(--text);
 }
 
+/*
+ * Compare page: a scenario rate that is scheduled but not billing yet.
+ * Deliberately NOT the brand color used for an active variant — a preview must
+ * never read as "what this costs today".
+ */
+.scenario-preview {
+  display: inline-block;
+  font-size: 0.68rem;
+  color: var(--derived);
+  border-bottom: 1px dashed color-mix(in srgb, var(--derived) 55%, transparent);
+  cursor: help;
+}
+
 /* ---------- Callouts ---------- */
 .callout {
   border: 1px solid var(--border);

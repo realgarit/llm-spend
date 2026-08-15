@@ -5,7 +5,14 @@ import { useMemo, useState } from "react";
 import type { CompareRow } from "@/data/compare-data";
 import { formatChf, formatUsd } from "@/data/currency";
 import { DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
-import { compareRowUnderScenario, DEFAULT_SCENARIO, scenarioToRateContext, type Scenario } from "@/lib/scenario";
+import { formatDuration, formatUtcInstant } from "@/lib/rate-display";
+import {
+  compareRowUnderScenario,
+  DEFAULT_SCENARIO,
+  scenarioContexts,
+  type Scenario,
+  type ScheduledPreview,
+} from "@/lib/scenario";
 import { useNow } from "@/lib/use-now";
 import { Mark } from "@/components/price";
 import { ScenarioControls } from "@/components/scenario-controls";
@@ -46,11 +53,12 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
     [rows]
   );
 
+  const liveNow = useMemo(() => now ?? new Date(buildAtMs), [now, buildAtMs]);
+
   const computed = useMemo(() => {
-    const liveNow = now ?? new Date(buildAtMs);
-    const ctx = scenarioToRateContext(scenario, liveNow, workload.inputTokens);
-    return rows.map((r) => compareRowUnderScenario(r, workload, ctx));
-  }, [rows, workload, scenario, now, buildAtMs]);
+    const ctxs = scenarioContexts(scenario, liveNow, workload.inputTokens);
+    return rows.map((r) => compareRowUnderScenario(r, workload, ctxs));
+  }, [rows, workload, scenario, liveNow]);
 
   const filtered = useMemo(
     () => (providerFilter === "all" ? computed : computed.filter((c) => c.row.provider === providerFilter)),
@@ -158,7 +166,7 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
             </tr>
           </thead>
           <tbody>
-            {sorted.map(({ row, resolved, cost, scenarioPriced }) => {
+            {sorted.map(({ row, resolved, cost, scenarioPriced, preview }) => {
               const isCheapest = cost.totalUsd === cheapest;
               const cachedConfidence = resolved.cachedConfidence ?? resolved.confidence;
               return (
@@ -171,16 +179,19 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
                   <td>
                     <div style={{ fontWeight: 500 }}>{row.model}</div>
                     {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
-                    {scenarioPriced && (
-                      <div
-                        className="mono"
-                        style={{ fontSize: "0.68rem", color: "var(--brand)", marginTop: "0.15rem" }}
-                        title="Priced under the selected scenario — differs from this row's flat base rate"
-                        suppressHydrationWarning
-                      >
-                        {resolved.label ?? "Scenario"}
-                      </div>
-                    )}
+                    {scenarioPriced &&
+                      (preview ? (
+                        <ScheduledPreviewLabel preview={preview} liveNow={liveNow} />
+                      ) : (
+                        <div
+                          className="mono"
+                          style={{ fontSize: "0.68rem", color: "var(--brand)", marginTop: "0.15rem" }}
+                          title="Priced under the selected scenario — differs from this row's flat base rate"
+                          suppressHydrationWarning
+                        >
+                          {resolved.label ?? "Scenario"}
+                        </div>
+                      ))}
                   </td>
                   <td>
                     <span className="badge badge-tier">{row.tier}</span>
@@ -230,11 +241,45 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
         <span className="mark mark-derived">†</span> /<span className="mark mark-estimate">‡</span> mark derived /
         estimated rates. A <span className="mono" style={{ color: "var(--brand)" }}>brand-colored label</span> under a
         model name names the variant priced under the selected scenario, when it differs from the row&rsquo;s base rate.
+        A <span className="mono scenario-preview">· preview</span> label means the opposite: that rate is scheduled but
+        is <strong>not billing yet</strong>, and is only shown because a specific hour was picked above — the row still
+        charges its base rate until the stated start instant. The default <span className="mono">Now</span> scenario
+        never shows a preview.
       </p>
 
       <style>{`
         .link-provider:hover { color: var(--brand); }
       `}</style>
+    </div>
+  );
+}
+
+/**
+ * Annotation for a row priced at a rate that has not started billing yet.
+ *
+ * Deliberately unlike the brand-colored label used for a genuinely active
+ * variant: a different color, the word "preview" spelled out, and the start
+ * instant on its own line, so a scheduled rate can never be mistaken for what
+ * the row bills today. `preview` is non-null only when the resolver actually
+ * had to look past a start date to produce these numbers — see
+ * `scheduledPreview` in lib/scenario.ts.
+ */
+function ScheduledPreviewLabel({ preview, liveNow }: { preview: ScheduledPreview; liveNow: Date }) {
+  const { variant, startsAt } = preview;
+  const starts = startsAt === null ? null : formatUtcInstant(startsAt, liveNow);
+  const title =
+    startsAt === null
+      ? `Preview only — "${variant.label}" is not in effect right now. This row still bills at its base rate.`
+      : `Preview only — not billable yet. "${variant.label}" takes effect ${starts}` +
+        ` (in ${formatDuration(startsAt.getTime() - liveNow.getTime())}).` +
+        " Until then this row still bills at its base rate.";
+
+  return (
+    <div style={{ marginTop: "0.15rem" }} title={title} suppressHydrationWarning>
+      <div className="mono scenario-preview">{variant.label} · preview</div>
+      <div className="mono" style={{ fontSize: "0.64rem", color: "var(--text-faint)" }}>
+        {starts ? `starts ${starts}` : "not in effect yet"}
+      </div>
     </div>
   );
 }

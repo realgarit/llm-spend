@@ -130,6 +130,11 @@ export function ScenarioControls({
         instead of their flat listed rate; a brand-colored label under the model name names which one applies.
         Context size for band-priced rows uses the input-token count below.
       </p>
+      <p style={{ fontSize: "0.72rem", color: "var(--text-faint)", marginTop: "0.4rem" }}>
+        Picking a specific hour also previews time-of-day rates that are scheduled but have not started billing yet;
+        those rows are labelled <span className="mono scenario-preview">· preview</span> with their start instant.{" "}
+        <span className="mono">Now</span> only ever shows rates that are billable at this moment.
+      </p>
     </div>
   );
 }

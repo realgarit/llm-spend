@@ -1,7 +1,7 @@
 import { type CompareRow, toPricingEntry } from "@/data/compare-data";
-import type { ServiceTier } from "@/data/types";
+import type { PricingEntry, RateVariant, ServiceTier } from "@/data/types";
 import { type CostBreakdown, type Workload, computeCost } from "@/lib/calc";
-import { type RateContext, type ResolvedRate, resolveRate } from "@/lib/rates";
+import { type RateContext, type ResolvedRate, applicableVariants, resolveRate } from "@/lib/rates";
 
 /**
  * Scenario controls for the compare page: pick a point in time and a service
@@ -59,11 +59,14 @@ export const SERVICE_TIER_OPTIONS: { value: ServiceTier; label: string }[] = [
  *
  * "now" passes `liveNow` straight through. The other modes keep `liveNow`'s
  * calendar date and only override the UTC hour — they preview an hour of the
- * day, not a different day. That matters for a `from`-gated variant: DeepSeek's
- * peak/off-peak split does not start until 2026-08-16T16:00:00Z, so picking
- * "Peak" before then still correctly resolves to the row's base rate. This is
- * an hour-of-day preview, not a time machine that fast-forwards a promo into
- * existence early.
+ * day, not a different day. The date is never moved: a scenario instant is
+ * always today, so nothing here can fast-forward a promo into existence.
+ *
+ * Looking *past* a not-yet-reached start date is a separate, explicit opt-in
+ * carried on the `RateContext` instead (`previewScheduledRates`, set by
+ * {@link scenarioContexts} for non-"now" modes only) — and whatever it reveals
+ * is labelled as a preview by {@link scheduledPreview}, never shown as a live
+ * price.
  */
 export function resolveScenarioTime(time: TimeScenario, liveNow: Date): Date {
   switch (time.mode) {
@@ -98,13 +101,117 @@ function atUtcHour(base: Date, hourUtc: number): Date {
  * avoids a second control for a dimension nothing yet reacts to, and once a
  * banded row is added, a small workload will correctly read as a small
  * prompt and a large one as a large prompt without further UI work.
+ *
+ * `previewScheduledRates` is set for every mode except "now". That is the
+ * whole of the opt-in described on `RateContext`: asking for a specific hour
+ * is an explicit "show me what this scenario costs", so a rate that is
+ * scheduled but not yet started may be revealed — labelled as a preview by
+ * {@link scheduledPreview}. Asking for "now" never is, so the default
+ * scenario can only ever show literally billable prices.
  */
 export function scenarioToRateContext(scenario: Scenario, liveNow: Date, contextTokens: number): RateContext {
   return {
     now: resolveScenarioTime(scenario.time, liveNow),
     serviceTier: scenario.serviceTier,
     contextTokens,
+    previewScheduledRates: scenario.time.mode !== "now",
   };
+}
+
+/**
+ * The two contexts every compare row is resolved against.
+ *
+ * - `preview` is what the visitor asked to see: the scenario's hour and tier,
+ *   with the schedule gate waived for non-"now" modes.
+ * - `live` is the literal truth at this instant — real clock, gate enforced.
+ *   It is never rendered; it exists so {@link scheduledPreview} can tell a
+ *   rate that is genuinely billable today apart from one that is only
+ *   reachable by looking ahead.
+ */
+export interface ScenarioContexts {
+  preview: RateContext;
+  live: RateContext;
+}
+
+export function scenarioContexts(scenario: Scenario, liveNow: Date, contextTokens: number): ScenarioContexts {
+  return {
+    preview: scenarioToRateContext(scenario, liveNow, contextTokens),
+    live: {
+      now: liveNow,
+      serviceTier: scenario.serviceTier,
+      contextTokens,
+      previewScheduledRates: false,
+    },
+  };
+}
+
+/** True when any of `entry`'s variants is scoped to hours of the day. */
+export function isTimeOfDayPriced(entry: PricingEntry): boolean {
+  return (entry.variants ?? []).some((v) => (v.conditions.utcHourWindows?.length ?? 0) > 0);
+}
+
+/**
+ * Narrow the schedule-gate opt-in to the rows the Time control is about.
+ *
+ * The control picks an hour of the day, so it may look past a start date only
+ * for rows whose price actually depends on the hour — DeepSeek's peak/off-peak
+ * pair. Rows whose only variants are plain date reversions (Gemini's 2027
+ * revert, Qwen's September list price) are left on the enforced gate: picking
+ * "Peak" is not a request to see next year's price, and letting one leak in
+ * would silently reorder the table's workload-cost ranking and move the
+ * cheapest-model highlight for a reason the reader never asked about.
+ *
+ * The whole *row* is opened up, not just its hour-scoped variants: DeepSeek's
+ * "Off-peak" carries no `utcHourWindows` at all (it is the fallback half of an
+ * hour-scoped pair), so gating variant-by-variant would reveal Peak and leave
+ * Off-peak stuck on the base rate.
+ */
+export function effectivePreviewContext(entry: PricingEntry, preview: RateContext): RateContext {
+  if (!preview.previewScheduledRates || isTimeOfDayPriced(entry)) return preview;
+  return { ...preview, previewScheduledRates: false };
+}
+
+/** A resolved rate that is only reachable by looking past its start date. */
+export interface ScheduledPreview {
+  /** The variant being previewed. */
+  variant: RateVariant;
+  /** When it starts applying, or null if its conditions name no start instant. */
+  startsAt: Date | null;
+}
+
+/**
+ * Is the rate `previewCtx` resolved to a preview of something not yet
+ * billable, or is it already really in force?
+ *
+ * The test is whether the matched variant's schedule is live *right now*, on
+ * the real clock, setting aside what hour of the day the scenario asked for —
+ * exactly what `applicableVariants` computes (it enforces `from`/`until`,
+ * context band and tier, and waives only `utcHourWindows`).
+ *
+ * Waiving the hour is what makes this self-correcting rather than a hardcoded
+ * "DeepSeek is a preview" rule. Comparing against the live *resolution*
+ * instead would misfire twice: once the peak/off-peak split is genuinely
+ * running it would call every non-current hour a "preview" (Peak at 02:00 is
+ * a real, billable rate even while it is 20:00), and on the changeover day
+ * itself the scenario instant can land earlier than the live one, since only
+ * the hour is overridden and the calendar date is kept.
+ *
+ * Returns null when nothing is being previewed: the base rate resolved, or the
+ * matched variant's schedule has genuinely started.
+ */
+export function scheduledPreview(
+  entry: PricingEntry,
+  previewCtx: RateContext,
+  liveCtx: RateContext,
+): ScheduledPreview | null {
+  const variant = resolveRate(entry, previewCtx).variant;
+  if (!variant) return null;
+  if (applicableVariants(entry, { ...liveCtx, previewScheduledRates: false }).includes(variant)) {
+    return null;
+  }
+
+  const fromMs = variant.conditions.from === undefined ? Number.NaN : Date.parse(variant.conditions.from);
+  return { variant, startsAt: Number.isNaN(fromMs) ? null : new Date(fromMs) };
 }
 
 /** True when `resolved` differs from `base` on any dimension — i.e. a variant actually changed the price. */
@@ -125,20 +232,40 @@ export interface ComparedRow {
   resolved: ResolvedRate;
   cost: CostBreakdown;
   scenarioPriced: boolean;
+  /**
+   * Non-null when `resolved` is a rate that has not started billing yet. The
+   * UI must say so wherever it shows these numbers — see
+   * {@link scheduledPreview}.
+   */
+  preview: ScheduledPreview | null;
 }
 
 /**
- * Resolve one compare row's rate and workload cost under `ctx`.
+ * Resolve one compare row's rate and workload cost under `ctxs`.
  *
  * The single place that reconstructs a `PricingEntry` from a `CompareRow` and
  * runs it through both `resolveRate` (for the per-unit numbers a table cell
  * shows) and `computeCost` (for the $ totals) — kept together so the compare
  * page's sort/filter/render logic never has to know how that reconstruction
- * works.
+ * works. It is also where the scenario's preview opt-in is narrowed per row
+ * ({@link effectivePreviewContext}) and where a previewed rate is flagged
+ * ({@link scheduledPreview}), so the two can never drift apart: the same
+ * context decides the numbers and the label.
  */
-export function compareRowUnderScenario(row: CompareRow, workload: Workload, ctx: RateContext): ComparedRow {
+export function compareRowUnderScenario(
+  row: CompareRow,
+  workload: Workload,
+  ctxs: ScenarioContexts,
+): ComparedRow {
   const entry = toPricingEntry(row);
+  const ctx = effectivePreviewContext(entry, ctxs.preview);
   const resolved = resolveRate(entry, ctx);
   const cost = computeCost(entry, workload, ctx);
-  return { row, resolved, cost, scenarioPriced: isScenarioPriced(row, resolved) };
+  return {
+    row,
+    resolved,
+    cost,
+    scenarioPriced: isScenarioPriced(row, resolved),
+    preview: scheduledPreview(entry, ctx, ctxs.live),
+  };
 }
