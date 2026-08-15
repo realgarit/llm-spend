@@ -248,6 +248,15 @@ a {
   border-color: var(--border-strong);
   background: var(--surface-2);
 }
+/*
+ * The hosting platform inside a tier badge ("Foundry · Global"). De-emphasized
+ * so the tier stays the primary word while the Foundry-vs-direct-API split is
+ * still readable without hovering for the tooltip.
+ */
+.tier-platform {
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
 
 /* Dagger marker used inline on derived/estimated numbers. */
 .mark {

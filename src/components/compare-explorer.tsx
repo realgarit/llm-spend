@@ -14,7 +14,7 @@ import {
   type ScheduledPreview,
 } from "@/lib/scenario";
 import { useNow } from "@/lib/use-now";
-import { Mark } from "@/components/price";
+import { Mark, TierBadge } from "@/components/price";
 import { ScenarioControls } from "@/components/scenario-controls";
 import { WorkloadCalculator } from "@/components/workload-calculator";
 
@@ -194,7 +194,7 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
                       ))}
                   </td>
                   <td>
-                    <span className="badge badge-tier">{row.tier}</span>
+                    <TierBadge tier={row.tier} />
                   </td>
                   <td className="num">
                     <span suppressHydrationWarning>{formatUsd(resolved.inputUsd)}</span>
@@ -236,6 +236,9 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
       </div>
 
       <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", marginTop: "0.9rem" }}>
+        Tier badges reading <span className="mono">Foundry · …</span> are Microsoft Foundry deployment tiers
+        (Global routes to any datacenter, Data Zone pins to US or EU at roughly a 10% premium, Regional pins to one
+        region); <span className="mono">Direct API</span> is the model developer&rsquo;s own first-party API.{" "}
         <span className="mono">Blended in</span> is the effective $/1M input paid after the cache split.
         <span className="mono"> *</span> marks models with no cache meter (hit rate ignored). Daggers{" "}
         <span className="mark mark-derived">†</span> /<span className="mark mark-estimate">‡</span> mark derived /
