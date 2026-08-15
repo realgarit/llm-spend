@@ -1,16 +1,9 @@
 import { Fragment } from "react";
 import type { Provider } from "@/data/types";
 import { formatTokens } from "@/lib/calc";
-import { ConfidenceBadge, PriceStacked } from "./price";
+import { ConfidenceBadge, PriceStacked, TierBadge } from "./price";
 import { RateCells } from "./rate-cell";
 import { VariantStrip } from "./variant-strip";
-
-const TIER_TITLE: Record<string, string> = {
-  Global: "Global: routed to any datacenter (cheapest, highest throughput).",
-  DataZone: "Data Zone: US or EU only (~10% premium).",
-  Regional: "Regional: single region (most restrictive).",
-  Direct: "Direct: the provider's own first-party API.",
-};
 
 export function PricingTable({ provider }: { provider: Provider }) {
   const isEmbeddings = provider.slug === "embeddings";
@@ -56,7 +49,7 @@ export function PricingTable({ provider }: { provider: Provider }) {
                     )}
                   </td>
                   <td>
-                    <span className="badge badge-tier" title={TIER_TITLE[e.tier]}>{e.tier}</span>
+                    <TierBadge tier={e.tier} />
                     {e.host && (
                       <div style={{ fontSize: "0.72rem", color: "var(--text-faint)", marginTop: "0.2rem" }}>{e.host}</div>
                     )}

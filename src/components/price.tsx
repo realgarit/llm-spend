@@ -1,4 +1,4 @@
-import type { Confidence } from "@/data/types";
+import type { Confidence, Tier } from "@/data/types";
 import { formatChf, formatUsd } from "@/data/currency";
 
 const CONF_LABEL: Record<Confidence, string> = {
@@ -17,6 +17,57 @@ export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
   return (
     <span className={`badge badge-${confidence}`} title={CONF_TITLE[confidence]}>
       {CONF_LABEL[confidence]}
+    </span>
+  );
+}
+
+/**
+ * How a tier reads on screen.
+ *
+ * `Tier` is a routing/hosting value, but three of its four members
+ * (Global / DataZone / Regional) are Microsoft Foundry deployment tiers while
+ * the fourth is the model developer's own API — the single most load-bearing
+ * distinction on this site, and until now it lived only in a hover tooltip.
+ * So the platform is named in the badge itself: "Foundry · Global" against
+ * "Direct API". `platform` is rendered de-emphasized so the tier still reads
+ * as the primary word and the column does not visually double in weight.
+ *
+ * Display only. The `Tier` union in data/types.ts is unchanged, and so is
+ * everything keyed off it (sort order, row keys, filters).
+ */
+const TIER_DISPLAY: Record<Tier, { platform?: string; label: string; title: string }> = {
+  Global: {
+    platform: "Foundry",
+    label: "Global",
+    title:
+      "Microsoft Foundry, Global tier: routed to any datacenter (cheapest, highest throughput).",
+  },
+  DataZone: {
+    platform: "Foundry",
+    label: "Data Zone",
+    title: "Microsoft Foundry, Data Zone tier: US or EU only (~10% premium over Global).",
+  },
+  Regional: {
+    platform: "Foundry",
+    label: "Regional",
+    title: "Microsoft Foundry, Regional tier: pinned to a single region (most restrictive).",
+  },
+  Direct: {
+    label: "Direct API",
+    title: "Not Foundry — the model developer's own first-party API, billed by them directly.",
+  },
+};
+
+/**
+ * The tier badge, shared by the provider tables and the compare table so the
+ * wording can only ever be defined once.
+ */
+export function TierBadge({ tier }: { tier: Tier }) {
+  const { platform, label, title } = TIER_DISPLAY[tier] ?? { label: tier, title: undefined };
+  return (
+    <span className="badge badge-tier" title={title}>
+      {platform && <span className="tier-platform">{platform} ·</span>}
+      {label}
     </span>
   );
 }
