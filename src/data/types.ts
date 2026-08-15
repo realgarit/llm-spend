@@ -38,6 +38,85 @@ export type Tier = "Global" | "DataZone" | "Regional" | "Direct";
  */
 export type Confidence = "official" | "derived" | "estimate";
 
+/**
+ * Service tier a rate is quoted for. Absent everywhere means "standard".
+ * - standard  : the ordinary synchronous API
+ * - batch     : asynchronous batch queue (typically ~50% of standard)
+ * - flex      : lower-priority synchronous serving
+ * - priority  : premium low-latency serving
+ * - highspeed : a provider-specific accelerated lane (Moonshot's naming)
+ */
+export type ServiceTier = "standard" | "batch" | "flex" | "priority" | "highspeed";
+
+/**
+ * A half-open window of UTC hours, `[startHourUtc, endHourUtc)`.
+ *
+ * Hours are 0-23 as returned by `Date#getUTCHours`; `endHourUtc` may also be 24
+ * to mean midnight. A window may wrap midnight (`{ startHourUtc: 22,
+ * endHourUtc: 2 }` is 22:00-02:00 UTC). A window whose bounds are equal is
+ * empty and never matches.
+ */
+export interface UtcHourWindow {
+  startHourUtc: number;
+  endHourUtc: number;
+}
+
+/**
+ * The conditions under which a rate variant applies. Every field is optional;
+ * an omitted field places no constraint. All fields present must hold for the
+ * variant to match (they are ANDed).
+ */
+export interface RateConditions {
+  /** ISO 8601 instant this variant starts applying (inclusive). */
+  from?: string;
+  /** ISO 8601 instant this variant stops applying (exclusive). */
+  until?: string;
+  /**
+   * UTC hour-of-day windows this variant applies in. The variant matches when
+   * the current UTC hour falls in any one of them. Used for time-of-day
+   * pricing such as DeepSeek's peak/off-peak split.
+   */
+  utcHourWindows?: UtcHourWindow[];
+  /** Prompt-size band in tokens. `minTokens` inclusive, `maxTokens` exclusive. */
+  contextBand?: { minTokens?: number; maxTokens?: number };
+  /** Service tier this variant is for. Absent means it applies to "standard". */
+  serviceTier?: ServiceTier;
+}
+
+/**
+ * One published rate that applies only under certain conditions: a promo
+ * window, a time-of-day band, a context-size band, a service tier.
+ *
+ * A variant carries its own **explicitly published** numbers. We never store a
+ * multiplier and compute a rate at runtime — that would violate the file-level
+ * rule in providers.ts that every number traces to an official page. A variant
+ * that is a stated multiple of the base rate still gets its arithmetic done by
+ * a human, against the source, at authoring time.
+ *
+ * Provenance travels with the variant: `confidence`, `cachedConfidence` and
+ * `sourceNote` fall back to the owning entry's values when omitted, so a
+ * variant sourced from a different page can say so.
+ */
+export interface RateVariant {
+  /** Short UI label, e.g. "Off-peak", "Peak", "Batch", "256K-1M". */
+  label: string;
+  conditions: RateConditions;
+  /** USD per 1M input tokens under these conditions. */
+  inputUsd: number;
+  /** USD per 1M cached input tokens, or null when no cache meter applies. */
+  cachedUsd: number | null;
+  /** USD per 1M output tokens under these conditions. */
+  outputUsd: number;
+  /** Defaults to the owning entry's `confidence`. */
+  confidence?: Confidence;
+  /** Defaults to the owning entry's `cachedConfidence`. */
+  cachedConfidence?: Confidence;
+  /** Short inline note shown with the variant. */
+  notes?: string;
+  /** Provenance of this variant's numbers specifically. */
+  sourceNote?: string;
+}
+
 export interface PricingEntry {
   /** Human model name, e.g. "DeepSeek-V4 Pro". */
   model: string;
@@ -68,6 +147,17 @@ export interface PricingEntry {
   sourceNote?: string;
   /** ISO date the rate was effective / captured. */
   effectiveDate: string;
+  /**
+   * Conditional rates layered over the flat rate above, for models whose price
+   * is not one number forever: promo windows, peak/off-peak hours, context
+   * bands, service tiers.
+   *
+   * The entry stays ONE row (one model, one purchasable lane); the variation is
+   * structured sub-data. Order is priority order — the first variant whose
+   * conditions match wins. When nothing matches, the flat `inputUsd`/
+   * `cachedUsd`/`outputUsd` above are the base rate. See lib/rates.ts.
+   */
+  variants?: RateVariant[];
 }
 
 export interface Provider {
