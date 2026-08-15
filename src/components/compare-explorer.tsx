@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import type { CompareRow } from "@/data/compare-data";
 import { formatChf, formatUsd } from "@/data/currency";
 import { DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
+import { compareRows, type SortDir, type SortKey } from "@/lib/compare-sort";
 import { formatDuration, formatUtcInstant } from "@/lib/rate-display";
 import {
   compareRowUnderScenario,
@@ -17,19 +18,6 @@ import { useNow } from "@/lib/use-now";
 import { Mark, TierBadge } from "@/components/price";
 import { ScenarioControls } from "@/components/scenario-controls";
 import { WorkloadCalculator } from "@/components/workload-calculator";
-
-type SortKey =
-  | "provider"
-  | "model"
-  | "tier"
-  | "inputUsd"
-  | "cachedUsd"
-  | "outputUsd"
-  | "blended"
-  | "total";
-type SortDir = "asc" | "desc";
-
-const TIER_ORDER: Record<string, number> = { Direct: 0, Global: 1, DataZone: 2, Regional: 3 };
 
 /**
  * `buildAtMs` is the server's build-time basis for resolving scenario rates —
@@ -67,28 +55,7 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
-    arr.sort((a, b) => {
-      const dir = sortDir === "asc" ? 1 : -1;
-      switch (sortKey) {
-        case "provider":
-          return dir * a.row.provider.localeCompare(b.row.provider);
-        case "model":
-          return dir * a.row.model.localeCompare(b.row.model);
-        case "tier":
-          return dir * ((TIER_ORDER[a.row.tier] ?? 9) - (TIER_ORDER[b.row.tier] ?? 9));
-        case "inputUsd":
-          return dir * (a.resolved.inputUsd - b.resolved.inputUsd);
-        case "cachedUsd":
-          return dir * (nz(a.resolved.cachedUsd) - nz(b.resolved.cachedUsd));
-        case "outputUsd":
-          return dir * (a.resolved.outputUsd - b.resolved.outputUsd);
-        case "blended":
-          return dir * (a.cost.blendedInputPerMUsd - b.cost.blendedInputPerMUsd);
-        case "total":
-        default:
-          return dir * (a.cost.totalUsd - b.cost.totalUsd);
-      }
-    });
+    arr.sort((a, b) => compareRows(a, b, sortKey, sortDir));
     return arr;
   }, [filtered, sortKey, sortDir]);
 
@@ -312,8 +279,4 @@ function Th({
       {children}
     </th>
   );
-}
-
-function nz(n: number | null): number {
-  return n === null ? Number.POSITIVE_INFINITY : n;
 }
