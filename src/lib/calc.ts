@@ -1,4 +1,5 @@
 import type { PricingEntry } from "@/data/types";
+import { type RateContext, resolveRate } from "@/lib/rates";
 
 export interface Workload {
   /** Total input tokens (fresh + cached, before applying the hit rate split). */
@@ -32,28 +33,45 @@ export interface CostBreakdown {
 /**
  * Compute the real blended cost of a workload against a single pricing entry.
  *
+ * Prices with whichever rate `resolveRate` resolves `entry` to under `ctx` —
+ * a row's flat fields when no variant applies (or `entry` carries none), or a
+ * matched variant's own published numbers otherwise. `ctx` defaults to the
+ * real current instant, standard tier, so existing two-argument callers keep
+ * compiling and behave exactly as before for every entry that carries no
+ * variants (the resolver never even looks at `now` in that case). Callers
+ * that render on a schedule (a static page, a hydrating client component)
+ * should pass an explicit `ctx.now` themselves rather than rely on that
+ * default — see `use-now.ts` / `scenario.ts` for the sanctioned way to get one
+ * without breaking hydration.
+ *
  * Input tokens are split by the cache hit rate: the cached fraction is billed at
- * `cachedUsd` (when a cache meter exists), the rest at `inputUsd`. If the model
- * has no cache meter, all input is billed at `inputUsd` regardless of hit rate.
+ * the resolved `cachedUsd` (when a cache meter exists), the rest at the resolved
+ * `inputUsd`. If the model has no cache meter, all input is billed at `inputUsd`
+ * regardless of hit rate.
  */
-export function computeCost(entry: PricingEntry, workload: Workload): CostBreakdown {
+export function computeCost(
+  entry: PricingEntry,
+  workload: Workload,
+  ctx: RateContext = { now: new Date() },
+): CostBreakdown {
+  const resolved = resolveRate(entry, ctx);
   const hit = clamp01(workload.cacheHitRate);
-  const hasCache = entry.cachedUsd !== null && entry.cachedUsd !== undefined;
+  const hasCache = resolved.cachedUsd !== null && resolved.cachedUsd !== undefined;
 
   const cachedTokens = hasCache ? workload.inputTokens * hit : 0;
   const freshTokens = workload.inputTokens - cachedTokens;
 
-  const freshInputUsd = (freshTokens / PER_MILLION) * entry.inputUsd;
+  const freshInputUsd = (freshTokens / PER_MILLION) * resolved.inputUsd;
   const cachedInputUsd = hasCache
-    ? (cachedTokens / PER_MILLION) * (entry.cachedUsd as number)
+    ? (cachedTokens / PER_MILLION) * (resolved.cachedUsd as number)
     : 0;
-  const outputUsd = (workload.outputTokens / PER_MILLION) * entry.outputUsd;
+  const outputUsd = (workload.outputTokens / PER_MILLION) * resolved.outputUsd;
   const totalUsd = freshInputUsd + cachedInputUsd + outputUsd;
 
   const blendedInputPerMUsd =
     workload.inputTokens > 0
       ? ((freshInputUsd + cachedInputUsd) / workload.inputTokens) * PER_MILLION
-      : entry.inputUsd;
+      : resolved.inputUsd;
 
   return {
     freshInputUsd,

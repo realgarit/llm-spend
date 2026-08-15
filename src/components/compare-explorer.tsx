@@ -4,8 +4,12 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CompareRow } from "@/data/compare-data";
 import { formatChf, formatUsd } from "@/data/currency";
-import { computeCost, DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
+import { DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
+import { compareRowUnderScenario, DEFAULT_SCENARIO, scenarioToRateContext, type Scenario } from "@/lib/scenario";
+import { useNow } from "@/lib/use-now";
 import { Mark } from "@/components/price";
+import { ScenarioControls } from "@/components/scenario-controls";
+import { WorkloadCalculator } from "@/components/workload-calculator";
 
 type SortKey =
   | "provider"
@@ -20,11 +24,22 @@ type SortDir = "asc" | "desc";
 
 const TIER_ORDER: Record<string, number> = { Direct: 0, Global: 1, DataZone: 2, Regional: 3 };
 
-export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
+/**
+ * `buildAtMs` is the server's build-time basis for resolving scenario rates —
+ * same role as `pricing-table.tsx`'s prop of the same name (see rate-cell.tsx).
+ * Before mount (and during the static-generation server render) this uses
+ * `buildAtMs` for "now"; after mount `useNow()` supplies the visitor's real
+ * clock, so a variant boundary crossed between build and view corrects itself
+ * without a rebuild, and the server/pre-mount HTML never disagrees with the
+ * first client render.
+ */
+export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; buildAtMs: number }) {
   const [workload, setWorkload] = useState<Workload>(DEFAULT_WORKLOAD);
+  const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [sortKey, setSortKey] = useState<SortKey>("total");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [providerFilter, setProviderFilter] = useState<string>("all");
+  const now = useNow();
 
   const providersList = useMemo(
     () => Array.from(new Set(rows.map((r) => r.provider))),
@@ -32,22 +47,10 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
   );
 
   const computed = useMemo(() => {
-    return rows.map((r) => {
-      const cost = computeCost(
-        {
-          model: r.model,
-          tier: r.tier,
-          inputUsd: r.inputUsd,
-          cachedUsd: r.cachedUsd,
-          outputUsd: r.outputUsd,
-          confidence: r.confidence,
-          effectiveDate: "",
-        },
-        workload
-      );
-      return { row: r, cost };
-    });
-  }, [rows, workload]);
+    const liveNow = now ?? new Date(buildAtMs);
+    const ctx = scenarioToRateContext(scenario, liveNow, workload.inputTokens);
+    return rows.map((r) => compareRowUnderScenario(r, workload, ctx));
+  }, [rows, workload, scenario, now, buildAtMs]);
 
   const filtered = useMemo(
     () => (providerFilter === "all" ? computed : computed.filter((c) => c.row.provider === providerFilter)),
@@ -66,11 +69,11 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
         case "tier":
           return dir * ((TIER_ORDER[a.row.tier] ?? 9) - (TIER_ORDER[b.row.tier] ?? 9));
         case "inputUsd":
-          return dir * (a.row.inputUsd - b.row.inputUsd);
+          return dir * (a.resolved.inputUsd - b.resolved.inputUsd);
         case "cachedUsd":
-          return dir * (nz(a.row.cachedUsd) - nz(b.row.cachedUsd));
+          return dir * (nz(a.resolved.cachedUsd) - nz(b.resolved.cachedUsd));
         case "outputUsd":
-          return dir * (a.row.outputUsd - b.row.outputUsd);
+          return dir * (a.resolved.outputUsd - b.resolved.outputUsd);
         case "blended":
           return dir * (a.cost.blendedInputPerMUsd - b.cost.blendedInputPerMUsd);
         case "total":
@@ -103,7 +106,8 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
 
   return (
     <div>
-      <Calculator workload={workload} onChange={setWorkload} />
+      <WorkloadCalculator workload={workload} onChange={setWorkload} />
+      <ScenarioControls scenario={scenario} onChange={setScenario} />
 
       {/* Filter + result summary */}
       <div
@@ -154,8 +158,9 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map(({ row, cost }) => {
+            {sorted.map(({ row, resolved, cost, scenarioPriced }) => {
               const isCheapest = cost.totalUsd === cheapest;
+              const cachedConfidence = resolved.cachedConfidence ?? resolved.confidence;
               return (
                 <tr key={row.id}>
                   <td>
@@ -166,30 +171,41 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
                   <td>
                     <div style={{ fontWeight: 500 }}>{row.model}</div>
                     {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
+                    {scenarioPriced && (
+                      <div
+                        className="mono"
+                        style={{ fontSize: "0.68rem", color: "var(--brand)", marginTop: "0.15rem" }}
+                        title="Priced under the selected scenario — differs from this row's flat base rate"
+                        suppressHydrationWarning
+                      >
+                        {resolved.label ?? "Scenario"}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <span className="badge badge-tier">{row.tier}</span>
                   </td>
                   <td className="num">
-                    {formatUsd(row.inputUsd)}
-                    <Mark confidence={row.confidence} />
+                    <span suppressHydrationWarning>{formatUsd(resolved.inputUsd)}</span>
+                    <Mark confidence={resolved.confidence} />
                   </td>
-                  <td className="num" style={{ color: row.cachedUsd === null ? "var(--text-faint)" : "var(--text-muted)" }}>
-                    {row.cachedUsd === null ? "—" : formatUsd(row.cachedUsd)}
-                    {row.cachedUsd !== null && <Mark confidence={row.cachedConfidence} />}
+                  <td className="num" style={{ color: resolved.cachedUsd === null ? "var(--text-faint)" : "var(--text-muted)" }}>
+                    <span suppressHydrationWarning>{resolved.cachedUsd === null ? "—" : formatUsd(resolved.cachedUsd)}</span>
+                    {resolved.cachedUsd !== null && <Mark confidence={cachedConfidence} />}
                   </td>
                   <td className="num">
-                    {formatUsd(row.outputUsd)}
-                    <Mark confidence={row.confidence} />
+                    <span suppressHydrationWarning>{formatUsd(resolved.outputUsd)}</span>
+                    <Mark confidence={resolved.confidence} />
                   </td>
                   <td className="num" style={{ color: "var(--text-muted)" }}>
-                    {formatUsd(cost.blendedInputPerMUsd)}
+                    <span suppressHydrationWarning>{formatUsd(cost.blendedInputPerMUsd)}</span>
                     {!cost.cacheApplied && (
                       <span title="No cache meter, so hit rate does not apply" style={{ color: "var(--text-faint)" }}>*</span>
                     )}
                   </td>
                   <td className="num">
                     <span
+                      suppressHydrationWarning
                       style={{
                         fontWeight: 600,
                         color: isCheapest ? "var(--official)" : "var(--text)",
@@ -197,7 +213,9 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
                     >
                       {formatUsd(cost.totalUsd)}
                     </span>
-                    <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{formatChf(cost.totalUsd)}</div>
+                    <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }} suppressHydrationWarning>
+                      {formatChf(cost.totalUsd)}
+                    </div>
                   </td>
                 </tr>
               );
@@ -210,7 +228,8 @@ export function CompareExplorer({ rows }: { rows: CompareRow[] }) {
         <span className="mono">Blended in</span> is the effective $/1M input paid after the cache split.
         <span className="mono"> *</span> marks models with no cache meter (hit rate ignored). Daggers{" "}
         <span className="mark mark-derived">†</span> /<span className="mark mark-estimate">‡</span> mark derived /
-        estimated rates.
+        estimated rates. A <span className="mono" style={{ color: "var(--brand)" }}>brand-colored label</span> under a
+        model name names the variant priced under the selected scenario, when it differs from the row&rsquo;s base rate.
       </p>
 
       <style>{`
@@ -244,127 +263,6 @@ function Th({
     >
       {children}
     </th>
-  );
-}
-
-function Calculator({
-  workload,
-  onChange,
-}: {
-  workload: Workload;
-  onChange: (w: Workload) => void;
-}) {
-  return (
-    <div className="card-2" style={{ padding: "1.4rem 1.5rem", marginBottom: "1.75rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.1rem" }}>
-        <div>
-          <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Interactive</div>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: 600 }}>Workload cost calculator</h2>
-        </div>
-        <button
-          type="button"
-          className="btn"
-          style={{ fontSize: "0.8rem" }}
-          onClick={() => onChange(DEFAULT_WORKLOAD)}
-        >
-          Reset to example
-        </button>
-      </div>
-
-      <div style={{ display: "grid", gap: "1.4rem", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}>
-        <NumberField
-          label="Input tokens (M)"
-          value={workload.inputTokens}
-          onChange={(v) => onChange({ ...workload, inputTokens: v })}
-          hint={formatTokens(workload.inputTokens)}
-        />
-        <NumberField
-          label="Output tokens (K)"
-          value={workload.outputTokens}
-          onChange={(v) => onChange({ ...workload, outputTokens: v })}
-          hint={formatTokens(workload.outputTokens)}
-          thousands
-        />
-        <div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-            <label htmlFor="cacherate" className="eyebrow">Cache hit rate</label>
-            <span className="mono" style={{ color: "var(--brand)", fontSize: "0.85rem" }}>
-              {Math.round(workload.cacheHitRate * 100)}%
-            </span>
-          </div>
-          <input
-            id="cacherate"
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={Math.round(workload.cacheHitRate * 100)}
-            onChange={(e) => onChange({ ...workload, cacheHitRate: Number(e.target.value) / 100 })}
-          />
-          <p style={{ fontSize: "0.72rem", color: "var(--text-faint)", marginTop: "0.5rem" }}>
-            Share of input tokens served from cache. Applied only to models with a cache meter.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  onChange,
-  hint,
-  thousands,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-  hint: string;
-  thousands?: boolean;
-}) {
-  const divisor = thousands ? 1_000 : 1_000_000;
-  const displayValue = value === 0 ? "" : String(Number((value / divisor).toFixed(4)));
-
-  const parseAndCommit = (raw: string) => {
-    const trimmed = raw.trim();
-    if (trimmed === "" || trimmed === "-") {
-      onChange(0);
-      return;
-    }
-    const units = Number(trimmed);
-    if (Number.isNaN(units)) return;
-    const tokens = Math.max(0, Math.round(units * divisor));
-    onChange(tokens);
-  };
-
-  return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-        <label className="eyebrow">{label}</label>
-        <span className="mono" style={{ color: "var(--text-faint)", fontSize: "0.8rem" }}>{hint}</span>
-      </div>
-      <input
-        type="text"
-        inputMode="decimal"
-        defaultValue={displayValue}
-        placeholder="0"
-        onBlur={(e) => parseAndCommit(e.target.value)}
-        onChange={(e) => {
-          const raw = e.target.value;
-          if (raw === "") {
-            onChange(0);
-            return;
-          }
-          const units = Number(raw);
-          if (!Number.isNaN(units) && units >= 0) {
-            const tokens = Math.round(units * divisor);
-            onChange(tokens);
-          }
-        }}
-        style={{ width: "100%" }}
-      />
-    </div>
   );
 }
 
