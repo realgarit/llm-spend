@@ -78,6 +78,7 @@ test("omits models that are no longer relevant to the catalog", () => {
     "GPT-5.1",
     "GPT-5",
     "GPT-5 Pro",
+    "DeepSeek V3",
     "DeepSeek V3.2",
     "DeepSeek-V3.1",
     "DeepSeek R1",
