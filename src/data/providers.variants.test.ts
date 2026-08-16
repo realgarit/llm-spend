@@ -453,7 +453,7 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
 ]);
 
 test("guard: every catalog row resolves to its own base rate as of today", () => {
-  const now = new Date("2026-08-14T12:00:00Z");
+  const now = new Date("2026-08-16T18:00:00Z");
 
   for (const provider of providers) {
     for (const row of provider.entries) {
