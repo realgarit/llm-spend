@@ -2,6 +2,7 @@ import Link from "next/link";
 import { providers } from "@/data/providers";
 import { formatUsd } from "@/data/currency";
 import { ConfidenceLegend, SectionHeading, Stat } from "@/components/ui";
+import { fromPrice } from "@/lib/from-price";
 
 export const dynamic = "force-static";
 
@@ -52,12 +53,14 @@ const METHOD: { n: string; body: string }[] = [
   { n: "6", body: "Treat anything not on an official page as an estimate, not fact. Re-check once real numbers land or a billing cycle closes." },
 ];
 
-function fromPrice(slug: string): number {
-  const p = providers.find((x) => x.slug === slug)!;
-  return Math.min(...p.entries.map((e) => e.inputUsd));
-}
-
 export default function HomePage() {
+  // Build-time basis for resolving variant-aware rates — same pattern as
+  // pricing-table.tsx's / compare/page.tsx's buildAtMs (see rate-cell.tsx /
+  // lib/use-now.ts). This page has no client-side island re-resolving on the
+  // visitor's clock, but fromPrice() still needs a `now` to resolve rows that
+  // carry rate variants, so it gets the same build-time value everything else
+  // on the site uses.
+  const buildAtMs = Date.now();
   return (
     <div className="container-page" style={{ paddingBlock: "3rem" }}>
       {/* Hero */}
@@ -124,7 +127,7 @@ export default function HomePage() {
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", flex: 1 }}>{p.tagline}</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.8rem" }}>
                 <span style={{ color: "var(--text-faint)" }}>
-                  from <span className="mono" style={{ color: "var(--brand)" }}>{formatUsd(fromPrice(p.slug))}</span>
+                  from <span className="mono" style={{ color: "var(--brand)" }}>{formatUsd(fromPrice(p.slug, new Date(buildAtMs)))}</span>
                   <span style={{ color: "var(--text-faint)" }}> /M in</span>
                 </span>
                 <span className="mono" style={{ color: "var(--brand)" }}>→</span>

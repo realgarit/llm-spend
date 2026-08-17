@@ -14,11 +14,11 @@ export const embeddings: Provider = {
       inputUsd: 0.12,
       cachedUsd: null,
       outputUsd: 0,
-      confidence: "derived",
+      confidence: "official",
       notes:
-        "Best RAG / code-retrieval pick. Matryoshka dims 256/512/1024/1536 (default 1536); input_type query/document distinction. Cohere no longer publishes a per-token Embed rate on its own pricing page; the figure is corroborated by Microsoft's live Foundry meter, which reads exactly $0.12/M.",
+        "Best RAG / code-retrieval pick. Matryoshka dims 256/512/1024/1536 (default 1536); input_type query/document distinction. Cohere publishes this per-token rate under the 'Advanced retrieval models' tab of its pricing page; Microsoft's live Foundry meter independently reads exactly $0.12/M.",
       sourceNote:
-        "Cohere delisted per-token Embed pricing from cohere.com/pricing between 2025-07-16 and 2025-08-09; the 2025-07-16 Internet Archive snapshot still shows $0.12 per 1M tokens for Embed 4. cohere.com/pricing now lists only Model Vault dedicated-instance rates (Embed 4 Small $4.00/hr, Embed 4 Medium $5.00/hr) and docs.cohere.com points back to that page. Rate retained because Azure's 'Embed v4 Txt Glbl Tokens' meter reads exactly $0.00012/1K ($0.12/M), captured 2026-07-29. Downgraded from official to derived: no first-party Cohere page publishes this rate today.",
+        "Cohere publishes this rate first-party on cohere.com/pricing under the 'Advanced retrieval models' tab, reading verbatim '$0.12 / 1M tokens' for Embed 4 (captured 2026-08-17); the same tab also publishes an image cost of $0.47/1M, a dimension this schema doesn't model. The figure is absent from the page's server-rendered HTML — only the default 'Workplace systems' tab is server-rendered, so this tab must be clicked in a live browser to see it, and Internet Archive snapshots (SSR-only) cannot show it.",
       effectiveDate: "2026-07-29",
     },
     {
