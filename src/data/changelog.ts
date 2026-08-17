@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-17",
+    title: "Provider cards no longer advertise a DeepSeek rate that is no longer charged",
+    tag: "methodology",
+    body: [
+      "The homepage provider cards show a \"from $X /M in\" figure for each provider. That figure was computed from each row's base input rate without accounting for conditional pricing, so after DeepSeek's peak/off-peak billing took effect on 2026-08-16 16:00 UTC it advertised DeepSeek \"from $0.14 /M in\" — a rate that is no longer charged at any hour of the day.",
+      "The figure is now resolved through the same rate engine the pricing table and compare page use, and reads $0.19 /M, the cheapest rate DeepSeek actually charges (its V4 Flash Global tier). No other provider's figure changed.",
+      "Because the calculation is now variant-aware, it will also follow Qwen3.7 Max's return to list price on 2026-09-01 and the Gemini Flash reversions on 2027-01-01 automatically, instead of continuing to show a superseded rate.",
+    ],
+    sources: [
+      { label: "DeepSeek pricing (peak/off-peak table)", href: "https://api-docs.deepseek.com/quick_start/pricing" },
+      { label: "DeepSeek API changelog (2026-08-13, transition dated)", href: "https://api-docs.deepseek.com/updates" },
+      {
+        label: "Azure Retail Prices API — DeepSeek meters",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-17",
+  },
+  {
+    date: "2026-08-17",
+    title: "Cohere Embed's direct rate is confirmed published again, and marked official",
+    tag: "methodology",
+    body: [
+      "Cohere's own pricing page publishes a per-token rate for Embed 4 again, at $0.12 per 1M tokens, shown under the \"Advanced retrieval models\" tab. The catalog's direct Cohere embedding row had been marked as a derived figure since 2026-07-29, when the rate appeared to have been removed from Cohere's site and Azure's meter became the only published source. The rate itself is unchanged — only its provenance label moves from derived to official, so the row no longer carries a confidence caveat it does not need.",
+      "The earlier \"removed\" conclusion rested on archived snapshots, which capture only server-rendered HTML; this page renders its per-token rates in tabs that load client-side, so the rate could not have appeared in a snapshot whether or not it was published.",
+    ],
+    sources: [
+      { label: "Cohere pricing — \"Advanced retrieval models\" tab", href: "https://cohere.com/pricing" },
+      { label: "Cohere docs — how pricing works", href: "https://docs.cohere.com/docs/how-does-cohere-pricing-work" },
+    ],
+    sourcesVerifiedOn: "2026-08-17",
+  },
+  {
     date: "2026-08-15",
     title: "Compare page's Service tier picker now returns real prices for seven rows, not a no-op",
     tag: "methodology",
