@@ -23,6 +23,24 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-19",
+    title: "GLM-5.3 is now tracked, with a published direct-API rate",
+    tag: "model",
+    body: [
+      "GLM-5.3, announced 2026-08-14 with no per-token price yet, now has one on Z.ai's pricing page: $1.40/M input, $0.26/M cached input, $4.40/M output — identical to GLM-5.1 and GLM-5.2 on all three dimensions. At the same price point, the choice within the family comes down to context window and reasoning behavior rather than cost: GLM-5.3 keeps the 1M-token window with 128K max output, and always runs with reasoning enabled (three effort levels — low, high, max — rather than an on/off toggle).",
+      "It is direct-API only for now. A full Azure Retail Prices API sweep on 2026-08-19 found no Microsoft Foundry meter for GLM 5.3, so unlike GLM-5, 5.1, and 5.2 — each of which has a Fireworks-hosted Data Zone row on Foundry — there is no Foundry lane to compare it against yet.",
+    ],
+    sources: [
+      { label: "Z.ai pricing (GLM-5.3 row)", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Z.ai GLM-5.3 model guide", href: "https://docs.z.ai/guides/llm/glm-5.3" },
+      {
+        label: "Azure Retail Prices API — Foundry Models (no GLM 5.3 meter)",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-19",
+  },
+  {
     date: "2026-08-17",
     title: "Provider cards no longer advertise a DeepSeek rate that is no longer charged",
     tag: "methodology",

@@ -6,8 +6,9 @@ export const glm: Provider = {
   slug: "glm",
   name: "GLM",
   org: "Zhipu / Z.ai",
-  tagline: "GLM-5.2 adds a 1M-token window and now has its own officially published Foundry Data Zone rate, including $0.15/M cached input.",
+  tagline: "GLM-5.3 joins 5.1 and 5.2 at exactly the same rate, so the choice within the family is about context window and Foundry availability, not cost.",
   intro: [
+    "GLM-5.3 is now the newest model in the family, direct-API only so far with no Foundry meter published. It prices identically to 5.1 and 5.2 on all three dimensions ($1.40/M input, $0.26/M cached input, $4.40/M output), keeps the same 1M-token window with 128K max output, and always runs with reasoning enabled — three effort levels (low, high, max) rather than an on/off toggle.",
     "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
     "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
     "GLM-5-Turbo sits between GLM-5 and 5.1/5.2 at $1.20/M input and $4.00/M output, and is Z.ai-direct only with no Foundry meter.",
@@ -113,6 +114,21 @@ export const glm: Provider = {
       sourceNote:
         "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-07-26: $1.40/M input, $0.26/M cached input, $4.40/M output (5.1 and 5.2 priced identically). Vendor label corrected from 'Fireworks direct API' to 'Z.ai direct API', matching the GLM-5 Direct row and closing the family's mixed-vendor Direct lane.",
       effectiveDate: "2026-07-26",
+    },
+    {
+      model: "GLM-5.3",
+      host: "Z.ai direct API",
+      tier: "Direct",
+      inputUsd: 1.4,
+      cachedUsd: 0.26,
+      outputUsd: 4.4,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes: "Prices identically to GLM-5.1 and GLM-5.2 on all three dimensions. Keeps the family's 1M-token window with 128K max output, and always runs with reasoning enabled — three effort levels (low, high, max); disabling reasoning is not supported.",
+      sourceNote:
+        "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-08-19: $1.40/M input, $0.26/M cached input, $4.40/M output per 1M tokens, USD — identical to GLM-5.1 and GLM-5.2. The model guide (docs.z.ai/guides/llm/glm-5.3) lists a 1M-token window, 128K max output, and reasoning always enabled with three effort levels (low, high, max). A full Azure Retail Prices API sweep on 2026-08-19 (29,405 rows) found no Foundry meter for GLM 5.3, so this direct-API row is the only lane.",
+      effectiveDate: "2026-08-19",
     },
   ],
   quirks: [
