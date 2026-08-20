@@ -376,13 +376,13 @@ const GPT56_PRIORITY_CASES = [
   },
   {
     model: "GPT-5.6 Terra",
-    base: { inputUsd: 2.5, cachedUsd: 0.25, outputUsd: 15.0 },
-    priority: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 30.0 },
+    base: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 12.0 },
+    priority: { inputUsd: 4.0, cachedUsd: 0.4, outputUsd: 24.0 },
   },
   {
     model: "GPT-5.6 Luna",
-    base: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 6.0 },
-    priority: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 12.0 },
+    base: { inputUsd: 0.2, cachedUsd: 0.02, outputUsd: 1.2 },
+    priority: { inputUsd: 0.4, cachedUsd: 0.04, outputUsd: 2.4 },
   },
 ];
 

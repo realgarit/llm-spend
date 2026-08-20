@@ -23,6 +23,24 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-20",
+    title: "Microsoft Foundry finally passes on the GPT-5.6 Terra and Luna price cuts",
+    tag: "pricing",
+    body: [
+      "OpenAI cut its direct-API rates for GPT-5.6 Terra and Luna on 2026-07-30, and for three weeks Microsoft Foundry kept billing the old ones. That gap is now closed. A Foundry meter tranche effective 2026-08-01 replaces the previous rates outright — the superseded 2026-07-01 meters no longer appear in the Azure retail catalog for either model — so all three GPT-5.6 variants are back at 1:1 parity with OpenAI direct.",
+      "Terra Global drops 20%, from $2.50/$0.25/$15.00 to $2.00/$0.20/$12.00 per 1M tokens. Luna Global drops 80%, from $1.00/$0.10/$6.00 to $0.20/$0.02/$1.20, which makes it the cheapest lane tracked here. The long-context tiers move by the same proportions, to $4.00/$0.40/$18.00 and $0.40/$0.04/$1.80. The priority (Azure \"PP\", renamed \"Fast mode\" by OpenAI) meters were cut alongside the standard ones and still bill at exactly 2x, and the Data Zone meters followed too, at the usual 1.10x. GPT-5.6 Sol was never cut and is unchanged at $5.00/$0.50/$30.00 on both Foundry and direct.",
+      "If you deferred a Foundry migration for these two models on cost grounds, the arithmetic has changed. It is also a reminder about sourcing: during the three-week lag, Azure support answers and at least one downstream cost tracker described the cut as already live on Azure while the retail catalog still billed the old rate. The published meter is what bills you.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — Foundry Models (GPT-5.6 meters, effective 2026-08-01)",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      { label: "OpenAI API pricing (post-cut direct rates)", href: "https://developers.openai.com/api/docs/pricing" },
+    ],
+    sourcesVerifiedOn: "2026-08-20",
+  },
+  {
     date: "2026-08-19",
     title: "GLM-5.3 is now tracked, with a published direct-API rate",
     tag: "model",

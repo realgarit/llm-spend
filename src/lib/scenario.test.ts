@@ -477,13 +477,13 @@ const TIERED_ROWS: {
     providerSlug: "openai-azure",
     model: "GPT-5.6 Terra",
     tier: "Global",
-    tiers: { priority: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 30.0 } },
+    tiers: { priority: { inputUsd: 4.0, cachedUsd: 0.4, outputUsd: 24.0 } },
   },
   {
     providerSlug: "openai-azure",
     model: "GPT-5.6 Luna",
     tier: "Global",
-    tiers: { priority: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 12.0 } },
+    tiers: { priority: { inputUsd: 0.4, cachedUsd: 0.04, outputUsd: 2.4 } },
   },
 ];
 
