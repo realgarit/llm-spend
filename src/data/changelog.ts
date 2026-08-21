@@ -23,6 +23,24 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-21",
+    title: "Kimi K3 reaches Microsoft Foundry, at a 10% Data Zone premium",
+    tag: "model",
+    body: [
+      "Kimi K3 has been tracked here since July as a direct-API-only model: every Azure Retail Prices sweep since then found no Foundry meter for it, so there was no Foundry lane to compare against. That has changed. A Fireworks-hosted Data Zone listing went live with meters effective 2026-08-01, at $3.30/M input, $0.33/M cached input, and $16.50/M output.",
+      "That is exactly 1.10x Moonshot's own $3.00/$0.30/$15.00 — the same Data Zone premium the Fireworks-hosted GLM, MiniMax, DeepSeek, and Kimi K2.6 lanes already carry. The listing is uniform across all 20 commercial Data Zone regions, with no regional outlier. There is no Foundry Global lane for K3, so unlike the K2 generation the only choice on Foundry is the Data Zone tier, and running K3 there costs 10% more than going direct to Moonshot.",
+      "A caveat worth knowing if you go looking for these rates yourself: Microsoft separately published six K3 meters under its native Azure Kimi product whose names contradict their own prices — one meter tagged as output bills $0.33/M, another tagged as Data Zone output bills the Global input rate. Their prices do resolve into a plausible Global and Data Zone pair, but no dimension can be read off the meter names, so only the correctly-labelled Fireworks lane is quoted here.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — Foundry Models (FW Kimi K3 Data Zone meters, effective 2026-08-01)",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      { label: "Moonshot Kimi K3 pricing (direct API baseline)", href: "https://platform.kimi.ai/docs/pricing/chat-k3" },
+    ],
+    sourcesVerifiedOn: "2026-08-21",
+  },
+  {
     date: "2026-08-20",
     title: "Microsoft Foundry finally passes on the GPT-5.6 Terra and Luna price cuts",
     tag: "pricing",
