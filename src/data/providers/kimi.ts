@@ -6,9 +6,9 @@ export const kimi: Provider = {
   slug: "kimi",
   name: "Kimi",
   org: "Moonshot AI",
-  tagline: "Kimi K3 is a 1M-context direct API flagship; earlier K2 models are resold on Microsoft Foundry across tiers.",
+  tagline: "Kimi K3 is a 1M-context flagship, now on Microsoft Foundry as well as Moonshot's own API; earlier K2 models are resold on Foundry across tiers.",
   intro: [
-    "Kimi K3 is available directly from Moonshot's API for long-horizon coding and knowledge work. Earlier K2 models are resold on Microsoft Foundry at Global and Data Zone tiers, plus a Fireworks-hosted listing. These chat models are generation-only, so pair them with an embeddings model for retrieval.",
+    "Kimi K3 is available directly from Moonshot's API for long-horizon coding and knowledge work, and since 2026-08-01 through a Fireworks-hosted Microsoft Foundry Data Zone listing. Earlier K2 models are resold on Foundry at Global and Data Zone tiers, plus Fireworks-hosted listings. These chat models are generation-only, so pair them with an embeddings model for retrieval.",
   ],
   entries: [
     {
@@ -74,6 +74,21 @@ export const kimi: Provider = {
       effectiveDate: "2026-07-23",
     },
     {
+      model: "Kimi K3",
+      host: "Fireworks-hosted",
+      tier: "DataZone",
+      inputUsd: 3.3,
+      cachedUsd: 0.33,
+      outputUsd: 16.5,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes:
+        "Kimi K3's first Microsoft Foundry lane. Data Zone only — there is no Global meter for K3 under a model-named meter.",
+      sourceNote:
+        "Azure Retail Prices API, productName 'Azure Fireworks Models', meters 'FW Kimi K3 Inp DZ Tokens' ($0.0033/1K = $3.30/M), 'FW Kimi K3 Cd Inp DZ Tokens' ($0.00033/1K = $0.33/M) and 'FW Kimi K3 Opt DZ Tokens' ($0.0165/1K = $16.50/M), effective 2026-08-01, captured 2026-08-21. One uniform price group across all 20 commercial Data Zone regions, no US-Gov or rounding outlier. Exactly 1.10x Moonshot's direct rate ($3.00/$0.30/$15.00), the same Data Zone premium every other Fireworks-hosted lane on Foundry carries.",
+      effectiveDate: "2026-08-21",
+    },
+    {
       model: "Kimi K2.6",
       host: "Fireworks-hosted",
       tier: "DataZone",
@@ -99,6 +114,14 @@ export const kimi: Provider = {
       tone: "info",
       body: [
         "The Fireworks-hosted K2.6 Data Zone listing ($1.045 / CHF 0.84 input) sits above the native Global tier ($0.95 / CHF 0.77).",
+      ],
+    },
+    {
+      title: "K3's other Foundry meters do not name their own dimensions",
+      tone: "warning",
+      body: [
+        "Alongside the clearly-named Fireworks lane tracked here, Microsoft also published six K3 meters under its native 'Azure Kimi' product on 2026-08-01 — but they are labelled 'Model 6' and 'Model 7' with input/output tags that contradict their own prices. 'Model 7 Outp glbl' bills $0.33/M and 'Model 6 Outp DZ' bills $3.00/M, for instance, and no meter is named as cached input at all.",
+        "The six prices do form two coherent sets — $3.00/$0.30/$15.00 across 35 regions and $3.30/$0.33/$16.50 across 19 — which look like a Global and a Data Zone lane, and the second set matches the Fireworks meters exactly. But assigning those numbers to input, cached, and output would mean importing the mapping from Moonshot's own price list and presenting the result as an Azure rate. Until Microsoft renames the meters, only the Fireworks Data Zone lane is quoted here, and no Foundry Global row for K3 is claimed.",
       ],
     },
   ],
