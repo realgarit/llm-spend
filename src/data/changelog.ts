@@ -23,6 +23,24 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-22",
+    title: "OpenAI cuts GPT-5.6 Sol, Foundry does not follow — and DeepSeek V4 Flash gains two Data Zone lanes",
+    tag: "pricing",
+    body: [
+      "OpenAI cut its flagship on 2026-08-21. GPT-5.6 Sol now bills $4.00/M input, $0.40/M cached input and $20.00/M output on the direct API, down from $5.00/$0.50/$30.00, with the long-context tier at $8.00/$0.80/$30.00. OpenAI's pricing page labels this promotional and says it is \"available at least through November 21, 2026\" — an open-ended commitment with no published reversion rate, so nothing is staged here for a future date.",
+      "Microsoft Foundry has not passed the cut on. A full sweep of the Azure Retail Prices catalog today found every GPT-5.6 Sol meter still on its original 2026-07-01 tranche at $5.00/$0.50/$30.00, with none of the newer 2026-08-01 tranche that carried the Terra and Luna cuts three weeks after those were announced. Running Sol on Foundry Global therefore costs 25% more per input token and 50% more per output token than going direct, and the Data Zone tier stacks its usual 10% on top. Terra and Luna are unaffected and remain at 1:1 parity. The Sol rates shown here are unchanged, because the Azure meter is what bills a Foundry customer — what changed is that it is no longer the same number OpenAI charges.",
+      "Separately, DeepSeek V4 Flash gains the two Foundry Data Zone lanes that V4 Pro already had. Microsoft's first-party Data Zone deployment bills $0.21/$0.031/$0.56, the expected 10% over Global. The Fireworks-hosted Data Zone listing bills $0.15/$0.03/$0.31 — below the Global tier on every dimension, which inverts the usual rule that Data Zone is the premium tier. That makes it the cheapest DeepSeek lane tracked here and the cheapest input rate on the site. The two are different sellers rather than different tiers of one seller, so the tier label carries no price ordering across hosts.",
+    ],
+    sources: [
+      { label: "OpenAI API pricing (GPT-5.6 Sol promotional rate and its \"at least through November 21, 2026\" note)", href: "https://developers.openai.com/api/docs/pricing" },
+      {
+        label: "Azure Retail Prices API — Foundry Models (GPT-5.6 Sol meters, DeepSeek V4 Flash Data Zone meters)",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-08-22",
+  },
+  {
     date: "2026-08-21",
     title: "Kimi K3 reaches Microsoft Foundry, at a 10% Data Zone premium",
     tag: "model",

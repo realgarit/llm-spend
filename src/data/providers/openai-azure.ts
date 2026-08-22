@@ -5,10 +5,10 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "Azure resells OpenAI 1:1 with no markup. The catch is deployment type and Responses-API-only variants.",
+  tagline: "Azure normally resells OpenAI 1:1, but a promotional cut on the GPT-5.6 Sol flagship has opened a fresh gap. Deployment type and Responses-API-only variants are the other catches.",
   intro: [
-    "Azure OpenAI matches OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and now has official Azure Foundry meters confirming the 1:1 pattern, including cached-input and cache-write meters plus Data Zone (+10%) and long-context tiers.",
-    "That 1:1 parity broke for three weeks. OpenAI cut its direct-API rates on 2026-07-30 — Terra by 20% (to $2.00/$0.20/$12.00) and Luna by 80% (to $0.20/$0.02/$1.20) — and the Azure Foundry meters did not follow, leaving Foundry at roughly 1.25x direct on Terra and 5x on Luna. Foundry has now caught up: a new meter tranche effective 2026-08-01, confirmed in the Azure Retail Prices API on 2026-08-20, replaces the old Terra and Luna rates with the cut ones on every dimension and every tier. Parity is restored across all three variants.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
   ],
   entries: [
     {
@@ -18,9 +18,10 @@ export const openaiAzure: Provider = {
       cachedUsd: 0.5,
       outputUsd: 30.0,
       confidence: "official",
-      notes: "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09. Matches OpenAI's direct rate 1:1.",
+      notes:
+        "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09. No longer at parity with OpenAI direct: OpenAI cut Sol to $4.00/$0.40/$20.00 on 2026-08-21 as promotional pricing, and this Foundry meter has not followed — Foundry is 1.25x direct on input and cached input, and 1.50x on output.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std Gl, effective 2026-07-01; captured 2026-07-21). Cache write bills at 1.25x uncached input ($6.25/M meter); reads stay ~90% off.",
+        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std Gl, effective 2026-07-01; captured 2026-07-21, re-verified unchanged in a full paged sweep on 2026-08-22 — all sol meters still carry the single 2026-07-01 tranche, with no 2026-08-01 tranche of the kind that carried the Terra and Luna cuts). Cache write bills at 1.25x uncached input ($6.25/M meter); reads stay ~90% off. OpenAI's own rate for gpt-5.6-sol, read via raw DOM from developers.openai.com/api/docs/pricing on 2026-08-22, is $4.00/$0.40/$20.00 with a $5.00/M cache write, labelled promotional and \"available at least through November 21, 2026\".",
       effectiveDate: "2026-07-21",
       variants: [
         {
@@ -42,9 +43,10 @@ export const openaiAzure: Provider = {
       cachedUsd: 0.55,
       outputUsd: 33.0,
       confidence: "official",
-      notes: "~10% Data Zone premium over Global.",
+      notes:
+        "~10% Data Zone premium over Global. Because the Global Sol meter did not follow OpenAI's 2026-08-21 promotional cut, this row is roughly 1.38x OpenAI's direct input rate and 1.65x its direct output rate.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std DZ, effective 2026-07-01; captured 2026-07-21).",
+        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std DZ, effective 2026-07-01; captured 2026-07-21, re-verified unchanged 2026-08-22 across the 13 US/EU Data Zone regions).",
       effectiveDate: "2026-07-21",
     },
     {
@@ -54,9 +56,10 @@ export const openaiAzure: Provider = {
       cachedUsd: 1.0,
       outputUsd: 45.0,
       confidence: "official",
-      notes: "Long Context tier; all meters roughly double the short-context rates.",
+      notes:
+        "Long Context tier; all meters roughly double the short-context rates. Also left behind by OpenAI's 2026-08-21 promotional Sol cut, which took the direct long-context rate to $8.00/$0.80/$30.00 — so Foundry is 1.25x direct on input and 1.50x on output here too.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol LongCo Std Gl, effective 2026-07-01; captured 2026-07-21).",
+        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol LongCo Std Gl, effective 2026-07-01; captured 2026-07-21, re-verified unchanged 2026-08-22). OpenAI's direct long-context rate for gpt-5.6-sol, read via raw DOM on 2026-08-22, is $8.00/$0.80/$30.00 with a $10.00/M cache write.",
       effectiveDate: "2026-07-21",
     },
     {
@@ -237,11 +240,13 @@ export const openaiAzure: Provider = {
       ],
     },
     {
-      title: "Terra and Luna: Foundry has caught up with the direct-API cut",
-      tone: "info",
+      title: "Sol is now the model Foundry has not repriced",
+      tone: "warning",
       body: [
-        "OpenAI cut GPT-5.6 Terra and Luna's direct-API rates on 2026-07-30 — Terra by 20% (to $2.00/$0.20/$12.00), Luna by 80% (to $0.20/$0.02/$1.20) — and for three weeks the Azure Foundry meters did not follow, leaving Foundry at roughly 1.25x direct on Terra and 5x on Luna. That gap is closed: a Foundry meter tranche effective 2026-08-01, confirmed in the Azure Retail Prices API on 2026-08-20, carries the cut rates on Global, Data Zone, long-context and priority meters alike, and the old 2026-07-01 rates are gone from the catalog entirely. All three GPT-5.6 variants are back at 1:1 with OpenAI direct.",
-        "Worth remembering for next time: the meters lagged the announcement by about three weeks, and during that window Azure's own support answers and at least one downstream cost tracker described the cut as already applied on Azure when the retail catalog still billed the old rate. The retail meter is what bills you.",
+        "OpenAI cut GPT-5.6 Terra and Luna on 2026-07-30, and for three weeks the Azure Foundry meters did not follow. That gap closed on 2026-08-01, when a new Foundry tranche picked up the cut rates on Global, Data Zone, long-context and priority meters alike. Terra and Luna are at 1:1 with OpenAI direct today.",
+        "The same thing has now happened to the flagship. On 2026-08-21 OpenAI cut GPT-5.6 Sol to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context — its pricing page calls this promotional and \"available at least through November 21, 2026\" — while every Sol meter in the Azure retail catalog still sits on its original 2026-07-01 tranche at $5.00/$0.50/$30.00. Running Sol on Foundry Global costs 25% more per input token and 50% more per output token than going direct to OpenAI, and Data Zone stacks its usual 10% on top of that.",
+        "Two things follow. If you are on Foundry for Sol specifically and have no data-residency requirement, the direct API is materially cheaper for as long as the promotion runs. And because OpenAI framed the cut as promotional with an open-ended \"at least through\" date rather than a fixed reversion, no reversion rate is published — this catalog does not stage a future price it cannot cite, so the Sol rows track the Azure meter and the gap is described here instead.",
+        "Worth remembering: when Terra and Luna lagged, Azure support answers and at least one downstream cost tracker described the cut as already applied on Azure while the retail catalog still billed the old rate. The retail meter is what bills you.",
       ],
     },
     {
