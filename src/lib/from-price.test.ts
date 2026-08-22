@@ -11,10 +11,16 @@ import { rateRange } from "./rates";
 const OFF_PEAK_NOW = new Date("2026-08-20T12:00:00Z");
 const PEAK_NOW = new Date("2026-08-20T02:00:00Z");
 
-test("DeepSeek's from-price is the Global Flash rate ($0.19), never the stale Direct base ($0.14)", () => {
+// The cheapest reachable DeepSeek input rate. It was the $0.19 Global V4 Flash
+// row until 2026-08-22, when the Fireworks-hosted V4 Flash Data Zone lane
+// ($0.15) was added and undercut it — Data Zone below Global, because the two
+// are different sellers rather than two tiers of one seller (see deepseek.ts).
+const DEEPSEEK_FROM = 0.15;
+
+test("DeepSeek's from-price is the cheapest reachable rate, never the stale Direct base ($0.14)", () => {
   const price = fromPrice("deepseek", OFF_PEAK_NOW);
 
-  assert.equal(price, 0.19);
+  assert.equal(price, DEEPSEEK_FROM);
   assert.notEqual(price, 0.14);
 });
 
@@ -25,8 +31,8 @@ test("DeepSeek's from-price is identical at a peak hour and an off-peak hour", (
   const offPeakPrice = fromPrice("deepseek", OFF_PEAK_NOW);
   const peakPrice = fromPrice("deepseek", PEAK_NOW);
 
-  assert.equal(offPeakPrice, 0.19);
-  assert.equal(peakPrice, 0.19);
+  assert.equal(offPeakPrice, DEEPSEEK_FROM);
+  assert.equal(peakPrice, DEEPSEEK_FROM);
   assert.equal(peakPrice, offPeakPrice);
 });
 

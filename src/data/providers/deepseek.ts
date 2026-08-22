@@ -5,9 +5,10 @@ const CAPTURED = "2026-07-11";
 export const deepseek: Provider = {
   slug: "deepseek",
   name: "DeepSeek",
-  tagline: "1M-token context, cheap direct pricing, and Microsoft Foundry resale markups from ~10% to a reported 4.5x.",
+  tagline: "1M-token context, cheap direct pricing, and Microsoft Foundry resale markups from ~10% to a reported 4.5x — with one Data Zone lane that undercuts Global.",
   intro: [
     "DeepSeek V4 Pro and V4 Flash ship real 1M-token windows (max output up to 384K). Pricing is a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. Numbers below.",
+    "Both models are now tracked across all four Foundry lanes. V4 Pro and V4 Flash each have a first-party Global listing, a first-party Data Zone listing at the usual ~10% premium, and a Fireworks-hosted Data Zone listing. For V4 Pro the Fireworks lane is slightly the more expensive of the two Data Zone options; for V4 Flash it is dramatically the cheapest lane of all four, below even Global.",
   ],
   entries: [
     {
@@ -159,6 +160,35 @@ export const deepseek: Provider = {
       sourceNote: "Fireworks official live pricing page.",
       effectiveDate: CAPTURED,
     },
+    {
+      model: "DeepSeek-V4 Flash",
+      tier: "DataZone",
+      inputUsd: 0.21,
+      cachedUsd: 0.031,
+      outputUsd: 0.56,
+      contextWindow: 1_000_000,
+      maxOutput: 384_000,
+      confidence: "official",
+      notes:
+        "First-party Foundry Data Zone deployment: the Global rate x1.10, rounded up to the meter's precision on every dimension. The Fireworks-hosted Data Zone lane below undercuts both this and Global.",
+      sourceNote:
+        "Azure Retail Prices API, product \"Azure Deepseek Models\": 'V4 Flash Inp DZ Tokens' $0.00021/1K, 'V4 Flash cached DZ Tokens' $0.000031/1K, 'V4 Flash Outp DZ Tokens' $0.00056/1K, uniform across 22 commercial regions. Captured 2026-08-22. Each figure is the Global rate x1.10 rounded up ($0.19 to $0.209 to $0.21; $0.028 to $0.0308 to $0.031; $0.51 to $0.561 to $0.56). The two US-Gov regions price higher, as they do across this whole product; the commercial majority is used here. Microsoft separately publishes a 'V4 Flash 0731' meter set for the newer snapshot at $0.44/$0.014/$1.32 Global — this row tracks the plain 'V4 Flash' meters.",
+      effectiveDate: "2026-08-22",
+    },
+    {
+      model: "DeepSeek-V4 Flash",
+      host: "Fireworks-hosted",
+      tier: "DataZone",
+      inputUsd: 0.15,
+      cachedUsd: 0.03,
+      outputUsd: 0.31,
+      confidence: "official",
+      notes:
+        "The cheapest DeepSeek lane on Foundry, and cheaper than the Global tier — an inversion of the usual pattern, because this is a different host undercutting the first-party listing rather than a tier discount.",
+      sourceNote:
+        "Azure Retail Prices API, product \"Azure Fireworks Models\": 'FW Deepseek-v4-Flash In DZ Tokens' $0.00015/1K, 'FW Deepseek-v4-Flash Cd In DZ Tokens' $0.00003/1K, 'FW Deepseek-v4-Flash Opt DZ Tokens' $0.00031/1K, effective 2026-08-01, uniform across all 20 commercial Data Zone regions with no US-Gov or rounding outlier. Captured 2026-08-22. Fireworks prices its own hosting, so this is not a multiple of DeepSeek's or Microsoft's rate, and the meter names no model snapshot.",
+      effectiveDate: "2026-08-22",
+    },
   ],
   quirks: [
     {
@@ -173,6 +203,14 @@ export const deepseek: Provider = {
       tone: "warning",
       body: [
         "The Azure pricing summary does not show a cached-input column, but Azure's retail catalog lists one for both Global models: $0.145 / CHF 0.12 per M for V4 Pro (~91.7% off) and $0.028 / CHF 0.02 for V4 Flash (~85% off). Billing exports reconcile to those published meters.",
+      ],
+    },
+    {
+      title: "V4 Flash: Data Zone can be cheaper than Global",
+      tone: "insight",
+      body: [
+        "Data Zone is normally the premium tier — it pins routing to a geography and charges about 10% for it. V4 Flash breaks that. Microsoft's own Data Zone deployment does follow the rule ($0.21 / CHF 0.17 input against $0.19 / CHF 0.15 Global), but the Fireworks-hosted Data Zone listing bills $0.15 / CHF 0.12 input and $0.31 / CHF 0.25 output — below the Global tier on every dimension, and the cheapest DeepSeek lane on Foundry.",
+        "The reason is that these are different sellers, not different tiers of one seller. Comparing tier labels across hosts tells you nothing about price; compare the meters. If you were going to accept Data Zone routing anyway, the Fireworks lane is strictly cheaper than staying on Global.",
       ],
     },
     {
