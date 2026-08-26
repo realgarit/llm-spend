@@ -553,11 +553,16 @@ test("guard: the preview opt-in never leaks into the default 'Now' scenario, for
 });
 
 test("the real DeepSeek catalog rows preview their peak rate before the split starts, and only they do", () => {
-  // Ties the abstract fixtures above to the actual catalog: today (15 Aug,
+  // Ties the abstract fixtures above to the actual catalog: today (14 Aug,
   // before the 16 Aug 16:00Z start) picking "Peak" must reveal DeepSeek's
   // peak numbers, labelled as a preview, and must leave every other row alone.
+  //
+  // The date must be a WEEKDAY. DeepSeek's peak window is Monday-Friday, and
+  // `resolveScenarioTime` deliberately overrides only the hour and keeps the
+  // calendar date, so a Saturday or Sunday fixture resolves to Off-peak no
+  // matter which hour "Peak" selects. 2026-08-14 is a Friday.
   const rows = buildCompareRows();
-  const ctxs = scenarioContexts(peakScenario(), new Date("2026-08-15T09:43:30Z"), DEFAULT_WORKLOAD.inputTokens);
+  const ctxs = scenarioContexts(peakScenario(), new Date("2026-08-14T09:43:30Z"), DEFAULT_WORKLOAD.inputTokens);
   const previewing = rows
     .map((row) => compareRowUnderScenario(row, DEFAULT_WORKLOAD, ctxs))
     .filter((c) => c.preview !== null);
@@ -575,4 +580,27 @@ test("the real DeepSeek catalog rows preview their peak rate before the split st
   assert.equal(pro.resolved.inputUsd, 1.32);
   assert.equal(pro.resolved.cachedUsd, 0.044);
   assert.equal(pro.resolved.outputUsd, 3.96);
+});
+
+test("on a weekend the 'Peak' scenario honestly resolves DeepSeek to Off-peak", () => {
+  // Pinned deliberately, not incidentally. `resolveScenarioTime` overrides the
+  // hour but keeps the calendar date, and DeepSeek's peak window is
+  // Monday-Friday, so picking "Peak" on a Saturday cannot produce a peak rate.
+  // Showing the off-peak number is the correct answer — there is no peak rate
+  // on a Saturday — and the row labels itself "Off-peak", so the table never
+  // claims otherwise. If the Time control is ever taught to move to a weekday,
+  // this expectation is the thing that must change with it.
+  const saturday = new Date("2026-08-29T09:43:30Z");
+  assert.equal(saturday.getUTCDay(), 6);
+
+  const ctxs = scenarioContexts(peakScenario(), saturday, DEFAULT_WORKLOAD.inputTokens);
+  const pro = buildCompareRows()
+    .map((row) => compareRowUnderScenario(row, DEFAULT_WORKLOAD, ctxs))
+    .find((c) => c.row.model === "DeepSeek-V4 Pro" && c.row.host === "DeepSeek direct API");
+
+  assert.ok(pro, "expected DeepSeek-V4 Pro (direct) among the compare rows");
+  assert.equal(pro.resolved.label, "Off-peak");
+  assert.equal(pro.resolved.inputUsd, 0.66);
+  assert.equal(pro.resolved.outputUsd, 1.98);
+  assert.equal(pro.preview, null, "the split has started, so this is a live rate and not a preview");
 });

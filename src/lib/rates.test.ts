@@ -362,3 +362,71 @@ test("reports no scheduled change for a row with no variants or no boundaries", 
     null,
   );
 });
+
+/**
+ * DeepSeek's published peak window is Monday-Friday only ("Peak hours are
+ * 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday"), so the same
+ * clock hour bills peak midweek and off-peak at the weekend.
+ */
+const WEEKDAY_PEAK: RateVariant = {
+  ...PEAK,
+  conditions: { ...PEAK.conditions, utcDaysOfWeek: [1, 2, 3, 4, 5] },
+};
+const weekdayPeakEntry = entry({ variants: [WEEKDAY_PEAK, OFF_PEAK] });
+
+test("utcDaysOfWeek matches only the listed UTC days", () => {
+  // 2026-08-24 is a Monday, so this run covers Mon..Sun in order.
+  const weekdays = { utcDaysOfWeek: [1, 2, 3, 4, 5] };
+  const expected = [true, true, true, true, true, false, false];
+
+  for (const [index, want] of expected.entries()) {
+    const iso = `2026-08-${String(24 + index).padStart(2, "0")}T02:00:00Z`;
+    assert.equal(matchesConditions(weekdays, at(iso)), want, iso);
+  }
+});
+
+test("an omitted or empty utcDaysOfWeek places no constraint", () => {
+  for (const iso of ["2026-08-29T02:00:00Z", "2026-08-24T02:00:00Z"]) {
+    assert.equal(matchesConditions({}, at(iso)), true, iso);
+    assert.equal(matchesConditions({ utcDaysOfWeek: [] }, at(iso)), true, iso);
+  }
+});
+
+test("a peak hour on a weekend falls through to off-peak", () => {
+  // Saturday 2026-08-29 and Sunday 2026-08-30, both inside a peak *hour*.
+  for (const iso of ["2026-08-29T02:00:00Z", "2026-08-29T09:59:59Z", "2026-08-30T06:30:00Z"]) {
+    const resolved = resolveRate(weekdayPeakEntry, at(iso));
+    assert.equal(resolved.label, "Off-peak", iso);
+    assert.equal(resolved.inputUsd, 0.5, iso);
+  }
+
+  // Same hours on the Friday before and the Monday after still bill peak.
+  for (const iso of ["2026-08-28T02:00:00Z", "2026-08-31T06:30:00Z"]) {
+    assert.equal(resolveRate(weekdayPeakEntry, at(iso)).label, "Peak", iso);
+  }
+});
+
+test("applicableVariants and rateRange waive the day scoping as well as the hour", () => {
+  // Sunday, an hour that can never be peak — the full spread must still show.
+  const sunday = at("2026-08-30T02:00:00Z");
+
+  assert.deepEqual(
+    applicableVariants(weekdayPeakEntry, sunday).map((v) => v.label),
+    ["Peak", "Off-peak"],
+  );
+  assert.deepEqual(rateRange(weekdayPeakEntry, sunday), {
+    minInputUsd: 0.5,
+    maxInputUsd: 1,
+    minOutputUsd: 1,
+    maxOutputUsd: 2,
+    varies: true,
+  });
+});
+
+test("nextRateChange finds Monday's peak from Friday, more than 48h out", () => {
+  // Friday 2026-08-28 10:00Z: the peak window has just closed and the next one
+  // does not open until Monday 2026-08-31 01:00Z — 63 hours later.
+  const change = nextRateChange(weekdayPeakEntry, at("2026-08-28T10:00:00Z"));
+
+  assert.deepEqual(change, { at: new Date("2026-08-31T01:00:00Z"), label: "Peak" });
+});

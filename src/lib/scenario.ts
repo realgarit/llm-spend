@@ -145,9 +145,14 @@ export function scenarioContexts(scenario: Scenario, liveNow: Date, contextToken
   };
 }
 
-/** True when any of `entry`'s variants is scoped to hours of the day. */
+/**
+ * True when any of `entry`'s variants is scoped to a recurring position in the
+ * week — an hour of the day, a day of the week, or both.
+ */
 export function isTimeOfDayPriced(entry: PricingEntry): boolean {
-  return (entry.variants ?? []).some((v) => (v.conditions.utcHourWindows?.length ?? 0) > 0);
+  return (entry.variants ?? []).some(
+    (v) => (v.conditions.utcHourWindows?.length ?? 0) > 0 || (v.conditions.utcDaysOfWeek?.length ?? 0) > 0,
+  );
 }
 
 /**
@@ -161,10 +166,10 @@ export function isTimeOfDayPriced(entry: PricingEntry): boolean {
  * would silently reorder the table's workload-cost ranking and move the
  * cheapest-model highlight for a reason the reader never asked about.
  *
- * The whole *row* is opened up, not just its hour-scoped variants: DeepSeek's
- * "Off-peak" carries no `utcHourWindows` at all (it is the fallback half of an
- * hour-scoped pair), so gating variant-by-variant would reveal Peak and leave
- * Off-peak stuck on the base rate.
+ * The whole *row* is opened up, not just its time-scoped variants: DeepSeek's
+ * "Off-peak" carries no `utcHourWindows` or `utcDaysOfWeek` at all (it is the
+ * fallback half of a time-scoped pair), so gating variant-by-variant would
+ * reveal Peak and leave Off-peak stuck on the base rate.
  */
 export function effectivePreviewContext(entry: PricingEntry, preview: RateContext): RateContext {
   if (!preview.previewScheduledRates || isTimeOfDayPriced(entry)) return preview;
@@ -186,7 +191,8 @@ export interface ScheduledPreview {
  * The test is whether the matched variant's schedule is live *right now*, on
  * the real clock, setting aside what hour of the day the scenario asked for —
  * exactly what `applicableVariants` computes (it enforces `from`/`until`,
- * context band and tier, and waives only `utcHourWindows`).
+ * context band and tier, and waives only the recurring time scoping —
+ * `utcHourWindows` and `utcDaysOfWeek`).
  *
  * Waiving the hour is what makes this self-correcting rather than a hardcoded
  * "DeepSeek is a preview" rule. Comparing against the live *resolution*

@@ -49,7 +49,7 @@ export const deepseek: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail.",
+        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail.",
       sourceNote: "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate.",
       effectiveDate: CAPTURED,
       variants: [
@@ -61,13 +61,15 @@ export const deepseek: Provider = {
               { startHourUtc: 1, endHourUtc: 4 },
               { startHourUtc: 6, endHourUtc: 10 },
             ],
+            // Monday-Friday. Weekends fall through to the Off-peak variant below.
+            utcDaysOfWeek: [1, 2, 3, 4, 5],
           },
           inputUsd: 1.32,
           cachedUsd: 0.044,
           outputUsd: 3.96,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
         },
         {
           label: "Off-peak",
@@ -77,7 +79,7 @@ export const deepseek: Provider = {
           outputUsd: 1.98,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
         },
       ],
     },
@@ -91,7 +93,7 @@ export const deepseek: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "First-party published cache-hit, cache-miss, and output rates. Peak/off-peak billing begins 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC): off-peak $0.007/$0.22/$0.66, peak $0.014/$0.44/$1.32 — see the changelog for detail.",
+        "First-party published cache-hit, cache-miss, and output rates. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.007/$0.22/$0.66, peak $0.014/$0.44/$1.32 — see the changelog for detail.",
       sourceNote: "DeepSeek's own direct API pricing, including the published cached-input rate.",
       effectiveDate: CAPTURED,
       variants: [
@@ -103,13 +105,15 @@ export const deepseek: Provider = {
               { startHourUtc: 1, endHourUtc: 4 },
               { startHourUtc: 6, endHourUtc: 10 },
             ],
+            // Monday-Friday. Weekends fall through to the Off-peak variant below.
+            utcDaysOfWeek: [1, 2, 3, 4, 5],
           },
           inputUsd: 0.44,
           cachedUsd: 0.014,
           outputUsd: 1.32,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
         },
         {
           label: "Off-peak",
@@ -119,7 +123,7 @@ export const deepseek: Provider = {
           outputUsd: 0.66,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing), captured 2026-08-14. Off-peak is exactly half of peak; peak hours are 01:00-04:00 and 06:00-10:00 UTC.",
+            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
         },
       ],
     },
