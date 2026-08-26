@@ -23,6 +23,22 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-26",
+    title: "DeepSeek's peak pricing is weekdays only — weekends bill at the off-peak rate",
+    tag: "pricing",
+    body: [
+      "DeepSeek's peak/off-peak split, which began billing on 2026-08-16, does not run every day. Its pricing page states that peak hours are 01:00-04:00 and 06:00-10:00 UTC \"Monday through Friday (all other hours are off-peak)\", and the Chinese edition of the same page agrees, expressing the identical windows in Beijing time. Every hour of Saturday and Sunday bills off-peak.",
+      "This site was showing the peak rate during those hours at the weekend, which overstated the cost of a weekend DeepSeek call by exactly 2x — V4 Pro read $1.32/M input and $3.96/M output when the real weekend rate is $0.66 and $1.98, and V4 Flash read $0.44/$1.32 instead of $0.22/$0.66. Twelve hours of every week were priced wrongly. Both DeepSeek direct rows are now correct at every hour of every day, and the published rates themselves are unchanged — only the schedule they are applied on.",
+      "Behind that, the catalog's scheduled-pricing model gains a day-of-week condition, so a rate that recurs only on working days can be described exactly rather than approximated. The rate the site quotes is still always a number DeepSeek publishes; what changed is that it is now applied on the calendar DeepSeek publishes it for.",
+    ],
+    sources: [
+      { label: "DeepSeek Models & Pricing (peak/off-peak table and the \"Monday through Friday\" footnote)", href: "https://api-docs.deepseek.com/quick_start/pricing/" },
+      { label: "DeepSeek 模型 & 价格 (the same windows stated in Beijing time, 周一至周五)", href: "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/" },
+      { label: "DeepSeek change log (2026-08-13 pricing adjustment announcement)", href: "https://api-docs.deepseek.com/updates/" },
+    ],
+    sourcesVerifiedOn: "2026-08-26",
+  },
+  {
     date: "2026-08-22",
     title: "OpenAI cuts GPT-5.6 Sol, Foundry does not follow — and DeepSeek V4 Flash gains two Data Zone lanes",
     tag: "pricing",

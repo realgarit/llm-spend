@@ -453,7 +453,9 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
 ]);
 
 test("guard: every catalog row resolves to its own base rate as of today", () => {
-  const now = new Date("2026-08-24T12:00:00Z");
+  // A literal, not `Date.now()`, so the guard is deterministic — bump it by
+  // hand as real time passes, or it stops representing an actual "today".
+  const now = new Date("2026-08-26T12:00:00Z");
 
   for (const provider of providers) {
     for (const row of provider.entries) {

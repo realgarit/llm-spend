@@ -77,6 +77,22 @@ export interface RateConditions {
    * pricing such as DeepSeek's peak/off-peak split.
    */
   utcHourWindows?: UtcHourWindow[];
+  /**
+   * UTC days of the week this variant applies on, as `Date#getUTCDay` numbers
+   * (0 = Sunday ... 6 = Saturday). The variant matches when the current UTC day
+   * is any one of them.
+   *
+   * Pairs with `utcHourWindows` for schedules that run only on working days —
+   * DeepSeek's peak hours are 01:00-04:00 and 06:00-10:00 UTC *Monday through
+   * Friday*, so its Peak variant carries both fields and weekends fall through
+   * to Off-peak. Like `utcHourWindows`, an omitted or empty array places no
+   * constraint.
+   *
+   * Days are read in UTC for the same reason hours are: these are absolute
+   * recurring windows, and a local-time read would shift the day boundary and
+   * quote the wrong price for most of the world.
+   */
+  utcDaysOfWeek?: number[];
   /** Prompt-size band in tokens. `minTokens` inclusive, `maxTokens` exclusive. */
   contextBand?: { minTokens?: number; maxTokens?: number };
   /** Service tier this variant is for. Absent means it applies to "standard". */
