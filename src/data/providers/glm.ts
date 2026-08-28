@@ -6,9 +6,10 @@ export const glm: Provider = {
   slug: "glm",
   name: "GLM",
   org: "Zhipu / Z.ai",
-  tagline: "GLM-5.3 joins 5.1 and 5.2 at exactly the same rate, so the choice within the family is about context window and Foundry availability, not cost.",
+  tagline: "GLM-5.3-Flash adds a multimodal, half-price direct lane, while GLM-5.3, 5.1 and 5.2 remain aligned on the full-rate tier.",
   intro: [
-    "GLM-5.3 is now the newest model in the family, direct-API only so far with no Foundry meter published. It prices identically to 5.1 and 5.2 on all three dimensions ($1.40/M input, $0.26/M cached input, $4.40/M output), keeps the same 1M-token window with 128K max output, and always runs with reasoning enabled — three effort levels (low, high, max) rather than an on/off toggle.",
+    "GLM-5.3-Flash is now the newest and cheapest 5.x lane: Z.ai's native multimodal model is currently 50% off at $0.075/M input, $0.015/M cached input and $0.25/M output. The promotion ends at 24:00 on 2026-09-09 UTC+8, after which it returns to $0.15/$0.03/$0.50. It keeps a 1M-token window, 128K max output and always-enabled reasoning.",
+    "GLM-5.3 remains direct-API only so far with no Foundry meter published. It prices identically to 5.1 and 5.2 on all three dimensions ($1.40/M input, $0.26/M cached input, $4.40/M output), keeps the same 1M-token window with 128K max output, and always runs with reasoning enabled — three effort levels (low, high, max) rather than an on/off toggle.",
     "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
     "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
     "GLM-5-Turbo sits between GLM-5 and 5.1/5.2 at $1.20/M input and $4.00/M output, and is Z.ai-direct only with no Foundry meter.",
@@ -129,6 +130,34 @@ export const glm: Provider = {
       sourceNote:
         "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-08-19: $1.40/M input, $0.26/M cached input, $4.40/M output per 1M tokens, USD — identical to GLM-5.1 and GLM-5.2. The model guide (docs.z.ai/guides/llm/glm-5.3) lists a 1M-token window, 128K max output, and reasoning always enabled with three effort levels (low, high, max). A full Azure Retail Prices API sweep on 2026-08-19 (29,405 rows) found no Foundry meter for GLM 5.3, so this direct-API row is the only lane.",
       effectiveDate: "2026-08-19",
+    },
+    {
+      model: "GLM-5.3-Flash",
+      host: "Z.ai direct API",
+      tier: "Direct",
+      inputUsd: 0.075,
+      cachedUsd: 0.015,
+      outputUsd: 0.25,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Native multimodal GLM-5 model with image, video and file input. Reasoning is always enabled; the current 50% promotion covers input, cached input and output, then reverts to the published list rate on 2026-09-09 at 16:00 UTC.",
+      sourceNote:
+        "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-08-28: GLM-5.3-Flash is listed at $0.075/M input, $0.015/M cached input and $0.25/M output, with strikethrough list prices of $0.15/$0.03/$0.50. The page states that the 50% promotion ends at 24:00 on September 9, 2026 (UTC+8, Singapore time). The official model guide (docs.z.ai/guides/vlm/glm-5.3-flash) lists image/video/text/file input, a 1M-token context window, 128K max output and reasoning that cannot be disabled. A full Azure Retail Prices API sweep on 2026-08-28 found no Foundry meter for GLM-5.3-Flash, so this direct-API row is the only lane.",
+      effectiveDate: "2026-08-28",
+      variants: [
+        {
+          label: "List price (from September 10)",
+          conditions: { from: "2026-09-09T16:00:00Z" },
+          inputUsd: 0.15,
+          cachedUsd: 0.03,
+          outputUsd: 0.5,
+          confidence: "official",
+          sourceNote:
+            "Z.ai official pricing page, captured 2026-08-28: GLM-5.3-Flash's strikethrough list prices are $0.15/M input, $0.03/M cached input and $0.50/M output; the page says the 50% promotion ends at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC.",
+        },
+      ],
     },
   ],
   quirks: [
