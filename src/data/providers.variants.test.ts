@@ -39,6 +39,38 @@ function qwenMaxPromo(): PricingEntry {
   return entry;
 }
 
+function glm53Flash(): PricingEntry {
+  const provider = getProvider("glm");
+  const entry = provider?.entries.find((candidate) => candidate.model === "GLM-5.3-Flash");
+
+  assert.ok(entry, "Expected the GLM-5.3-Flash entry");
+  return entry;
+}
+
+function qwen38Flash(): PricingEntry {
+  const provider = getProvider("qwen");
+  const entry = provider?.entries.find((candidate) => candidate.model === "Qwen3.8 Flash");
+
+  assert.ok(entry, "Expected the Qwen3.8 Flash entry");
+  return entry;
+}
+
+function qwen38Max(): PricingEntry {
+  const provider = getProvider("qwen");
+  const entry = provider?.entries.find((candidate) => candidate.model === "Qwen3.8 Max");
+
+  assert.ok(entry, "Expected the Qwen3.8 Max entry");
+  return entry;
+}
+
+function qwen37TextEmbedding(): PricingEntry {
+  const provider = getProvider("embeddings");
+  const entry = provider?.entries.find((candidate) => candidate.model === "Qwen3.7 text embedding");
+
+  assert.ok(entry, "Expected the Qwen3.7 text embedding entry");
+  return entry;
+}
+
 function kimiK27Code(): PricingEntry {
   const provider = getProvider("kimi");
   const entry = provider?.entries.find((candidate) => candidate.model === "Kimi K2.7 Code");
@@ -234,6 +266,51 @@ test("Qwen3.7 Max (Promo) reverts to list price at the first instant of Septembe
   // The row's cachedConfidence ("derived") is mirrored onto the variant rather
   // than left to fall back to the row's overall (official) confidence.
   assert.equal(resolved.cachedConfidence, "derived");
+});
+
+// ---------------------------------------------------------------------------
+// New direct model and cache rates
+// ---------------------------------------------------------------------------
+
+test("GLM-5.3-Flash resolves its current promo and dated list-price reversion", () => {
+  const beforeExpiry = resolveRate(glm53Flash(), at("2026-09-09T15:59:59Z"));
+  const afterExpiry = resolveRate(glm53Flash(), at("2026-09-09T16:00:00Z"));
+
+  assert.equal(beforeExpiry.inputUsd, 0.075);
+  assert.equal(beforeExpiry.cachedUsd, 0.015);
+  assert.equal(beforeExpiry.outputUsd, 0.25);
+  assert.equal(beforeExpiry.variant, null);
+  assert.equal(afterExpiry.label, "List price (from September 10)");
+  assert.equal(afterExpiry.inputUsd, 0.15);
+  assert.equal(afterExpiry.cachedUsd, 0.03);
+  assert.equal(afterExpiry.outputUsd, 0.5);
+});
+
+test("Qwen3.8 rows use the official cache rates and Qwen3.7 embedding is input-only", () => {
+  const qwen38FlashRate = resolveRate(qwen38Flash(), at("2026-08-28T12:00:00Z"));
+  const qwen38MaxRate = resolveRate(qwen38Max(), at("2026-08-28T12:00:00Z"));
+  const embedding = qwen37TextEmbedding();
+
+  assert.deepEqual(
+    {
+      inputUsd: qwen38FlashRate.inputUsd,
+      cachedUsd: qwen38FlashRate.cachedUsd,
+      outputUsd: qwen38FlashRate.outputUsd,
+    },
+    { inputUsd: 0.15, cachedUsd: 0.016, outputUsd: 0.47 },
+  );
+  assert.equal(qwen38FlashRate.confidence, "official");
+  assert.equal(qwen38MaxRate.cachedUsd, 0.17);
+  assert.equal(qwen38MaxRate.cachedConfidence, "official");
+  assert.deepEqual(
+    {
+      inputUsd: embedding.inputUsd,
+      cachedUsd: embedding.cachedUsd,
+      outputUsd: embedding.outputUsd,
+      contextWindow: embedding.contextWindow,
+    },
+    { inputUsd: 0.07, cachedUsd: null, outputUsd: 0, contextWindow: 128_000 },
+  );
 });
 
 // ---------------------------------------------------------------------------

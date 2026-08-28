@@ -5,9 +5,24 @@ export const embeddings: Provider = {
   name: "Embeddings",
   tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
   intro: [
-    "Embedding models bill per million input tokens only, no output meter. The DeepSeek and Kimi chat models are generation-only; DeepSeek has a separate deepseek-embedding-v2 (768-dim) for retrieval.",
+    "Embedding models bill per million input tokens only, no output meter. Alibaba's new Qwen3.7 text embedding adds a 128K-token multilingual option at $0.07/M input; Cohere remains the strongest code-retrieval choice, while OpenAI's small model remains the budget pick.",
   ],
   entries: [
+    {
+      model: "Qwen3.7 text embedding",
+      host: "Model Studio (Intl)",
+      tier: "Direct",
+      inputUsd: 0.07,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "New multilingual embedding model with configurable 2560/2048/1536/1024/768/512/256 dimensions (1024 default), up to 20 inputs per request and 128K tokens per input line. Input-only billing; no output or cached-input rate is published.",
+      sourceNote:
+        "Alibaba Cloud Model Studio's official Synchronous API page, last updated 2026-08-26 and captured 2026-08-28: the Singapore/International table lists qwen3.7-text-embedding at $0.07 per 1M input tokens, with a 128,000-token maximum per line and 20-row batches. The same page documents the model ID, dimensions and OpenAI-compatible Singapore endpoint. No output or cached-input charge is listed, so this row is input-only.",
+      effectiveDate: "2026-08-28",
+    },
     {
       model: "Cohere embed-v-4-0",
       tier: "Direct",

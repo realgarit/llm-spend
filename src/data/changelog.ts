@@ -23,6 +23,29 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-28",
+    title: "GLM-5.3-Flash and Qwen3.8 Flash add new direct lanes",
+    tag: "model",
+    body: [
+      "Z.ai's new GLM-5.3-Flash is now priced in the catalog at its current 50%-off rate: $0.075/M input, $0.015/M cached input and $0.25/M output. The model is natively multimodal, keeps a 1M-token context window with 128K max output, and always runs with reasoning enabled. Z.ai states that the promotion ends at 24:00 on September 9, 2026 (UTC+8), so the row now switches to the published $0.15/$0.03/$0.50 list rate at 16:00 UTC on September 9.",
+      "Alibaba's current Model Studio pricing adds Qwen3.8 Flash on the International Singapore endpoint at $0.15/M input and $0.47/M output for the full 1M-token band. Its first-party QwenCloud model page publishes $0.016/M for both implicit cached input and explicit cache reads, plus $0.20/M for explicit cache creation; the catalog uses the published $0.016 cached-input figure. Both new generation rows are direct-only: the full Azure Retail Prices sweep on 2026-08-28 found no matching Foundry meter.",
+      "The same cache review corrected Qwen3.8 Max's cached-input cell from the old 10%-derived $0.20/M value to the official $0.17/M explicit cache-read rate. Alibaba now publishes $0.25/M for implicit cache, $2.50/M for explicit cache creation and $0.17/M for explicit cache reads, and explicitly calls Qwen3.8 models exceptions to the generic cache formula. Qwen3.7 Max's existing 50%-off row is also now documented as ending on August 31, 2026.",
+      "Finally, Alibaba's Singapore Model Studio endpoint now lists Qwen3.7 text embedding at $0.07/M input, with up to 128,000 tokens per input line and no output or cached-input charge. It is added as an input-only direct embedding lane; no Foundry embedding meter was found.",
+    ],
+    sources: [
+      { label: "Z.ai pricing (GLM-5.3-Flash promotional and list rates)", href: "https://docs.z.ai/guides/overview/pricing" },
+      { label: "Z.ai GLM-5.3-Flash model guide (1M context and 128K output)", href: "https://docs.z.ai/guides/vlm/glm-5.3-flash" },
+      { label: "Alibaba Cloud Model Studio pricing (Qwen3.8 Flash International Singapore row)", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
+      { label: "QwenCloud Qwen3.8-Flash model page (cache rates and limits)", href: "https://www.qwencloud.com/models/qwen3.8-flash" },
+      { label: "Alibaba Cloud qwen3.8-max model page (official cache rates)", href: "https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max" },
+      { label: "Alibaba Cloud Context Cache documentation (Qwen3.8 exceptions)", href: "https://www.alibabacloud.com/help/en/model-studio/context-cache" },
+      { label: "Alibaba Cloud text embedding Synchronous API (Qwen3.7 text embedding)", href: "https://www.alibabacloud.com/help/en/model-studio/text-embedding-synchronous-api" },
+      { label: "Alibaba Cloud Qwen3.8-Max campaign (Qwen3.7 Max promo end date)", href: "https://www.alibabacloud.com/en/campaign/qwen-discount" },
+      { label: "Azure Retail Prices API — Foundry Models (full 2026-08-28 sweep)", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27" },
+    ],
+    sourcesVerifiedOn: "2026-08-28",
+  },
+  {
     date: "2026-08-26",
     title: "DeepSeek's peak pricing is weekdays only — weekends bill at the off-peak rate",
     tag: "pricing",
