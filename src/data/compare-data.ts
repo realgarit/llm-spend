@@ -1,6 +1,6 @@
 import { chatEntries } from "./providers";
 import type { Confidence, PricingEntry, RateVariant, Tier } from "./types";
-import { laneId } from "@/lib/lane-id";
+import { assertUniqueLaneIds, laneId } from "@/lib/lane-id";
 
 /**
  * Flattened, serializable rows for the client-side compare table + calculator.
@@ -32,8 +32,8 @@ export interface CompareRow {
   variants?: RateVariant[];
 }
 
-export function buildCompareRows(): CompareRow[] {
-  return chatEntries().map(({ provider, entry }) => ({
+export function buildCompareRows(entries = chatEntries()): CompareRow[] {
+  const rows = entries.map(({ provider, entry }) => ({
     id: laneId({
       providerSlug: provider.slug,
       model: entry.model,
@@ -55,6 +55,9 @@ export function buildCompareRows(): CompareRow[] {
     sourceNote: entry.sourceNote,
     variants: entry.variants,
   }));
+
+  assertUniqueLaneIds(rows);
+  return rows;
 }
 
 /**

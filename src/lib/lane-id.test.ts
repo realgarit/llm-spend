@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { buildCompareRows, type CompareRow } from "@/data/compare-data";
+import { chatEntries } from "@/data/providers";
 import { assertUniqueLaneIds, laneId } from "@/lib/lane-id";
 
 test("builds a deterministic lane id from the stable lane identity", () => {
@@ -52,6 +53,12 @@ test("rejects duplicate lane ids with the colliding id", () => {
   const duplicate: CompareRow = { ...row };
 
   assert.throws(() => assertUniqueLaneIds([row, duplicate]), new RegExp(row.id));
+});
+
+test("buildCompareRows rejects a duplicate catalog lane before it reaches the UI", () => {
+  const entries = chatEntries();
+
+  assert.throws(() => buildCompareRows([...entries, entries[0]]), /Duplicate lane id/);
 });
 
 test("catalog has 66 unique stable lane ids", () => {
