@@ -23,6 +23,20 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-08-30",
+    title: "The comparison table becomes a cost decision cockpit",
+    tag: "methodology",
+    body: [
+      "The cross-provider comparison now starts with four clearly illustrative workload shapes, then surfaces the lowest-cost lane overall, on Microsoft Foundry, and on a direct API before the full rate table. These are cost leaders for the selected workload and pricing scenario — not model-quality recommendations — and each signal remains traceable to the same sourced catalog rows below.",
+      "Search, provider, deployment, cache-meter, and official-only filters now compose in one focused control surface. An explicit sort control stays synchronized with keyboard-sortable table headers, while a directional empty state preserves the workload and scenario if a filter combination finds nothing.",
+      "The initial view shows the top 12 lanes under the active sort instead of forcing every visitor through all 66 rows; the complete filtered catalog remains one action away. On narrow screens those same semantic rows become legible cost cards with no document-level horizontal overflow. No catalog price, availability, confidence level, or calculation formula changed in this release.",
+    ],
+    sources: [
+      { label: "Decision cockpit design and acceptance criteria", href: "https://github.com/realgarit/llm-spend/issues/74" },
+    ],
+    sourcesVerifiedOn: "2026-08-30",
+  },
+  {
     date: "2026-08-28",
     title: "GLM-5.3-Flash and Qwen3.8 Flash add new direct lanes",
     tag: "model",

@@ -1,3 +1,4 @@
+import React from "react";
 import type { Confidence, Tier } from "@/data/types";
 import { formatChf, formatUsd } from "@/data/currency";
 

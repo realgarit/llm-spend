@@ -16,8 +16,18 @@ import {
 } from "@/lib/scenario";
 import { useNow } from "@/lib/use-now";
 import { Mark, TierBadge } from "@/components/price";
+import { CompareFilterBar } from "@/components/compare-filters";
+import { CostSignalRail } from "@/components/cost-signal-rail";
 import { ScenarioControls } from "@/components/scenario-controls";
 import { WorkloadCalculator } from "@/components/workload-calculator";
+import { WorkloadPresets } from "@/components/workload-presets";
+import {
+  buildCostLeaders,
+  DEFAULT_COMPARE_FILTERS,
+  filterComparedRows,
+  limitComparedRows,
+  RESULTS_PREVIEW_LIMIT,
+} from "@/lib/compare-insights";
 
 /**
  * `buildAtMs` is the server's build-time basis for resolving scenario rates —
@@ -33,7 +43,8 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
   const [scenario, setScenario] = useState<Scenario>(DEFAULT_SCENARIO);
   const [sortKey, setSortKey] = useState<SortKey>("total");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
-  const [providerFilter, setProviderFilter] = useState<string>("all");
+  const [filters, setFilters] = useState(DEFAULT_COMPARE_FILTERS);
+  const [showAll, setShowAll] = useState(false);
   const now = useNow();
 
   const providersList = useMemo(
@@ -48,10 +59,9 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
     return rows.map((r) => compareRowUnderScenario(r, workload, ctxs));
   }, [rows, workload, scenario, liveNow]);
 
-  const filtered = useMemo(
-    () => (providerFilter === "all" ? computed : computed.filter((c) => c.row.provider === providerFilter)),
-    [computed, providerFilter]
-  );
+  const filtered = useMemo(() => filterComparedRows(computed, filters), [computed, filters]);
+
+  const leaders = useMemo(() => buildCostLeaders(filtered), [filtered]);
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
@@ -59,10 +69,9 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
     return arr;
   }, [filtered, sortKey, sortDir]);
 
-  const cheapest = useMemo(
-    () => (sorted.length ? Math.min(...sorted.map((c) => c.cost.totalUsd)) : 0),
-    [sorted]
-  );
+  const visibleSorted = useMemo(() => limitComparedRows(sorted, showAll), [sorted, showAll]);
+
+  const cheapest = leaders.overall?.compared.cost.totalUsd ?? 0;
 
   function onSort(key: SortKey) {
     if (key === sortKey) {
@@ -80,70 +89,64 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
   }
 
   return (
-    <div>
-      <WorkloadCalculator workload={workload} onChange={setWorkload} />
-      <ScenarioControls scenario={scenario} onChange={setScenario} />
+    <div className="decision-cockpit">
+      <WorkloadPresets workload={workload} onChange={setWorkload} />
+      <CostSignalRail leaders={leaders} />
 
-      {/* Filter + result summary */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "0.75rem",
-          marginBottom: "0.9rem",
+      <section className="fine-tune-section" aria-labelledby="fine-tune-heading">
+        <div className="fine-tune-heading">
+          <div className="eyebrow">Fine-tune</div>
+          <h2 id="fine-tune-heading">Workload and pricing scenario</h2>
+          <p>Adjust the token shape, cache behavior, time window, and service tier. Every signal updates immediately.</p>
+        </div>
+        <WorkloadCalculator workload={workload} onChange={setWorkload} />
+        <ScenarioControls scenario={scenario} onChange={setScenario} />
+      </section>
+
+      <CompareFilterBar
+        filters={filters}
+        onChange={setFilters}
+        providers={providersList}
+        resultCount={filtered.length}
+        totalCount={computed.length}
+        workloadSummary={`${formatTokens(workload.inputTokens)} in / ${formatTokens(workload.outputTokens)} out @ ${Math.round(workload.cacheHitRate * 100)}% cache`}
+        sortKey={sortKey}
+        sortDir={sortDir}
+        onSortChange={(key, dir) => {
+          setSortKey(key);
+          setSortDir(dir);
         }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem" }}>
-          <label htmlFor="provfilter" className="eyebrow" style={{ marginRight: "0.15rem" }}>
-            Provider
-          </label>
-          <select
-            id="provfilter"
-            value={providerFilter}
-            onChange={(e) => setProviderFilter(e.target.value)}
-          >
-            <option value="all">All providers</option>
-            {providersList.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div style={{ fontSize: "0.8rem", color: "var(--text-faint)" }} className="mono">
-          {sorted.length} models · cost for {formatTokens(workload.inputTokens)} in /{" "}
-          {formatTokens(workload.outputTokens)} out @ {Math.round(workload.cacheHitRate * 100)}% cache
-        </div>
-      </div>
+        onClear={() => setFilters(DEFAULT_COMPARE_FILTERS)}
+      />
 
-      <div className="table-wrap">
-        <table className="data">
+      {sorted.length > 0 ? (
+      <>
+      <div className="table-wrap decision-results">
+        <table className="data decision-table">
           <thead>
             <tr>
-              <Th onClick={() => onSort("provider")} className="th-sort">Provider{sortArrow("provider")}</Th>
-              <Th onClick={() => onSort("model")} className="th-sort">Model{sortArrow("model")}</Th>
-              <Th onClick={() => onSort("tier")} className="th-sort">Tier{sortArrow("tier")}</Th>
-              <Th onClick={() => onSort("inputUsd")} className="th-sort num-h">Input{sortArrow("inputUsd")}</Th>
-              <Th onClick={() => onSort("cachedUsd")} className="th-sort num-h">Cached{sortArrow("cachedUsd")}</Th>
-              <Th onClick={() => onSort("outputUsd")} className="th-sort num-h">Output{sortArrow("outputUsd")}</Th>
-              <Th onClick={() => onSort("blended")} className="th-sort num-h">Blended in{sortArrow("blended")}</Th>
-              <Th onClick={() => onSort("total")} className="th-sort num-h">Workload cost{sortArrow("total")}</Th>
+              <Th onClick={() => onSort("provider")} className="th-sort" sort={sortKey === "provider" ? sortDir : undefined}>Provider{sortArrow("provider")}</Th>
+              <Th onClick={() => onSort("model")} className="th-sort" sort={sortKey === "model" ? sortDir : undefined}>Model{sortArrow("model")}</Th>
+              <Th onClick={() => onSort("tier")} className="th-sort" sort={sortKey === "tier" ? sortDir : undefined}>Tier{sortArrow("tier")}</Th>
+              <Th onClick={() => onSort("inputUsd")} className="th-sort num-h" sort={sortKey === "inputUsd" ? sortDir : undefined}>Input{sortArrow("inputUsd")}</Th>
+              <Th onClick={() => onSort("cachedUsd")} className="th-sort num-h" sort={sortKey === "cachedUsd" ? sortDir : undefined}>Cached{sortArrow("cachedUsd")}</Th>
+              <Th onClick={() => onSort("outputUsd")} className="th-sort num-h" sort={sortKey === "outputUsd" ? sortDir : undefined}>Output{sortArrow("outputUsd")}</Th>
+              <Th onClick={() => onSort("blended")} className="th-sort num-h" sort={sortKey === "blended" ? sortDir : undefined}>Blended in{sortArrow("blended")}</Th>
+              <Th onClick={() => onSort("total")} className="th-sort num-h" sort={sortKey === "total" ? sortDir : undefined}>Workload cost{sortArrow("total")}</Th>
             </tr>
           </thead>
           <tbody>
-            {sorted.map(({ row, resolved, cost, scenarioPriced, preview }) => {
+            {visibleSorted.map(({ row, resolved, cost, scenarioPriced, preview }) => {
               const isCheapest = cost.totalUsd === cheapest;
               const cachedConfidence = resolved.cachedConfidence ?? resolved.confidence;
               return (
                 <tr key={row.id}>
-                  <td>
+                  <td data-label="Provider">
                     <Link href={`/providers/${row.providerSlug}`} style={{ color: "var(--text-muted)" }} className="link-provider">
                       {row.provider}
                     </Link>
                   </td>
-                  <td>
+                  <td data-label="Model">
                     <div style={{ fontWeight: 500 }}>{row.model}</div>
                     {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
                     {scenarioPriced &&
@@ -160,28 +163,28 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
                         </div>
                       ))}
                   </td>
-                  <td>
+                  <td data-label="Deployment">
                     <TierBadge tier={row.tier} />
                   </td>
-                  <td className="num">
+                  <td className="num" data-label="Input / 1M">
                     <span suppressHydrationWarning>{formatUsd(resolved.inputUsd)}</span>
                     <Mark confidence={resolved.confidence} />
                   </td>
-                  <td className="num" style={{ color: resolved.cachedUsd === null ? "var(--text-faint)" : "var(--text-muted)" }}>
+                  <td className="num" data-label="Cached / 1M" style={{ color: resolved.cachedUsd === null ? "var(--text-faint)" : "var(--text-muted)" }}>
                     <span suppressHydrationWarning>{resolved.cachedUsd === null ? "—" : formatUsd(resolved.cachedUsd)}</span>
                     {resolved.cachedUsd !== null && <Mark confidence={cachedConfidence} />}
                   </td>
-                  <td className="num">
+                  <td className="num" data-label="Output / 1M">
                     <span suppressHydrationWarning>{formatUsd(resolved.outputUsd)}</span>
                     <Mark confidence={resolved.confidence} />
                   </td>
-                  <td className="num" style={{ color: "var(--text-muted)" }}>
+                  <td className="num" data-label="Blended input" style={{ color: "var(--text-muted)" }}>
                     <span suppressHydrationWarning>{formatUsd(cost.blendedInputPerMUsd)}</span>
                     {!cost.cacheApplied && (
                       <span title="No cache meter, so hit rate does not apply" style={{ color: "var(--text-faint)" }}>*</span>
                     )}
                   </td>
-                  <td className="num">
+                  <td className="num decision-total" data-label="Workload cost">
                     <span
                       suppressHydrationWarning
                       style={{
@@ -201,6 +204,30 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
           </tbody>
         </table>
       </div>
+      {sorted.length > RESULTS_PREVIEW_LIMIT && (
+        <div className="result-disclosure">
+          <span className="mono">
+            Showing {visibleSorted.length} of {sorted.length} lanes under the current sort
+          </span>
+          <button type="button" className="btn" onClick={() => setShowAll((value) => !value)}>
+            {showAll ? "Show top 12" : `Show all ${sorted.length}`}
+          </button>
+        </div>
+      )}
+      </>
+      ) : (
+        <section className="result-empty" aria-labelledby="no-results-heading">
+          <div className="result-empty-mark mono" aria-hidden>0</div>
+          <div>
+            <div className="eyebrow">No matching lanes</div>
+            <h2 id="no-results-heading">Broaden the cost search</h2>
+            <p>No catalog lane matches every active filter. Your workload and pricing scenario are still intact.</p>
+            <button type="button" className="btn btn-primary" onClick={() => setFilters(DEFAULT_COMPARE_FILTERS)}>
+              Clear filters
+            </button>
+          </div>
+        </section>
+      )}
 
       <p style={{ fontSize: "0.78rem", color: "var(--text-faint)", marginTop: "0.9rem" }}>
         Tier badges reading <span className="mono">Foundry · …</span> are Microsoft Foundry deployment tiers
@@ -258,25 +285,33 @@ function Th({
   children,
   onClick,
   className,
+  sort,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
+  sort?: SortDir;
 }) {
   return (
     <th
-      onClick={onClick}
       className={className}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={(e) => {
-        if (onClick && (e.key === "Enter" || e.key === " ")) {
-          e.preventDefault();
-          onClick();
-        }
-      }}
+      aria-sort={sort === "asc" ? "ascending" : sort === "desc" ? "descending" : undefined}
     >
-      {children}
+      {onClick ? (
+        <button
+          type="button"
+          className="th-sort-button"
+          onClick={onClick}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onClick();
+            }
+          }}
+        >
+          {children}
+        </button>
+      ) : children}
     </th>
   );
 }

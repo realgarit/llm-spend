@@ -35,12 +35,14 @@ export function WorkloadCalculator({
 
       <div style={{ display: "grid", gap: "1.4rem", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}>
         <NumberField
+          id="workload-input"
           label="Input tokens (M)"
           value={workload.inputTokens}
           onChange={(v) => onChange({ ...workload, inputTokens: v })}
           hint={formatTokens(workload.inputTokens)}
         />
         <NumberField
+          id="workload-output"
           label="Output tokens (K)"
           value={workload.outputTokens}
           onChange={(v) => onChange({ ...workload, outputTokens: v })}
@@ -73,12 +75,14 @@ export function WorkloadCalculator({
 }
 
 function NumberField({
+  id,
   label,
   value,
   onChange,
   hint,
   thousands,
 }: {
+  id: string;
   label: string;
   value: number;
   onChange: (v: number) => void;
@@ -103,10 +107,11 @@ function NumberField({
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-        <label className="eyebrow">{label}</label>
+        <label htmlFor={id} className="eyebrow">{label}</label>
         <span className="mono" style={{ color: "var(--text-faint)", fontSize: "0.8rem" }}>{hint}</span>
       </div>
       <input
+        id={id}
         type="text"
         inputMode="decimal"
         defaultValue={displayValue}

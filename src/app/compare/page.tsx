@@ -19,15 +19,15 @@ export default function ComparePage() {
   // client component re-resolves on the visitor's real clock after mount.
   const buildAtMs = Date.now();
   return (
-    <div className="container-page" style={{ paddingBlock: "3rem" }}>
-      <header className="rise" style={{ maxWidth: "48rem", marginBottom: "2.5rem" }}>
+    <div className="container-page compare-page">
+      <header className="rise compare-intro">
         <div className="eyebrow" style={{ marginBottom: "0.9rem" }}>Cross-provider</div>
-        <h1 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 600, letterSpacing: "-0.03em" }}>
+        <h1>
           Compare cost, not sticker price
         </h1>
-        <p style={{ color: "var(--text-muted)", marginTop: "1rem", fontSize: "1.05rem" }}>
-          Set a workload (the default is a real agentic session: 60M input / 210K output tokens at 90% cache hit) and
-          sort every chat model by what it would actually bill. Prices per 1M tokens; totals in USD and CHF.
+        <p>
+          Shape a workload and see the lowest-cost purchasable lanes across Microsoft Foundry and direct APIs.
+          Every result stays traceable to the complete rate table below.
         </p>
       </header>
       <CompareExplorer rows={rows} buildAtMs={buildAtMs} />
