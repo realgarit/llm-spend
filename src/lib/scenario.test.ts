@@ -311,6 +311,7 @@ function testRow(overrides: Partial<CompareRow> = {}): CompareRow {
     outputUsd: 2,
     confidence: "official",
     cachedConfidence: "official",
+    effectiveDate: "2026-08-14",
     ...overrides,
   };
 }

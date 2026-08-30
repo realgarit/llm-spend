@@ -45,6 +45,7 @@ function compared({
       outputUsd: 4,
       confidence,
       cachedConfidence,
+      effectiveDate: "2026-08-30",
     },
     resolved: {
       inputUsd: 1,
