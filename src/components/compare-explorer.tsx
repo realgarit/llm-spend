@@ -147,7 +147,7 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
                     </Link>
                   </td>
                   <td data-label="Model">
-                    <div style={{ fontWeight: 500 }}>{row.model}</div>
+                    <Link href={`/models/${row.id}`} style={{ fontWeight: 500 }}>{row.model}</Link>
                     {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
                     {scenarioPriced &&
                       (preview ? (

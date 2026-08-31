@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { buildCompareRows } from "@/data/compare-data";
 import { providerSlugs } from "@/data/providers";
 import { site } from "@/lib/site";
 
@@ -21,6 +22,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
+    });
+  }
+
+  for (const row of buildCompareRows()) {
+    routes.push({
+      url: `${site.url}/models/${row.id}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
     });
   }
 
