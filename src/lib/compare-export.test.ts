@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { Confidence, Tier } from "@/data/types";
 import { BASE_RATE_LABEL } from "@/lib/rates";
-import type { ComparedRow } from "@/lib/scenario";
+import type { ComparedRow, ScheduledPreview } from "@/lib/scenario";
 import { buildCompareCsv } from "./compare-export";
 import type { CompareDecisionState } from "./compare-state";
 
@@ -20,6 +20,7 @@ function compared({
   cachedConfidence = confidence,
   label = null,
   totalUsd = 10,
+  preview = null,
 }: {
   id?: string;
   provider?: string;
@@ -33,6 +34,7 @@ function compared({
   cachedConfidence?: Confidence;
   label?: string | null;
   totalUsd?: number;
+  preview?: ScheduledPreview | null;
 } = {}): ComparedRow {
   return {
     row: {
@@ -67,7 +69,7 @@ function compared({
       blendedInputPerMUsd: cachedUsd ?? inputUsd,
     },
     scenarioPriced: label !== null,
-    preview: null,
+    preview,
   };
 }
 
@@ -132,6 +134,44 @@ test("buildCompareCsv falls back to rates.ts's shared base-rate label when no va
   const csv = buildCompareCsv([compared({ label: null })], state, usdToChf);
   const [, row] = csv.split("\r\n");
   assert.equal(row.split(",")[5], BASE_RATE_LABEL);
+});
+
+test("buildCompareCsv marks a previewed (not-yet-billing) rate distinctly from a live one with the same label", () => {
+  const preview: ScheduledPreview = {
+    variant: {
+      label: "Peak",
+      conditions: { from: "2026-09-01T00:00:00Z" },
+      inputUsd: 1.32,
+      cachedUsd: 0.044,
+      outputUsd: 3.96,
+    },
+    startsAt: new Date("2026-09-01T00:00:00Z"),
+  };
+
+  const previewCsv = buildCompareCsv([compared({ label: "Peak", preview })], state, usdToChf);
+  const liveCsv = buildCompareCsv([compared({ label: "Peak", preview: null })], state, usdToChf);
+  const [, previewRow] = previewCsv.split("\r\n");
+  const [, liveRow] = liveCsv.split("\r\n");
+
+  // The one distinction the UI works hardest to preserve (ScheduledPreviewLabel
+  // vs. the plain scenario label) must survive into the export: same label,
+  // different — and distinguishable — Variant cells.
+  assert.notEqual(previewRow, liveRow);
+  assert.equal(liveRow.split(",")[5], "Peak");
+  assert.ok(previewRow.includes('"Peak (preview, starts 2026-09-01T00:00:00.000Z)"'), previewRow);
+});
+
+test("buildCompareCsv omits the starts-at suffix when a preview's variant names no start instant", () => {
+  const preview: ScheduledPreview = {
+    variant: { label: "Promo", conditions: {}, inputUsd: 1, cachedUsd: null, outputUsd: 2 },
+    startsAt: null,
+  };
+
+  const csv = buildCompareCsv([compared({ label: "Promo", preview })], state, usdToChf);
+  const [, row] = csv.split("\r\n");
+
+  assert.ok(row.includes("Promo (preview)"), row);
+  assert.ok(!row.includes("starts"), row);
 });
 
 test("buildCompareCsv quotes a field containing a comma per RFC 4180", () => {

@@ -83,6 +83,24 @@ test("encodeCompareState omits defaults and emits canonical ordered fields", () 
   );
 });
 
+test("encodeCompareState omits non-finite workload values instead of encoding NaN or Infinity", () => {
+  const encoded = encodeCompareState({
+    ...defaults,
+    workload: { inputTokens: Number.NaN, outputTokens: Number.POSITIVE_INFINITY, cacheHitRate: Number.NEGATIVE_INFINITY },
+  });
+
+  assert.ok(!encoded.includes("NaN"), encoded);
+  assert.ok(!encoded.includes("Infinity"), encoded);
+  // Every workload field failed its validity predicate and was omitted
+  // entirely, so only the version marker remains (hasChanges is still true —
+  // NaN/Infinity are never equal to the defaults — but nothing unsafe is
+  // encoded on their behalf).
+  assert.equal(encoded, "v=1");
+  // Decoding what WAS encoded falls back to the documented default for every
+  // omitted field, per the fix's contract.
+  assert.deepEqual(decodeCompareState(encoded, laneIds).workload, defaults.workload);
+});
+
 test("scenarioLabel is a stable human-readable summary for CSV exports", () => {
   assert.equal(scenarioLabel(defaults), "Now · Standard");
   assert.equal(

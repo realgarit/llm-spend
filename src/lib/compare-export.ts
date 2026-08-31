@@ -1,5 +1,5 @@
 import { BASE_RATE_LABEL } from "@/lib/rates";
-import type { ComparedRow } from "@/lib/scenario";
+import type { ComparedRow, ScheduledPreview } from "@/lib/scenario";
 import { scenarioLabel, type CompareDecisionState } from "@/lib/compare-state";
 
 /**
@@ -18,7 +18,8 @@ import { scenarioLabel, type CompareDecisionState } from "@/lib/compare-state";
  * preamble line) so a reader who opens the file without its context still
  * knows what point in time and service tier it was priced under. "Input /
  * Cached / Output USD" are the row's per-1M-token rates; "Total USD / CHF"
- * are the whole-workload cost from `cost.totalUsd`.
+ * are the whole-workload cost from `cost.totalUsd`. "Variant" additionally
+ * marks a previewed-but-not-yet-billing rate — see {@link variantField}.
  */
 export function buildCompareCsv(
   rows: ComparedRow[],
@@ -28,14 +29,14 @@ export function buildCompareCsv(
   const scenario = scenarioLabel(state);
   const lines = [CSV_HEADER.map(csvField).join(",")];
 
-  for (const { row, resolved, cost } of rows) {
+  for (const { row, resolved, cost, preview } of rows) {
     const fields = [
       scenario,
       row.provider,
       row.model,
       row.host ?? "",
       row.tier,
-      resolved.label ?? BASE_RATE_LABEL,
+      variantField(resolved.label ?? BASE_RATE_LABEL, preview),
       formatCsvNumber(resolved.inputUsd),
       resolved.cachedUsd === null ? "" : formatCsvNumber(resolved.cachedUsd),
       formatCsvNumber(resolved.outputUsd),
@@ -49,6 +50,25 @@ export function buildCompareCsv(
   // CRLF per RFC 4180. No trailing terminator after the last line — the spec
   // only requires records to be CRLF-*delimited*, not CRLF-terminated.
   return lines.join("\r\n");
+}
+
+/**
+ * The Variant cell for one row: the active rate's label, plus — when
+ * `preview` is non-null — a suffix marking that the rate has not started
+ * billing yet.
+ *
+ * This is the CSV equivalent of the table's `ScheduledPreviewLabel`
+ * (compare-explorer.tsx), whose whole documented point is that a scheduled
+ * rate can never be mistaken for what the row bills today. Without this, a
+ * previewed row and a genuinely live one produced an identical cell here —
+ * the one distinction the UI works hardest to preserve was lost on export.
+ * Uses an absolute ISO instant rather than the UI's relative "in 3 days"
+ * phrasing, since a CSV cell has no live clock to render a countdown against.
+ */
+function variantField(label: string, preview: ScheduledPreview | null): string {
+  if (preview === null) return label;
+  const starts = preview.startsAt === null ? "" : `, starts ${preview.startsAt.toISOString()}`;
+  return `${label} (preview${starts})`;
 }
 
 const CSV_HEADER = [

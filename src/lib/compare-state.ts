@@ -72,6 +72,16 @@ export function decodeCompareState(search: string, validLaneIds: ReadonlySet<str
 export function encodeCompareState(state: CompareDecisionState): string {
   const defaults = defaultState();
   const params = new URLSearchParams();
+  // Guard against NaN/Infinity leaking into the encoded URL (e.g. from a
+  // cleared numeric workload input upstream) with the exact same validity
+  // predicates the decoder applies when reading these params back —
+  // `parseSafeInteger`/`parseCacheRate` take a string, so the in-memory
+  // number is round-tripped through `String()` first. A value that fails its
+  // predicate is treated as absent below rather than encoded, so decoding the
+  // resulting URL falls back to the documented default for that field.
+  const validInputTokens = parseSafeInteger(String(state.workload.inputTokens));
+  const validOutputTokens = parseSafeInteger(String(state.workload.outputTokens));
+  const validCacheHitRate = parseCacheRate(String(state.workload.cacheHitRate));
   const hasChanges =
     state.workload.inputTokens !== defaults.workload.inputTokens ||
     state.workload.outputTokens !== defaults.workload.outputTokens ||
@@ -89,9 +99,15 @@ export function encodeCompareState(state: CompareDecisionState): string {
   if (!hasChanges) return "";
 
   params.set("v", "1");
-  if (state.workload.inputTokens !== defaults.workload.inputTokens) params.set("input", String(state.workload.inputTokens));
-  if (state.workload.outputTokens !== defaults.workload.outputTokens) params.set("output", String(state.workload.outputTokens));
-  if (state.workload.cacheHitRate !== defaults.workload.cacheHitRate) params.set("cache", String(state.workload.cacheHitRate));
+  if (validInputTokens !== null && validInputTokens !== defaults.workload.inputTokens) {
+    params.set("input", String(validInputTokens));
+  }
+  if (validOutputTokens !== null && validOutputTokens !== defaults.workload.outputTokens) {
+    params.set("output", String(validOutputTokens));
+  }
+  if (validCacheHitRate !== null && validCacheHitRate !== defaults.workload.cacheHitRate) {
+    params.set("cache", String(validCacheHitRate));
+  }
   if (state.scenario.time.mode !== defaults.scenario.time.mode) params.set("time", state.scenario.time.mode);
   if (state.scenario.time.mode === "custom" && state.scenario.time.customHourUtc !== DEFAULT_CUSTOM_HOUR_UTC) {
     params.set("hour", String(state.scenario.time.customHourUtc));
