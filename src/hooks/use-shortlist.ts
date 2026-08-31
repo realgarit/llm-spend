@@ -21,22 +21,46 @@ export interface UseShortlistResult {
   message: string | null;
 }
 
-/** Read the persisted shortlist. Never throws: storage access failures (quota, disabled, private mode) fall back to an empty list. */
-function readStoredShortlist(): string[] {
+/**
+ * Minimal shape of the storage `readStoredShortlist`/`writeStoredShortlist`
+ * need — satisfied by the real `localStorage`/`sessionStorage`, and small
+ * enough to stub out with a throwing fake in a test (see
+ * `use-shortlist.test.ts`) without pulling in a DOM.
+ */
+export type ShortlistStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+/**
+ * Read the persisted shortlist. Never throws: storage access failures
+ * (quota, disabled, private mode) fall back to an empty list.
+ *
+ * `storage` defaults to the browser's `localStorage`, so every call site
+ * below is unchanged; the parameter exists so this function's
+ * failure-handling contract — the thing the Global Constraints require of
+ * this hook — is directly exercisable by `node:test` with a stub whose
+ * methods throw, independent of `useShortlist` the React hook (which this
+ * repo's test runner can't otherwise mount).
+ */
+export function readStoredShortlist(storage: ShortlistStorage = localStorage): string[] {
   try {
-    return parseStoredShortlist(localStorage.getItem(STORAGE_KEY));
+    return parseStoredShortlist(storage.getItem(STORAGE_KEY));
   } catch {
     return [];
   }
 }
 
-/** Persist the shortlist, or clear the key entirely for an empty one. Never throws — a failed write just means the session stays in-memory-only. */
-function writeStoredShortlist(ids: string[]): void {
+/**
+ * Persist the shortlist, or clear the key entirely for an empty one. Never
+ * throws — a failed write just means the session stays in-memory-only.
+ *
+ * `storage` defaults to the browser's `localStorage` for the same
+ * testability reason as `readStoredShortlist`.
+ */
+export function writeStoredShortlist(ids: string[], storage: ShortlistStorage = localStorage): void {
   try {
     if (ids.length === 0) {
-      localStorage.removeItem(STORAGE_KEY);
+      storage.removeItem(STORAGE_KEY);
     } else {
-      localStorage.setItem(STORAGE_KEY, serializeShortlist(ids));
+      storage.setItem(STORAGE_KEY, serializeShortlist(ids));
     }
   } catch {
     /* Storage disabled/unavailable — the in-memory shortlist is unaffected and stays correct for the rest of the session. */
