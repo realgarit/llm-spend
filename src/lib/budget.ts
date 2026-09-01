@@ -63,17 +63,31 @@ export interface RateBasis {
 // ---------------------------------------------------------------------------
 
 /**
- * Clamp to a finite, non-negative number. `NaN`, `Infinity`/`-Infinity`, and
- * negative values all become `0` — the brief's "clamp invalid/negative input
- * to zero rather than propagating a negative or NaN through the math" rule,
- * applied uniformly to every numeric input this file accepts. A large but
- * finite positive value passes through unchanged: "huge" is a valid input
- * this planner must still answer with a finite, directional result — only
- * genuinely invalid values are zeroed, never merely large ones.
+ * Clamp to a finite, non-negative number no larger than `max`. `NaN`,
+ * `Infinity`/`-Infinity`, and negative values all become `0` — the brief's
+ * "clamp invalid/negative input to zero rather than propagating a negative or
+ * NaN through the math" rule, applied uniformly to every numeric input this
+ * file accepts. A large but finite positive value passes through unchanged up
+ * to `max`: "huge" is a valid input this planner must still answer with a
+ * finite, directional result — only genuinely invalid values are zeroed,
+ * never merely large ones.
+ *
+ * `max` defaults to `Number.MAX_SAFE_INTEGER` (~9.007e15) so that every
+ * caller gets an upper bound for free without having to think about it.
+ * That default is not arbitrary: `monthlyVolume` chains up to four sanitized
+ * fields together (`perRequest.inputTokens * effectiveRequestsPerDay *
+ * activeDaysPerMonth`, itself `requestsPerDay * (1 + growthPercent / 100)`),
+ * and the worst case with every factor at this bound — roughly
+ * `9.007e15^4` — lands around `6.6e61`, still ~246 orders of magnitude below
+ * `Number.MAX_VALUE` (~1.7977e308). Without a bound here, an absurd-but-finite
+ * single input like `requestsPerDay: 1e304` multiplies out to `Infinity`,
+ * which then turns into `NaN` the instant two such values are subtracted
+ * (`requiredCacheHitRate`'s `atOne - atZero`) — this bound is what keeps every
+ * downstream computation finite instead of propagating that.
  */
-function sanitizeNonNegative(n: number): number {
+function sanitizeNonNegative(n: number, max: number = Number.MAX_SAFE_INTEGER): number {
   if (!Number.isFinite(n) || n < 0) return 0;
-  return n;
+  return Math.min(n, max);
 }
 
 /** Sanitizes the two token counts; `cacheHitRate` is left to `computeCost`'s own `clamp01`, which already handles NaN/out-of-range without this file duplicating that clamp. */

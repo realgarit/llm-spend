@@ -6,8 +6,16 @@ import { getProvider } from "@/data/providers";
 import { usdToChf } from "@/data/currency";
 import { type Workload, computeCost } from "@/lib/calc";
 import { sameModelDeploymentComparison } from "@/lib/lane-insights";
-import type { RateContext } from "@/lib/rates";
-import { DEFAULT_SCENARIO, compareRowUnderScenario, scenarioContexts } from "@/lib/scenario";
+import { type RateContext, resolveRate } from "@/lib/rates";
+import {
+  DEFAULT_SCENARIO,
+  type Scenario,
+  compareRowUnderScenario,
+  effectivePreviewContext,
+  isTimeOfDayPriced,
+  scenarioContexts,
+  scenarioToRateContext,
+} from "@/lib/scenario";
 import {
   type BudgetInput,
   type RateBasis,
@@ -176,20 +184,28 @@ test("NaN across every numeric input clamps to zero and produces an all-finite, 
   assert.equal(result.monthlySpendUsd, 0);
 });
 
-test("very large requests/day, tokens, and growth still produce a finite, directional projection", () => {
+test("REGRESSION: requests/day at the real overflow boundary (1e304) still produces a finite, directional projection, never Infinity/NaN", () => {
+  // The review's own confirmed repro: requestsPerDay: 1e304 (everything else
+  // realistic) multiplies out past Number.MAX_VALUE (~1.7977e308) inside
+  // monthlyVolume's inputTokens * effectiveRequestsPerDay * activeDaysPerMonth
+  // chain, producing monthlyInputTokens/monthlyOutputTokens: Infinity. A prior
+  // version of this test used requestsPerDay: 1_000_000_000 — about 200 orders
+  // of magnitude below where the overflow actually happens — so it passed both
+  // before and after any clamp existed and would never have caught the bug.
+  // sanitizeNonNegative's new upper bound (budget.ts) is what fixes this.
   const result = projectMonthlyBudget(
     input({
       perRequest: { inputTokens: 1_000_000, outputTokens: 200_000, cacheHitRate: 0.5 },
-      requestsPerDay: 1_000_000_000,
+      requestsPerDay: 1e304,
       activeDaysPerMonth: 31,
       monthlyGrowthPercent: 500,
       monthlyBudgetUsd: 1_000_000_000,
     }),
     basis(),
   );
-  allFinite(result, "huge-input projection");
+  allFinite(result, "overflow-boundary projection");
   assert.ok(result.monthlySpendUsd > 0);
-  assert.ok(result.headroomUsd < 0, "a billion requests/day at these rates should overrun a $1B budget");
+  assert.ok(result.headroomUsd < 0, "an overflow-scale requests/day at these rates should overrun a $1B budget");
 });
 
 test("an all-zero input produces an all-zero, finite projection — never NaN from a 0/0 division", () => {
@@ -320,6 +336,101 @@ test("real catalog: requiredCacheHitRate returns a valid, finite result for ever
     if (result.status === "already-within-budget") assert.ok(Number.isFinite(result.monthlySpendAtNoCacheUsd));
     if (result.status === "impossible") assert.ok(Number.isFinite(result.monthlySpendAtFullCacheUsd));
   }
+});
+
+test("REGRESSION: requiredCacheHitRate never returns hitRate: NaN when requestsPerDay alone overflows (the review's confirmed repro)", () => {
+  // Before the fix: requestsPerDay: 1e304 overflows monthlyInputTokens and
+  // monthlyOutputTokens to Infinity (see the projectMonthlyBudget overflow
+  // regression above). requiredCacheHitRate then calls computeCost at h=0,
+  // where cachedTokens = monthlyInputTokens(Infinity) * hit(0) = NaN (0 *
+  // Infinity is indeterminate in IEEE 754), so freshTokens = Infinity - NaN =
+  // NaN and atZero ends up NaN too — before even reaching atOne or the h=1
+  // evaluation. Both budget comparisons (`atZero <= budget`, `atOne >
+  // budget`) are then false (any comparison against NaN is false), so the
+  // code falls through to the algebraic solve and returns hitRate: NaN,
+  // exactly as the review observed.
+  const result = requiredCacheHitRate({ ...DEFAULT_BUDGET_INPUT, requestsPerDay: 1e304 }, basis());
+
+  if (result.status === "required") {
+    assert.ok(Number.isFinite(result.hitRate), `hitRate should be finite, got ${result.hitRate}`);
+    assert.ok(result.hitRate >= 0 && result.hitRate <= 1);
+    assert.ok(Number.isFinite(result.monthlySpendUsd));
+  } else if (result.status === "already-within-budget") {
+    assert.ok(Number.isFinite(result.monthlySpendAtNoCacheUsd));
+  } else if (result.status === "impossible") {
+    assert.ok(Number.isFinite(result.monthlySpendAtFullCacheUsd));
+  } else {
+    assert.fail(`unexpected status: ${result.status}`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// budget-planner regression: scenario preview must not leak a not-yet-started
+// rate (Finding 1 — the primary/crossover pricing paths in budget-planner.tsx
+// must narrow the scenario's preview context per-row via
+// effectivePreviewContext, exactly like compareRowUnderScenario already does)
+// ---------------------------------------------------------------------------
+
+test("REGRESSION: a non-'now' scenario must price a date-scoped-variant row off its CURRENT rate, not a future reversion it hasn't reached yet", () => {
+  // budget-planner.tsx builds a RateBasis for the selected lane (and for each
+  // crossover counterpart) from scenarioToRateContext's raw preview context.
+  // That context sets previewScheduledRates unconditionally for every
+  // non-"now" Time scenario (Peak/Off-peak/Custom) — scenario.ts's own
+  // effectivePreviewContext doc comment warns this must be narrowed per-row,
+  // or picking a Time scenario silently previews ANY not-yet-started variant,
+  // not just genuinely time-of-day-scoped ones. Gemini 3.6 Flash is exactly
+  // that shape: a promotional base rate today that reverts on 2027-01-01,
+  // with no hour-of-day variant anywhere on the row — the review's own
+  // reproduction (selecting it and picking a non-"Now" scenario silently
+  // doubled every dollar figure on /budget).
+  const gemini = getProvider("gemini");
+  const entry = gemini?.entries.find((e) => e.model === "Gemini 3.6 Flash");
+  assert.ok(entry, "expected a Gemini 3.6 Flash entry in the catalog");
+  assert.equal(
+    isTimeOfDayPriced(entry as PricingEntry),
+    false,
+    "this row's variants are date/service-tier-scoped, not hour-of-day-scoped — exactly the shape effectivePreviewContext must still gate",
+  );
+
+  const liveNow = new Date("2026-08-30T12:00:00Z"); // well before the 2027-01-01 reversion
+  const scenario: Scenario = { time: { mode: "peak" }, serviceTier: "standard" }; // any non-"now" mode reproduces this
+  const rawCtx = scenarioToRateContext(scenario, liveNow, 1000);
+  assert.equal(rawCtx.previewScheduledRates, true, "non-'now' scenarios opt into schedule preview");
+
+  // The bug, reproduced directly: pricing this row off the raw scenario
+  // context previews the not-yet-started 2027 reversion four months early.
+  const buggyResolved = resolveRate(entry as PricingEntry, rawCtx);
+  assert.equal(buggyResolved.label, "Standard (from 2027)");
+  assert.equal(buggyResolved.inputUsd, 1.5);
+  assert.equal(buggyResolved.outputUsd, 7.5);
+
+  // The fix: narrow the context per-row via effectivePreviewContext before
+  // pricing anything — exactly what budget-planner.tsx's rateBasis and each
+  // crossover counterpart now do, mirroring compareRowUnderScenario.
+  const narrowedCtx = effectivePreviewContext(entry as PricingEntry, rawCtx);
+  const fixedResolved = resolveRate(entry as PricingEntry, narrowedCtx);
+  assert.equal(fixedResolved.label, null, "must resolve to the currently-billing base rate, not a preview");
+  assert.equal(fixedResolved.inputUsd, 0.75);
+  assert.equal(fixedResolved.outputUsd, 3.75);
+
+  // The end-to-end assertion the finding asked for: projected monthly spend
+  // reflects the CURRENTLY billing rate, not the future reverted one.
+  const scenarioInput = input({
+    perRequest: { inputTokens: 1_000_000, outputTokens: 0, cacheHitRate: 0 },
+    requestsPerDay: 1,
+    activeDaysPerMonth: 1,
+  });
+
+  const fixedBasis: RateBasis = { entry: entry as PricingEntry, ctx: narrowedCtx };
+  const fixedProjection = projectMonthlyBudget(scenarioInput, fixedBasis);
+  assert.equal(fixedProjection.monthlySpendUsd, 0.75, "1,000,000 input tokens at the CURRENT $0.75/M rate");
+
+  // And proof this assertion would actually have caught the original bug:
+  // the identical workload priced off the unnarrowed context silently doubles
+  // the spend, pricing off the future $1.50/M reversion instead.
+  const buggyBasis: RateBasis = { entry: entry as PricingEntry, ctx: rawCtx };
+  const buggyProjection = projectMonthlyBudget(scenarioInput, buggyBasis);
+  assert.equal(buggyProjection.monthlySpendUsd, 1.5, "the un-narrowed context prices off the future reversion instead");
 });
 
 // ---------------------------------------------------------------------------

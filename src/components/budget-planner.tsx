@@ -21,6 +21,7 @@ import {
   DEFAULT_SCENARIO,
   type Scenario,
   compareRowUnderScenario,
+  effectivePreviewContext,
   scenarioContexts,
   scenarioToRateContext,
 } from "@/lib/scenario";
@@ -70,20 +71,30 @@ export function BudgetPlanner({ rows, buildAtMs }: { rows: CompareRow[]; buildAt
     [perRequest, requestsPerDay, activeDaysPerMonth, monthlyGrowthPercent, monthlyBudgetUsd],
   );
 
-  // The one scenario-resolved context every lane priced on this page shares —
-  // contextTokens is perRequest.inputTokens (a genuine single-prompt size,
-  // unlike the compare page's monthly-aggregate stand-in — see
+  // The one scenario-resolved PREVIEW basis every lane priced on this page
+  // shares — contextTokens is perRequest.inputTokens (a genuine single-prompt
+  // size, unlike the compare page's monthly-aggregate stand-in — see
   // scenarioToRateContext's doc comment) so a future context-band variant
   // would already read the right prompt size here.
+  //
+  // This is the RAW preview context only — pricing an entry off it directly
+  // would let any non-"now" Time scenario (Peak/Off-peak/Custom) preview ANY
+  // not-yet-started variant on that row, not just genuinely time-of-day-scoped
+  // ones (e.g. it would silently reveal Gemini's 2027-01-01 price reversion
+  // four months early). Every actual pricing site below — rateBasis, and each
+  // crossover counterpart — narrows this per-entry via effectivePreviewContext
+  // before use, exactly like compareRowUnderScenario already does for
+  // comparedRows.
   const ctx = useMemo(
     () => scenarioToRateContext(scenario, liveNow, perRequest.inputTokens),
     [scenario, liveNow, perRequest.inputTokens],
   );
 
-  const rateBasis: RateBasis | null = useMemo(
-    () => (selectedRow ? { entry: toPricingEntry(selectedRow), ctx } : null),
-    [selectedRow, ctx],
-  );
+  const rateBasis: RateBasis | null = useMemo(() => {
+    if (!selectedRow) return null;
+    const entry = toPricingEntry(selectedRow);
+    return { entry, ctx: effectivePreviewContext(entry, ctx) };
+  }, [selectedRow, ctx]);
 
   const projection = useMemo(
     () => (rateBasis ? projectMonthlyBudget(budgetInput, rateBasis) : null),
@@ -120,7 +131,8 @@ export function BudgetPlanner({ rows, buildAtMs }: { rows: CompareRow[]; buildAt
   const crossovers = useMemo(() => {
     if (!deploymentComparison || !rateBasis) return [];
     return deploymentComparison.comparisons.map((markup) => {
-      const counterpartRate: RateBasis = { entry: toPricingEntry(markup.compared.row), ctx };
+      const counterpartEntry = toPricingEntry(markup.compared.row);
+      const counterpartRate: RateBasis = { entry: counterpartEntry, ctx: effectivePreviewContext(counterpartEntry, ctx) };
       const directRate = deploymentComparison.targetIsDirect ? rateBasis : counterpartRate;
       const foundryRate = deploymentComparison.targetIsDirect ? counterpartRate : rateBasis;
       return { markup, result: deploymentCacheCrossover(budgetInput, directRate, foundryRate) };
@@ -330,7 +342,14 @@ function PlainNumberField({
               return;
             }
             const parsed = Number(raw);
-            if (!Number.isNaN(parsed)) onChange(parsed);
+            // Number.isFinite (not just !Number.isNaN): a number input syntactically
+            // accepts scientific notation like "1e400", which Number() parses straight
+            // to Infinity. Rejecting that here — the same way NaN was already rejected —
+            // keeps this state finite at the source, so monthlyBudgetUsd (echoed verbatim
+            // in prose below via formatPlain, bypassing budget.ts's own sanitization)
+            // can never become "$Infinity" text. A huge-but-finite value still passes
+            // through unchanged; only literal Infinity/-Infinity is refused.
+            if (Number.isFinite(parsed)) onChange(parsed);
           }}
           style={{ width: "100%" }}
         />
@@ -513,8 +532,9 @@ function formatCount(n: number): string {
   return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }
 
-/** A budget/USD figure with no currency symbol, for inline "$X" sentences that already supply the "$" themselves. */
+/** A budget/USD figure with no currency symbol, for inline "$X" sentences that already supply the "$" themselves. Defense-in-depth finiteness guard, mirroring formatCount below: this renders the raw monthlyBudgetUsd state directly rather than a budget.ts-sanitized value. */
 function formatPlain(n: number): string {
+  if (!Number.isFinite(n)) return "—";
   return Number.isInteger(n) ? n.toLocaleString("en-US") : n.toFixed(2);
 }
 
