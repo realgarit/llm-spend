@@ -790,6 +790,7 @@ th.num-h .th-sort-button {
     gap: 0.75rem;
   }
   table.decision-table tbody tr {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     overflow: hidden;
@@ -814,20 +815,27 @@ th.num-h .th-sort-button {
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  table.decision-table tbody td:nth-child(1),
+  /*
+   * Column order is: 1 pin, 2 provider, 3 model, 4 tier, 5 input, 6 cached,
+   * 7 output, 8 blended, 9 total. The pin lifts out of the card grid entirely
+   * (see .cell-pin below) and sits in the card's top-right corner, so the
+   * provider row reserves space for it on the right.
+   */
   table.decision-table tbody td:nth-child(2),
   table.decision-table tbody td:nth-child(3),
-  table.decision-table tbody td:nth-child(8) {
+  table.decision-table tbody td:nth-child(4),
+  table.decision-table tbody td:nth-child(9) {
     grid-column: 1 / -1;
   }
-  table.decision-table tbody td:nth-child(1) {
+  table.decision-table tbody td:nth-child(2) {
+    padding-right: 3.25rem;
     padding-bottom: 0.35rem;
     border-bottom: 0;
   }
-  table.decision-table tbody td:nth-child(2) {
+  table.decision-table tbody td:nth-child(3) {
     padding-top: 0;
   }
-  table.decision-table tbody td:nth-child(7) {
+  table.decision-table tbody td:nth-child(8) {
     display: none;
   }
   table.decision-table tbody td.decision-total {
@@ -1032,5 +1040,586 @@ select {
   }
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ===========================================================================
+   Decision workspace
+   ---------------------------------------------------------------------------
+   Everything below styles the six roadmap surfaces that the compare page now
+   connects: the shortlist pin controls, the share/export bar, the fixed
+   "decision spine" tray, and the three focused routes (lane cost anatomy,
+   budget planner, freshness command center).
+
+   No new colors: every value resolves through the palette tokens declared at
+   the top of this file (carbon ink --ink, instrument panel --surface, raised
+   graphite --surface-2, signal amber --brand, verified green --official, trace
+   blue --derived), so all of it follows the light/dark switch for free.
+   =========================================================================== */
+
+/* Removed from the visual layout, kept in the accessibility tree. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Row pin control ---------- */
+.th-pin,
+td.cell-pin {
+  width: 3.25rem;
+  padding-right: 0;
+}
+/*
+ * 2.5rem = the 40px control the design spec asks for. Border and background
+ * stay transparent until hover/pressed so a column of 12 of them does not
+ * compete with the rates beside it.
+ */
+.pin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.pin-button:hover {
+  color: var(--brand);
+  border-color: var(--border-strong);
+}
+.pin-button[aria-pressed="true"] {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+}
+table.decision-table tbody tr.is-pinned td {
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+}
+
+/* ---------- Share and export bar (inside the filter panel) ---------- */
+.share-bar {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
+  align-items: center;
+}
+.share-actions .btn {
+  min-height: 2.5rem;
+}
+.share-hint {
+  flex: 1 1 18rem;
+  min-width: 0;
+  color: var(--text-faint);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+/*
+ * Height is reserved whether or not a message is present: the region has to
+ * stay in the accessibility tree for a live announcement to be heard, and
+ * holding the space also stops the panel jumping the first time it speaks.
+ */
+.share-status {
+  min-height: 1.15rem;
+  color: var(--brand);
+  font-size: 0.75rem;
+}
+.share-fallback {
+  display: grid;
+  gap: 0.3rem;
+}
+.share-fallback label {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.share-fallback input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+/* ---------- Decision spine (persistent shortlist tray) ---------- */
+/*
+ * The tray itself is a transparent, non-interactive layer pinned to the bottom
+ * of the viewport; only its populated children take pointer events. That is
+ * what lets it "disappear when empty" without a :has() query — with nothing
+ * pinned the only child is the (empty, non-interactive) live region, so
+ * nothing is painted and nothing under it is blocked.
+ */
+.shortlist-tray {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+.shortlist-strip,
+.shortlist-need-more,
+.shortlist-grid {
+  pointer-events: auto;
+}
+.shortlist-live,
+.shortlist-strip,
+.shortlist-need-more,
+.shortlist-grid {
+  align-self: center;
+  width: min(76rem, 100%);
+}
+.shortlist-live {
+  padding: 0 1.25rem 0.35rem;
+  color: var(--brand);
+  font-size: 0.78rem;
+}
+.shortlist-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  align-items: center;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid var(--border-strong);
+  border-bottom: 0;
+  border-radius: 0.9rem 0.9rem 0 0;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  animation: spine-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.shortlist-heading-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.shortlist-workload {
+  color: var(--text-faint);
+  font-size: 0.7rem;
+}
+.shortlist-chips {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shortlist-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  max-width: 100%;
+  padding: 0.15rem 0.2rem 0.15rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  background: var(--surface-2);
+  font-size: 0.78rem;
+}
+.shortlist-chip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shortlist-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.shortlist-chip-remove:hover {
+  color: var(--estimate);
+  background: color-mix(in srgb, var(--estimate) 14%, transparent);
+}
+.shortlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.shortlist-actions .btn {
+  min-height: 2.5rem;
+  font-size: 0.82rem;
+}
+.shortlist-actions .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.shortlist-actions .btn-primary:disabled:hover {
+  filter: none;
+}
+.shortlist-need-more,
+.shortlist-grid {
+  border: 1px solid var(--border-strong);
+  border-top: 0;
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+.shortlist-need-more {
+  padding: 0.85rem 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+/*
+ * The expanded comparison is height-capped and scrolls internally rather than
+ * growing without limit: a fixed panel that can cover the whole viewport would
+ * obscure the very table it is comparing against.
+ */
+.shortlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  max-height: min(52vh, 26rem);
+  padding: 0.9rem 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.shortlist-card {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--surface);
+}
+.shortlist-card-head {
+  display: flex;
+  gap: 0.5rem;
+  align-items: start;
+  justify-content: space-between;
+}
+.shortlist-card-model {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.shortlist-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  align-items: center;
+  margin-top: 0.3rem;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+}
+.shortlist-card-host {
+  font-family: var(--font-mono);
+}
+.shortlist-card-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 0.75rem;
+  margin: 0;
+}
+.shortlist-card-figures dt {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.shortlist-card-figures dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+.shortlist-card-variant {
+  color: var(--brand);
+  font-size: 0.7rem;
+}
+.shortlist-card-total {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  align-items: baseline;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+.shortlist-card-total-usd {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.shortlist-card-total-chf {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+.shortlist-card-delta {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+/* Cost baseline, never a quality verdict — see shortlist-tray.tsx's copy. */
+.shortlist-baseline {
+  color: var(--official);
+}
+/*
+ * Reserves the space the fixed tray occupies so the end of the page stays
+ * reachable. Rendered by compare-explorer.tsx only while something is pinned,
+ * and grown while the comparison is expanded.
+ */
+.decision-spine-spacer {
+  height: 7rem;
+}
+.decision-spine-spacer[data-expanded="true"] {
+  height: min(62vh, 34rem);
+}
+
+@keyframes spine-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Lane cost anatomy (/models/[laneId]) ---------- */
+.anatomy-explorer {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.25rem);
+}
+.anatomy-section {
+  min-width: 0;
+}
+.anatomy-rate-stat,
+.anatomy-unavailable-stat,
+.anatomy-alternative-card {
+  min-width: 0;
+}
+.anatomy-alternative-card:hover {
+  border-color: var(--border-strong);
+}
+.anatomy-preview-notice {
+  max-width: 46rem;
+}
+/* Long single-line arithmetic and variant labels must wrap, never widen the page. */
+.anatomy-sum-proof,
+.anatomy-scenario-badge {
+  overflow-wrap: anywhere;
+}
+.anatomy-provenance-dim {
+  min-width: 0;
+}
+.anatomy-provenance-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 0.9rem;
+}
+.anatomy-deployment-table th,
+.anatomy-deployment-table td {
+  white-space: nowrap;
+}
+
+/* ---------- Monthly budget planner (/budget) ---------- */
+.budget-page,
+.freshness-page {
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+.budget-intro,
+.freshness-intro {
+  max-width: 54rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+.budget-planner {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.25rem);
+}
+.budget-section {
+  min-width: 0;
+}
+.budget-lane-section select {
+  min-height: 2.75rem;
+}
+.budget-monthly-assumptions input[type="number"] {
+  width: 100%;
+  min-height: 2.75rem;
+}
+.budget-projection-grid,
+.budget-crossover-card,
+.budget-crossover-list {
+  min-width: 0;
+}
+.budget-headroom-copy,
+.budget-break-even-copy {
+  max-width: 46rem;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Freshness command center (/freshness) ---------- */
+.freshness-dashboard {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.25rem);
+}
+.freshness-section {
+  min-width: 0;
+  scroll-margin-top: 5rem;
+}
+.freshness-timeline-list {
+  min-width: 0;
+}
+.freshness-table td,
+.freshness-coverage-table td {
+  vertical-align: top;
+}
+
+@media (max-width: 720px) {
+  /* ---- Decision spine on a phone ---- */
+  .shortlist-live {
+    padding-inline: 0.9rem;
+  }
+  .shortlist-strip {
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.7rem 0.7rem 0 0;
+  }
+  .shortlist-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+  .shortlist-actions .btn {
+    flex: 1 1 8rem;
+    justify-content: center;
+  }
+  .shortlist-need-more,
+  .shortlist-grid {
+    padding-inline: 0.9rem;
+  }
+  .shortlist-grid {
+    grid-template-columns: 1fr;
+    max-height: min(56vh, 24rem);
+  }
+  /* Four chips wrap to two rows above two full-width actions — measured at
+     ~203px on a 375px viewport, so this reserves a little more than that. */
+  .decision-spine-spacer {
+    height: 13.5rem;
+  }
+  .decision-spine-spacer[data-expanded="true"] {
+    height: min(70vh, 30rem);
+  }
+
+  /* ---- Compare rows: the pin lifts into the card's top-right corner ---- */
+  table.decision-table tbody td.cell-pin {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.45rem;
+    z-index: 1;
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+  }
+  table.decision-table tbody td.cell-pin::before {
+    content: none;
+  }
+
+  /* ---- Freshness tables become card lists, like the compare table ---- */
+  /*
+   * The wrap's own frame would double the card borders, so it steps back to a
+   * plain block once its table has become a card list. If :has() is
+   * unsupported the cards simply sit inside one extra frame — cosmetic only,
+   * never a layout break.
+   */
+  .table-wrap:has(> table.freshness-table),
+  .table-wrap:has(> table.freshness-coverage-table) {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  table.freshness-table,
+  table.freshness-table tbody,
+  table.freshness-coverage-table,
+  table.freshness-coverage-table tbody {
+    display: block;
+    width: 100%;
+  }
+  table.freshness-table thead,
+  table.freshness-coverage-table thead {
+    display: none;
+  }
+  table.freshness-table tbody,
+  table.freshness-coverage-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+  table.freshness-table tbody tr,
+  table.freshness-coverage-table tbody tr {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--surface);
+  }
+  table.freshness-table tbody td,
+  table.freshness-coverage-table tbody td {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: normal;
+  }
+  table.freshness-table tbody td::before,
+  table.freshness-coverage-table tbody td::before {
+    color: var(--text-faint);
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  table.freshness-table tbody td:last-child,
+  table.freshness-coverage-table tbody td:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shortlist-strip {
+    animation: none;
+  }
+  .pin-button,
+  .shortlist-chip-remove {
+    transition: none;
   }
 }

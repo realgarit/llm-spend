@@ -8,9 +8,17 @@ export const site = {
   author: "realgarit",
 } as const;
 
+/**
+ * Primary navigation, in decision order: compare lanes, plan a month against a
+ * budget, then check how fresh and how sourced the underlying rates are.
+ * `SiteHeader` marks an item active with `pathname.startsWith(href)`, so every
+ * href here must be a distinct top-level segment.
+ */
 export const nav = [
   { href: "/", label: "Home" },
   { href: "/compare", label: "Compare" },
+  { href: "/budget", label: "Budget" },
+  { href: "/freshness", label: "Freshness" },
   { href: "/cache-economics", label: "Cache economics" },
   { href: "/rate-limits", label: "Rate limits" },
   { href: "/changelog", label: "Changelog" },
