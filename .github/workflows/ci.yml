@@ -35,3 +35,33 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Only Chromium: the browser gate checks this app's behavior, not
+      # cross-engine rendering, and a second engine would double the runtime
+      # for no extra signal. Installed after the cheap checks so a typecheck or
+      # lint failure does not pay for a browser download.
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      # E2E_SKIP_BUILD reuses the artifact the Build step above just produced —
+      # tests/e2e/serve.mjs would otherwise run `npm run build` a second time.
+      # It serves that build with the real standalone server and fails loudly if
+      # .next/standalone is missing, so this stays honest if the steps are ever
+      # reordered. Never `--update-snapshots` here: visual baselines are
+      # recorded by hand (see tests/e2e/README.md).
+      - name: Browser tests
+        run: npm run test:e2e
+        env:
+          E2E_SKIP_BUILD: "1"
+        timeout-minutes: 20
+
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
