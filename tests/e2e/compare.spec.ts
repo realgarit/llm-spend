@@ -16,7 +16,15 @@ const resultsTable = (page: Page) => page.locator("table.decision-table");
 const resultRows = (page: Page) => resultsTable(page).locator("tbody tr");
 const summary = (page: Page) => page.locator(".filter-summary");
 
-/** The "N of M lanes" counter, parsed. */
+/**
+ * The `.filter-summary` "N of M lanes" counter, parsed: `shown` is how many
+ * catalog lanes pass the active filters, `total` is the whole catalog size.
+ *
+ * This is NOT how many rows are actually rendered in the table — that is a
+ * separate number, capped by the top-12 progressive-disclosure toggle
+ * ("Show all N" / "Show top 12"). For the on-screen row count use
+ * `resultRows(page).count()` (or `.toHaveCount(...)`) instead.
+ */
 async function laneCounts(page: Page): Promise<{ shown: number; total: number }> {
   const text = (await summary(page).locator("strong").innerText()).trim();
   const match = /^(\d+) of (\d+) lanes$/.exec(text);
