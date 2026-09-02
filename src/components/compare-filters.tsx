@@ -40,6 +40,7 @@ export function CompareFilterBar({
   sortDir,
   onSortChange,
   onClear,
+  children,
 }: {
   filters: CompareFilters;
   onChange: (filters: CompareFilters) => void;
@@ -51,6 +52,8 @@ export function CompareFilterBar({
   sortDir: SortDir;
   onSortChange: (key: SortKey, dir: SortDir) => void;
   onClear: () => void;
+  /** Optional panel footer — the compare page passes {@link CompareActionBar} here. */
+  children?: React.ReactNode;
 }) {
   const selectedSort = SORT_OPTIONS.find((option) => option.key === sortKey && option.dir === sortDir);
 
@@ -142,6 +145,81 @@ export function CompareFilterBar({
         <strong>{resultCount} of {totalCount} lanes</strong>
         <span>{workloadSummary}</span>
       </div>
+
+      {children}
     </section>
+  );
+}
+
+export interface CompareActionBarProps {
+  /** Copy the full scenario URL to the clipboard. */
+  onCopyLink: () => void;
+  /** Download the visible result rows as CSV. */
+  onExportCsv: () => void;
+  /** Result of the most recent copy/export attempt, announced politely. Null before either is used. */
+  status: string | null;
+  /**
+   * The scenario URL, exposed as selectable text only when the clipboard write
+   * failed. Per the design spec's boundary behavior, a clipboard failure
+   * "leaves the comparison intact and exposes a selectable URL fallback" —
+   * so the visitor can still hand the scenario to someone else by hand.
+   */
+  fallbackUrl: string | null;
+  /** How many rows an export would write — the visible result set, not the whole catalog. */
+  exportCount: number;
+}
+
+/**
+ * Share and export controls for the current comparison.
+ *
+ * Deliberately lives inside the filter panel rather than as its own section
+ * between the panel and the results table: `.decision-cockpit` is a grid whose
+ * gap `.decision-results` cancels with a negative margin, so a new top-level
+ * sibling there would break that rhythm. This is presentational and fully
+ * controlled — every clipboard, blob, and history call stays in
+ * `compare-explorer.tsx`, which owns the state being shared.
+ */
+export function CompareActionBar({
+  onCopyLink,
+  onExportCsv,
+  status,
+  fallbackUrl,
+  exportCount,
+}: CompareActionBarProps) {
+  return (
+    <div className="share-bar">
+      <div className="share-actions">
+        <button type="button" className="btn" onClick={onCopyLink}>
+          Copy scenario link
+        </button>
+        <button type="button" className="btn" onClick={onExportCsv}>
+          Export CSV
+        </button>
+        <span className="share-hint mono">
+          Shares this exact workload, scenario, filters, sort, and shortlist. CSV writes the {exportCount} visible
+          {exportCount === 1 ? " lane" : " lanes"}.
+        </span>
+      </div>
+
+      {/* Always mounted: some assistive tech only announces *changes* to a live
+          region that was already present, not the content of a new one. */}
+      <p className="share-status mono" role="status" aria-live="polite">
+        {status ?? ""}
+      </p>
+
+      {fallbackUrl !== null && (
+        <div className="share-fallback">
+          <label htmlFor="share-fallback-url">Scenario link</label>
+          <input
+            id="share-fallback-url"
+            className="mono"
+            type="text"
+            readOnly
+            value={fallbackUrl}
+            onFocus={(event) => event.currentTarget.select()}
+          />
+        </div>
+      )}
+    </div>
   );
 }

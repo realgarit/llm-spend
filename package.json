@@ -12,6 +12,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "tsx --test src/**/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "test:all": "npm test && npm run test:e2e",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -20,6 +23,8 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.9",

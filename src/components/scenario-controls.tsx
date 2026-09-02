@@ -1,5 +1,11 @@
 "use client";
 
+// Explicit React import: this repo's test runner (`tsx --test`) compiles JSX
+// with the classic runtime, so any component rendered through
+// `react-dom/server` in a test — directly or, as here, as a child of
+// `CompareExplorer` — needs `React` in scope. Next's own build uses the
+// automatic runtime and ignores it.
+import React from "react";
 import {
   DEFAULT_CUSTOM_HOUR_UTC,
   DEFAULT_SCENARIO,

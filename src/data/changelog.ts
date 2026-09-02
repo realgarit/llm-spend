@@ -23,6 +23,29 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-02",
+    title: "Comparisons are now shareable, exportable, and keep a shortlist",
+    tag: "methodology",
+    body: [
+      "A comparison is no longer something you have to rebuild from memory. The workload, pricing scenario, filters, sort order, and pinned lanes are all written into the /compare address as you work, so copying that link hands someone the exact comparison you are looking at. “Copy scenario link” puts the full URL on the clipboard and, if the browser refuses, shows the link as selectable text instead. “Export CSV” writes the rows currently on screen — scenario label, provider, model, host, tier, active rate variant, resolved input/cache/output rates, workload total in USD and CHF, and confidence — straight to a file, entirely in the browser.",
+      "Every result row now has a pin control. Pinned lanes collect in a tray that follows you down the page, survives a refresh, and expands into a side-by-side comparison of up to four lanes showing each one's resolved rates, blended input, and workload total, with the cheapest lane in the shortlist as the cost baseline and every other lane's difference in dollars and percent. That baseline is the lowest cost for the workload you selected — never a claim about model quality.",
+      "Three new destinations open up alongside it. Each lane now has its own cost-anatomy page splitting a workload into fresh input, cached input, and output, with per-dimension provenance, the lane's full published rate schedule, same-model Direct-versus-Foundry markup, and cost-comparable alternatives. The new budget planner projects a representative month from a per-request workload and answers what cache hit rate a lane would need to fit a monthly budget. The new freshness page shows when the catalog was last audited in full, which lanes are missing a cache meter or carry a scheduled rate change, and where each provider's figures come from.",
+      "No catalog price, cache rate, availability, confidence level, or calculation formula changed in this release. Every figure on the new pages is resolved by the same pricing code that already drives the comparison table.",
+    ],
+    sources: [
+      { label: "Shareable scenario state and CSV export (issue #75)", href: "https://github.com/realgarit/llm-spend/issues/75" },
+      { label: "Persistent shortlist and decision spine (issue #76)", href: "https://github.com/realgarit/llm-spend/issues/76" },
+      { label: "Lane cost-anatomy routes (issue #77)", href: "https://github.com/realgarit/llm-spend/issues/77" },
+      { label: "Monthly budget planner (issue #78)", href: "https://github.com/realgarit/llm-spend/issues/78" },
+      { label: "Freshness and provenance command center (issue #79)", href: "https://github.com/realgarit/llm-spend/issues/79" },
+      {
+        label: "AAA cost decision workspace design",
+        href: "https://github.com/realgarit/llm-spend/blob/main/docs/superpowers/specs/2026-08-30-aaa-decision-workspace-design.md",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-02",
+  },
+  {
     date: "2026-08-30",
     title: "The comparison table becomes a cost decision cockpit",
     tag: "methodology",

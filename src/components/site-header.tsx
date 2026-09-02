@@ -102,8 +102,16 @@ export function SiteHeader() {
         </nav>
       )}
 
+      {/*
+        The inline nav row only fits once seven items, the wordmark and the
+        right-hand controls have room side by side: below this width the items
+        squeeze until their own labels wrap ("Cache economics" over two lines),
+        so the hamburger panel covers the whole range instead. Raised from
+        860px when /budget and /freshness joined the nav.
+      */}
       <style>{`
-        @media (min-width: 860px) {
+        .nav-desktop a { white-space: nowrap; }
+        @media (min-width: 1080px) {
           .nav-desktop { display: flex !important; }
           .nav-mobile-btn { display: none !important; }
           .nav-mobile-panel { display: none !important; }

@@ -21,6 +21,7 @@ function row(id: string, tier: "Direct" | "Global", totalUsd: number): ComparedR
       outputUsd: 4,
       confidence: "official",
       cachedConfidence: "official",
+      effectiveDate: "2026-08-30",
     },
     resolved: {
       inputUsd: 1,

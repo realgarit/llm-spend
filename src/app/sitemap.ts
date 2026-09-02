@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { buildCompareRows } from "@/data/compare-data";
 import { providerSlugs } from "@/data/providers";
 import { site } from "@/lib/site";
 
@@ -6,7 +7,15 @@ export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const staticRoutes = ["", "/compare", "/cache-economics", "/rate-limits", "/changelog"];
+  const staticRoutes = [
+    "",
+    "/compare",
+    "/budget",
+    "/freshness",
+    "/cache-economics",
+    "/rate-limits",
+    "/changelog",
+  ];
 
   const routes: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
     url: `${site.url}${path}`,
@@ -21,6 +30,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
+    });
+  }
+
+  for (const row of buildCompareRows()) {
+    routes.push({
+      url: `${site.url}/models/${row.id}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
     });
   }
 

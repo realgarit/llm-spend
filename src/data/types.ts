@@ -21,6 +21,12 @@ export type ProviderSlug =
   | "minimax"
   | "embeddings";
 
+/** A labeled external source used to trace catalog information. */
+export interface SourceLink {
+  label: string;
+  href: string;
+}
+
 /**
  * Hosting / routing tier a price applies to.
  * - Global      : cloud "Global" routed tier (any datacenter)

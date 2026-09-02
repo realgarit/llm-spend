@@ -8,6 +8,14 @@
 # testing
 /coverage
 
+# playwright (browser quality gate) — reports and per-run failure artifacts.
+# tests/e2e/*-snapshots/ is deliberately NOT ignored: the visual baselines are
+# committed reference images.
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+
 # next.js
 /.next/
 /out/
@@ -34,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# linked development worktrees
+.worktrees/

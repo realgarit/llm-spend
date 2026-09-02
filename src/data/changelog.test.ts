@@ -22,3 +22,28 @@ test("every changelog entry has labeled sources", () => {
     }
   }
 });
+
+test("the newest entry is first, so the rendered changelog reads newest-first", () => {
+  for (let i = 1; i < changelog.length; i += 1) {
+    assert.ok(
+      changelog[i - 1].date >= changelog[i].date,
+      `${changelog[i - 1].date} is listed before the newer ${changelog[i].date}`,
+    );
+  }
+});
+
+test("the decision workspace release states its customer-visible effect on the current date", () => {
+  const entry = changelog.find((candidate) => candidate.date === "2026-09-02");
+  assert.ok(entry, "expected a 2026-09-02 changelog entry for the connected decision workspace");
+
+  const body = entry.body.join(" ");
+  // Every surface this release actually connects has to be described, not just named in a commit.
+  for (const surface of [/shareable|share|link/i, /CSV/, /shortlist/i, /budget/i, /freshness/i]) {
+    assert.match(body, surface, `2026-09-01 entry does not describe ${surface}`);
+  }
+  // Cost-only language boundary: the site never ranks lanes by quality.
+  assert.doesNotMatch(body, /\bbest\b/i);
+  assert.doesNotMatch(body, /\brecommend/i);
+  // No pricing moved in this release; say so rather than leaving it ambiguous.
+  assert.match(body, /no (catalog )?(price|rate)/i);
+});

@@ -1,5 +1,11 @@
 "use client";
 
+// Explicit React import: this repo's test runner (`tsx --test`) compiles JSX
+// with the classic runtime, so any component rendered through
+// `react-dom/server` in a test — directly or, as here, as a child of
+// `CompareExplorer` — needs `React` in scope. Next's own build uses the
+// automatic runtime and ignores it.
+import React from "react";
 import { DEFAULT_WORKLOAD, formatTokens, type Workload } from "@/lib/calc";
 
 /**
@@ -74,6 +80,26 @@ export function WorkloadCalculator({
   );
 }
 
+/**
+ * Parse a raw numeric-field string into a finite number, or `null` if it
+ * isn't one.
+ *
+ * `Number.isFinite`, not `!Number.isNaN` — a value like `"1e400"` is
+ * syntactically valid scientific notation, but `Number()` overflows it to
+ * literal `Infinity`, which is a non-`NaN` `number` that would sail straight
+ * through a NaN-only guard. That `Infinity` would then set
+ * `workload.inputTokens`/`outputTokens` to `Infinity`, propagate into `NaN`
+ * costs downstream (`compareRowUnderScenario` in `lib/scenario.ts` prices the
+ * raw workload directly, with no sanitizing step of its own), and render as
+ * literal "$NaN"/"NaN%" text on `/budget`'s crossover section. Exported so
+ * this guard is unit-testable directly — see the same fix, and the same
+ * reasoning, in `budget-planner.tsx`'s `PlainNumberField`.
+ */
+export function parseFiniteUnits(raw: string): number | null {
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function NumberField({
   id,
   label,
@@ -98,8 +124,8 @@ function NumberField({
       onChange(0);
       return;
     }
-    const units = Number(trimmed);
-    if (Number.isNaN(units)) return;
+    const units = parseFiniteUnits(trimmed);
+    if (units === null) return;
     const tokens = Math.max(0, Math.round(units * divisor));
     onChange(tokens);
   };
@@ -123,8 +149,8 @@ function NumberField({
             onChange(0);
             return;
           }
-          const units = Number(raw);
-          if (!Number.isNaN(units) && units >= 0) {
+          const units = parseFiniteUnits(raw);
+          if (units !== null && units >= 0) {
             const tokens = Math.round(units * divisor);
             onChange(tokens);
           }
