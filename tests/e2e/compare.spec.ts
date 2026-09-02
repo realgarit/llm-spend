@@ -353,10 +353,22 @@ test("export CSV downloads the visible lanes", async ({ page }) => {
 
   // A UTF-8 BOM so Excel on Windows does not mangle the non-ASCII model names,
   // then a header row and one line per visible lane.
+  //
+  // "Visible" here means the rows actually rendered under the top-12
+  // disclosure default — NOT `laneCounts()`'s `.filter-summary` reading. Those
+  // are two different "N of M lanes" counters on this page: `.filter-summary`
+  // reports how many lanes pass the active filters out of the whole catalog
+  // (66 of 66, since this test applies none), while `.result-disclosure`
+  // reports how many of those filtered lanes are actually on screen (12 of
+  // 66, by default). The CSV is built from the latter (`visibleSorted` in
+  // compare-explorer.tsx), so the assertion must be too — using `laneCounts()`
+  // here previously compared the export against the wrong "66", a mismatch
+  // only a real (non-cancelled) download could ever expose, since the
+  // cancelled-download early return above skips straight past it locally.
   expect(body.startsWith("﻿")).toBe(true);
   const lines = body.split(/\r?\n/).filter((line) => line.trim() !== "");
-  const { shown } = await laneCounts(page);
-  expect(lines.length).toBeGreaterThan(shown);
+  const visibleRowCount = await resultRows(page).count();
+  expect(lines.length).toBe(visibleRowCount + 1);
 });
 
 test("back navigation restores the shared decision state", async ({ page }) => {
