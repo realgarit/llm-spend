@@ -46,6 +46,22 @@ export const changelog: ChangelogEntry[] = [
     sourcesVerifiedOn: "2026-09-02",
   },
   {
+    date: "2026-09-02",
+    title: "Claude Fable 5.1 and Mythos 5.1 add cheaper cache reads",
+    tag: "model",
+    body: [
+      "Anthropic launched Claude Fable 5.1 on September 1 as its latest generally available frontier model. The catalog now includes a Direct row at $10/M input, $0.25/M cached input and $50/M output, with a 1M-token context window and 128K maximum output. Its cache-read price is one quarter of Claude Fable 5's $1/M rate; the published cache-write prices are unchanged.",
+      "Invite-only Claude Mythos 5.1 is also listed as a limited-availability Direct row at the same $10/$0.25/$50 rates and specifications. Anthropic lists Fable 5.1 as available in Microsoft Foundry, but Foundry continues to bill Claude through Claude Consumption Units and the Azure Retail Prices API still publishes no Anthropic per-token meter, so no token-priced Foundry row is inferred.",
+    ],
+    sources: [
+      { label: "Anthropic Claude Fable 5.1 model page", href: "https://platform.claude.com/docs/en/models/fable-5-1/overview" },
+      { label: "Anthropic Claude pricing (Fable/Mythos 5.1 rates)", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
+      { label: "Anthropic Claude Platform release notes (September 1 launch)", href: "https://platform.claude.com/docs/en/release-notes/overview" },
+      { label: "Azure Retail Prices API — Foundry Models (2026-09-02 absence check)", href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27" },
+    ],
+    sourcesVerifiedOn: "2026-09-02",
+  },
+  {
     date: "2026-08-30",
     title: "The comparison table becomes a cost decision cockpit",
     tag: "methodology",

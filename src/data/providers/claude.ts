@@ -6,10 +6,10 @@ export const claude: Provider = {
   slug: "claude",
   name: "Claude",
   org: "Anthropic",
-  tagline: "1M-token Opus, Sonnet 5's launch pricing now permanent, caching priced as a multiplier, and now natively hosted on Microsoft Foundry with Azure billing.",
+  tagline: "Claude Fable 5.1's 1M-token frontier lane, Sonnet 5's permanent launch pricing, cheaper cache reads, and Azure CCU billing on Microsoft Foundry.",
   intro: [
-    "Claude Opus 5 is now GA and prices identically to Opus 4.8 — both carry a 1M-token window. Sonnet 5 launched in June 2026 at $2/$0.20/$10 per M as introductory pricing through 2026-08-31, with a rise to $3/$0.30/$15 planned for 2026-09-01; Anthropic cancelled that increase on 2026-08-10, so the launch rate is now permanent.",
-    "Claude Opus 4.8, Sonnet 5, and Haiku 4.5 are now GA and natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters.",
+    "Claude Fable 5.1 is Anthropic's latest generally available model: 1M-token context, 128K max output, and $10/$0.25/$50 per M for input, cached input and output. Invite-only Claude Mythos 5.1 shares those specifications and prices. Claude Opus 5 is GA at $5/$0.50/$25, while Sonnet 5's $2/$0.20/$10 launch rate is now permanent.",
+    "Claude Fable 5.1, Opus 4.8, Sonnet 5, and Haiku 4.5 are natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters, so this catalog keeps the new 5.1 token prices on Direct rows only.",
   ],
   entries: [
     {
@@ -64,6 +64,36 @@ export const claude: Provider = {
       effectiveDate: CAPTURED,
     },
     {
+      model: "Claude Fable 5.1",
+      tier: "Direct",
+      inputUsd: 10.0,
+      cachedUsd: 0.25,
+      outputUsd: 50.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Latest generally available Claude model for demanding reasoning and long-horizon agentic work. Cache reads are priced at $0.25/M, one quarter of the predecessor's cache-read rate.",
+      sourceNote:
+        "Anthropic's official Claude Fable 5.1 model page and pricing page, read 2026-09-02: $10/M input, $0.25/M cache read and $50/M output, with a 1M-token context and 128K max output. The release notes confirm availability on the Claude API and Microsoft Foundry. Azure's full Foundry Models Retail Prices API sweep on 2026-09-02 has no Anthropic per-token meter, so this is a Direct row rather than a token-priced Foundry row.",
+      effectiveDate: "2026-09-01",
+    },
+    {
+      model: "Claude Mythos 5.1",
+      tier: "Direct",
+      inputUsd: 10.0,
+      cachedUsd: 0.25,
+      outputUsd: 50.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Invite-only Project Glasswing model. Shares Claude Fable 5.1's specifications and $0.25/M cache-read rate.",
+      sourceNote:
+        "Anthropic's official Claude pricing and Claude Fable 5.1 model pages, read 2026-09-02: Claude Mythos 5.1 is limited to Project Glasswing participants and shares the published $10/M input, $0.25/M cache read, $50/M output, 1M context and 128K max output. Azure's full Foundry Models Retail Prices API sweep on 2026-09-02 has no Anthropic per-token meter, so this is a Direct row rather than a token-priced Foundry row.",
+      effectiveDate: "2026-09-01",
+    },
+    {
       model: "Claude Fable 5",
       tier: "Direct",
       inputUsd: 10.0,
@@ -93,7 +123,7 @@ export const claude: Provider = {
       title: "Cache read rates now explicitly published",
       tone: "info",
       body: [
-        "Anthropic's pricing page now publishes explicit per-model cache hit rates (e.g., $0.50/MTok for Opus 4.8, $0.20/MTok for Sonnet 5). These replace the earlier multiplier model (~10% of input). Cache writes still follow the 1.25x (5-min) / 2x (1-hour) multiplier pattern relative to base input.",
+        "Anthropic's pricing page now publishes explicit per-model cache hit rates (e.g., $0.25/MTok for Fable/Mythos 5.1, $0.50/MTok for Opus 4.8, $0.20/MTok for Sonnet 5). These replace the earlier multiplier model (~10% of input). Cache writes still follow the 1.25x (5-min) / 2x (1-hour) multiplier pattern relative to base input.",
       ],
     },
     {
