@@ -62,6 +62,19 @@ export const changelog: ChangelogEntry[] = [
     sourcesVerifiedOn: "2026-09-02",
   },
   {
+    date: "2026-09-02",
+    title: "Pinned lanes now follow you to the budget planner and lane pages",
+    tag: "methodology",
+    body: [
+      "The shortlist tray on /compare only ever showed up there — a lane pinned during a comparison became invisible the moment you moved to its own cost-anatomy page or to the budget planner. Both routes now show a compact shortlist strip naming every currently pinned lane by provider, model, and deployment tier, alongside the workload cost that page already has active for it (a lane's cost-anatomy page prices it under the same workload shown on /compare by default; the budget planner prices it under its own per-request shape, so the same pinned lane can read differently in each place, correctly). Each chip links to that lane's cost-anatomy page, and an unpin control keeps the shortlist in sync with the tray on /compare, since every surface reads and writes the same stored shortlist.",
+      "The strip is entirely absent when nothing is pinned, and no catalog price, cache rate, availability, confidence level, or calculation formula changed in this release — every figure it shows is read from the same resolved comparison rows each page already computed for its own table or projection, never a second pricing pass.",
+    ],
+    sources: [
+      { label: "Shortlist context chips on /budget and /models/[laneId] (issue #87)", href: "https://github.com/realgarit/llm-spend/issues/87" },
+    ],
+    sourcesVerifiedOn: "2026-09-02",
+  },
+  {
     date: "2026-08-30",
     title: "The comparison table becomes a cost decision cockpit",
     tag: "methodology",
