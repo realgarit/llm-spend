@@ -3,7 +3,7 @@ export const site = {
   tagline: "What LLM APIs actually cost.",
   description:
     "Real LLM API prices in USD and CHF. Measured mostly on Microsoft Foundry (formerly Azure AI Foundry), plus direct APIs, with hidden cache meters flagged and every rate sourced.",
-  url: "https://llmcost.realgar.ch",
+  url: "https://llmspend.realgar.ch",
   githubUrl: "https://github.com/realgarit/llm-spend",
   author: "realgarit",
 } as const;
