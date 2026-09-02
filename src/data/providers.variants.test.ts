@@ -89,6 +89,16 @@ function minimaxM3(): PricingEntry {
   return entry;
 }
 
+function claudeDirect(model: string): PricingEntry {
+  const provider = getProvider("claude");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === model && candidate.tier === "Direct",
+  );
+
+  assert.ok(entry, `Expected a direct Claude ${model} entry`);
+  return entry;
+}
+
 function gpt56Global(model: string): PricingEntry {
   const provider = getProvider("openai-azure");
   const entry = provider?.entries.find((candidate) => candidate.model === model && candidate.tier === "Global");
@@ -312,6 +322,37 @@ test("Qwen3.8 rows use the official cache rates and Qwen3.7 embedding is input-o
     { inputUsd: 0.07, cachedUsd: null, outputUsd: 0, contextWindow: 128_000 },
   );
 });
+
+// ---------------------------------------------------------------------------
+// Claude Fable/Mythos 5.1 direct lanes
+// ---------------------------------------------------------------------------
+
+for (const model of ["Claude Fable 5.1", "Claude Mythos 5.1"]) {
+  test(`${model} uses Anthropic's published cache-read rate`, () => {
+    const entry = claudeDirect(model);
+
+    assert.deepEqual(
+      {
+        inputUsd: entry.inputUsd,
+        cachedUsd: entry.cachedUsd,
+        outputUsd: entry.outputUsd,
+        contextWindow: entry.contextWindow,
+        maxOutput: entry.maxOutput,
+        confidence: entry.confidence,
+        effectiveDate: entry.effectiveDate,
+      },
+      {
+        inputUsd: 10,
+        cachedUsd: 0.25,
+        outputUsd: 50,
+        contextWindow: 1_000_000,
+        maxOutput: 128_000,
+        confidence: "official",
+        effectiveDate: "2026-09-01",
+      },
+    );
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Kimi K2.7 Code — Highspeed service tier (Moonshot's naming; 2x standard)
