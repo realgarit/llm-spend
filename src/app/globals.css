@@ -1415,6 +1415,57 @@ table.decision-table tbody tr.is-pinned td {
   }
 }
 
+/* ---------- Shortlist context chips (/budget, /models/[laneId]) ---------- */
+/*
+ * The same .shortlist-chip / .shortlist-chips visual language as the compare
+ * page's persistent tray above, laid out inline in normal page flow instead
+ * of pinned to the viewport — these two pages have no fixed decision spine of
+ * their own, just a small strip naming what's pinned (see
+ * shortlist-context-chips.tsx). Renders nothing when empty, so there is no
+ * empty-state rule to write here.
+ *
+ * No margin of its own: both host grids (.anatomy-explorer, .budget-planner)
+ * already space every child via their own `gap`, and this component sits as
+ * an ordinary grid child — a margin here would stack on top of that gap and
+ * open a bigger seam after the chips than between any other two sections.
+ */
+.shortlist-context-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  /* Without this, a grid/flex ancestor lets this item grow to its
+     unwrapped content width instead of wrapping within the available
+     track — the classic min-width:auto overflow trap. */
+  min-width: 0;
+}
+/*
+ * Wider than the tray's chip: this one carries provider + model + tier badge
+ * + price, since (unlike the compare table) there is no surrounding row to
+ * supply that context. `.shortlist-chip`'s own right padding is tuned for a
+ * trailing round remove button; `has-remove` is added only when `onRemove` is
+ * passed, so a read-only chip (the common case here) gets a normal right
+ * inset instead of the button-sized gap.
+ */
+.shortlist-context-chip {
+  padding: 0.3rem 0.65rem;
+  gap: 0.4rem;
+}
+.shortlist-context-chip.has-remove {
+  padding-right: 0.2rem;
+}
+.shortlist-context-chip-link {
+  display: inline-block;
+  max-width: 16rem;
+}
+.shortlist-context-chip-link:hover {
+  color: var(--brand);
+}
+.shortlist-context-chip-price {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
 /* ---------- Lane cost anatomy (/models/[laneId]) ---------- */
 .anatomy-explorer {
   display: grid;

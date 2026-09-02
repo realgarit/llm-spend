@@ -19,6 +19,7 @@ import { type Workload, formatTokens } from "@/lib/calc";
 import { type DeploymentMarkup, sameModelDeploymentComparison } from "@/lib/lane-insights";
 import {
   DEFAULT_SCENARIO,
+  type ComparedRow,
   type Scenario,
   compareRowUnderScenario,
   effectivePreviewContext,
@@ -26,9 +27,11 @@ import {
   scenarioToRateContext,
 } from "@/lib/scenario";
 import { useNow } from "@/lib/use-now";
+import { useShortlist } from "@/hooks/use-shortlist";
 import { TierBadge } from "@/components/price";
 import { SectionHeading, Stat } from "@/components/ui";
 import { ScenarioControls } from "@/components/scenario-controls";
+import { ShortlistContextChips } from "@/components/shortlist-context-chips";
 import { WorkloadCalculator } from "@/components/workload-calculator";
 
 /**
@@ -119,6 +122,23 @@ export function BudgetPlanner({ rows, buildAtMs }: { rows: CompareRow[]; buildAt
     () => rows.map((row) => compareRowUnderScenario(row, perRequest, scenarioCtxs)),
     [rows, perRequest, scenarioCtxs],
   );
+
+  // Read-only-minimum shortlist context strip (issue #87) — this route has no
+  // URL-driven lane selection of its own, so `useShortlist` is mounted with an
+  // empty `urlLaneIds` and purely reflects whatever is already in storage
+  // rather than overriding it. `shortlistRows` reads pinned lanes, in pin
+  // order, out of the SAME `comparedRows` array built just above — never
+  // re-priced. Mirrors compare-explorer.tsx's `shortlistRows`. Called before
+  // the "no lanes" early return below so the hook always runs unconditionally.
+  const validLaneIds = useMemo(() => new Set(rows.map((r) => r.id)), [rows]);
+  const shortlist = useShortlist(validLaneIds, []);
+  const shortlistRows = useMemo(() => {
+    const byId = new Map(comparedRows.map((entry) => [entry.row.id, entry]));
+    return shortlist.laneIds
+      .map((id) => byId.get(id))
+      .filter((entry): entry is ComparedRow => entry !== undefined);
+  }, [comparedRows, shortlist.laneIds]);
+
   const selectedCompared = useMemo(
     () => comparedRows.find((c) => c.row.id === selectedRow?.id) ?? null,
     [comparedRows, selectedRow],
@@ -149,6 +169,8 @@ export function BudgetPlanner({ rows, buildAtMs }: { rows: CompareRow[]; buildAt
 
   return (
     <div className="budget-planner">
+      <ShortlistContextChips rows={shortlistRows} onRemove={shortlist.toggle} />
+
       <section className="card-2 budget-section budget-lane-section" style={{ padding: "1.4rem 1.5rem", marginBottom: "1.75rem" }}>
         <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Lane</div>
         <h2 style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: "1.1rem" }}>Which lane are you planning for?</h2>

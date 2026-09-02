@@ -25,9 +25,11 @@ import {
   type ScheduledPreview,
 } from "@/lib/scenario";
 import { useNow } from "@/lib/use-now";
+import { useShortlist } from "@/hooks/use-shortlist";
 import { ConfidenceBadge, Mark, TierBadge } from "@/components/price";
 import { SectionHeading, Stat } from "@/components/ui";
 import { ScenarioControls } from "@/components/scenario-controls";
+import { ShortlistContextChips } from "@/components/shortlist-context-chips";
 import { VariantStrip } from "@/components/variant-strip";
 import { WorkloadCalculator } from "@/components/workload-calculator";
 import { WorkloadPresets } from "@/components/workload-presets";
@@ -84,8 +86,26 @@ export function CostAnatomyExplorer({
     [compared, computed],
   );
 
+  // Read-only-minimum shortlist context strip (issue #87) — this route has no
+  // URL-driven lane selection of its own, so `useShortlist` is mounted with an
+  // empty `urlLaneIds` and purely reflects whatever is already in storage
+  // rather than overriding it. `shortlistRows` reads pinned lanes, in pin
+  // order, out of the SAME `computed` array the alternatives/deployment
+  // sections above already built — never re-priced. Mirrors
+  // compare-explorer.tsx's `shortlistRows`.
+  const validLaneIds = useMemo(() => new Set(rows.map((r) => r.id)), [rows]);
+  const shortlist = useShortlist(validLaneIds, []);
+  const shortlistRows = useMemo(() => {
+    const byId = new Map(computed.map((entry) => [entry.row.id, entry]));
+    return shortlist.laneIds
+      .map((id) => byId.get(id))
+      .filter((entry): entry is ComparedRow => entry !== undefined);
+  }, [computed, shortlist.laneIds]);
+
   return (
     <div className="anatomy-explorer">
+      <ShortlistContextChips rows={shortlistRows} onRemove={shortlist.toggle} />
+
       <WorkloadPresets workload={workload} onChange={setWorkload} />
 
       <section className="fine-tune-section" aria-label="Workload and pricing scenario">
