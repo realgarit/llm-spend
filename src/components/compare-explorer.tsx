@@ -66,12 +66,23 @@ export const DEFAULT_DECISION_STATE: CompareDecisionState = decodeCompareState("
  *
  * Instead this shell renders the workspace with default state, then — once,
  * after mount — decodes the real URL and remounts the workspace with it via a
- * changed `key`. The remount is the load-bearing part: `useShortlist` resolves
+ * changed `key`. The remount is the load-bearing part, and it happens EXACTLY
+ * ONCE, on this pre-hydration -> hydrated transition: `useShortlist` resolves
  * URL-vs-storage precedence at ITS first render (see the hook's doc comment),
  * so handing it URL lanes requires a genuinely fresh mount, not a prop change.
- * The same mechanism serves `popstate`: a history navigation bumps the epoch
- * and rebuilds the workspace from whatever the URL now says, which is the only
- * way to re-apply URL precedence to the shortlist as well as to the controls.
+ *
+ * A later `popstate` (browser back/forward) does NOT remount `CompareWorkspace`
+ * again. It used to — an earlier version of this shell bumped the same key on
+ * every `popstate` — but remounting to reseed the shortlist also reset every
+ * other piece of that component's local state along with it, including view
+ * toggles with no URL representation at all (`showAll`, `trayExpanded`): a
+ * Back press would silently re-collapse an expanded result list or shortlist
+ * tray even though every genuinely shared value was restored correctly.
+ * `popstate` is now handled entirely inside the already-mounted
+ * `CompareWorkspace`, which decodes the new URL and pushes it into its own
+ * state setters directly — including `useShortlist`'s `setLaneIds` seam,
+ * which exists specifically so the shortlist can be reseeded without a
+ * remount. See `CompareWorkspace`'s own `popstate` effect for the rest.
  *
  * This mirrors the "render a value derivable from props first, adopt the real
  * browser-only value in a post-mount effect" discipline already used by
@@ -94,29 +105,20 @@ export function CompareExplorer({ rows, buildAtMs }: { rows: CompareRow[]; build
     initialSearchRef.current = typeof window === "undefined" ? "" : window.location.search;
   }
 
-  const [hydrated, setHydrated] = useState<{ epoch: number; state: CompareDecisionState } | null>(null);
+  // Non-null only once the one-time hydration effect below has run. Its mere
+  // presence — not its content — is what the `key` below keys off of, so
+  // `CompareWorkspace` remounts exactly once, on the pre-hydration ->
+  // hydrated transition, and never again on a later `popstate`.
+  const [hydratedState, setHydratedState] = useState<CompareDecisionState | null>(null);
 
   useEffect(() => {
-    setHydrated((previous) => ({
-      epoch: (previous?.epoch ?? 0) + 1,
-      state: decodeCompareState(initialSearchRef.current ?? "", validLaneIds),
-    }));
-
-    function onPopState() {
-      setHydrated((previous) => ({
-        epoch: (previous?.epoch ?? 0) + 1,
-        state: decodeCompareState(window.location.search, validLaneIds),
-      }));
-    }
-
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
+    setHydratedState(decodeCompareState(initialSearchRef.current ?? "", validLaneIds));
   }, [validLaneIds]);
 
   return (
     <CompareWorkspace
-      key={hydrated?.epoch ?? 0}
-      initialState={hydrated?.state ?? DEFAULT_DECISION_STATE}
+      key={hydratedState ? "hydrated" : "pre-hydration"}
+      initialState={hydratedState ?? DEFAULT_DECISION_STATE}
       rows={rows}
       validLaneIds={validLaneIds}
       buildAtMs={buildAtMs}
@@ -243,6 +245,53 @@ function CompareWorkspace({
     // with null breaks Next's own back/forward restoration.
     window.history.replaceState(window.history.state, "", next);
   }, [decisionState]);
+
+  /**
+   * Restore workload/scenario/filters/sort/shortlist on a `popstate`
+   * (browser back/forward) by decoding the URL the browser just navigated to
+   * and pushing it directly into this already-mounted component's own state
+   * setters — including `shortlist.setLaneIds`, which reuses that hook's own
+   * normalize-then-persist path (see use-shortlist.ts) rather than
+   * duplicating it here.
+   *
+   * Deliberately does NOT touch `showAll` or `trayExpanded`: those are local
+   * view toggles with no URL representation, and a Back press that restores
+   * the shared decision state should not also silently re-collapse an
+   * expanded result list or shortlist tray. It also resets `share` to
+   * `NO_SHARE_FEEDBACK` — that message is ephemeral feedback about a past
+   * copy-link/export action, not decision state, and resetting it here keeps
+   * this handler's behavior otherwise identical to what the remount it
+   * replaced used to do (which cleared every piece of local state).
+   *
+   * `shortlist.setLaneIds` always treats the popstate-decoded lane list as
+   * authoritative, including when it's empty — unlike a fresh mount of
+   * `useShortlist`, which falls back to storage when the URL is silent. A
+   * live `/compare` history entry's URL is kept continuously in sync with the
+   * shortlist by the history-sync effect above (`replaceState`, not
+   * `pushState`), so by the time a visitor navigates away and back, the URL
+   * they land on already reflects whatever was pinned at that point in
+   * history — there is no separate "URL truly has no opinion" case to fall
+   * back from here the way there is at initial mount.
+   */
+  useEffect(() => {
+    function onPopState() {
+      const decoded = decodeCompareState(window.location.search, validLaneIds);
+      setWorkload(decoded.workload);
+      setScenario(decoded.scenario);
+      setSortKey(decoded.sort.key);
+      setSortDir(decoded.sort.dir);
+      setFilters(decoded.filters);
+      shortlist.setLaneIds(decoded.selectedLaneIds);
+      setShare(NO_SHARE_FEEDBACK);
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+    // `shortlist` (from `useShortlist`) is a fresh object every render, so
+    // this resubscribes on every render rather than only when `setLaneIds`
+    // would genuinely change — `setLaneIds` itself is `useCallback(..., [])`
+    // and never changes identity, so this is a same-cost no-op swap each
+    // time, not a real churn source.
+  }, [validLaneIds, shortlist]);
 
   const scenarioUrl = useCallback(() => {
     const query = encodeCompareState(decisionState);

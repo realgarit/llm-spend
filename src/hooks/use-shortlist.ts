@@ -19,6 +19,18 @@ export interface UseShortlistResult {
   reset: () => void;
   /** Feedback from the most recent `toggle` call — non-null only on a rejected (cap-exceeding) pin attempt. */
   message: string | null;
+  /**
+   * Replace the shortlist outright with `ids`, normalized (deduped, pruned
+   * against the current catalog, capped at `SHORTLIST_LIMIT`) exactly the way
+   * the mount effect below normalizes a URL-provided list, then written
+   * through the same storage path `toggle`/`reset` already use.
+   *
+   * The seam a caller with its own authoritative lane list — e.g. a
+   * `popstate`-decoded URL — uses to reseed this hook in place, without
+   * having to remount the component that owns it just to get the mount
+   * effect below to run again with a fresh `urlLaneIds`.
+   */
+  setLaneIds: (ids: string[]) => void;
 }
 
 /**
@@ -83,18 +95,28 @@ export function writeStoredShortlist(ids: string[], storage: ShortlistStorage = 
  * URL precedence and storage sync are resolved once, at mount: if the URL
  * named a shortlist, it wins and is (re-)written to storage as-is; otherwise
  * whatever was already in storage is adopted (pruned/capped the same way via
- * `normalizeShortlist`). This hook is not wired into a live route yet — a
- * later task connects it to `/compare`'s real URL state and can decide
- * whether a `popstate` navigation after mount should re-apply URL
- * precedence; nothing here forecloses that, it simply isn't built yet, so
- * mount-only mirrors the two existing hydration hooks rather than
- * introducing a third, different pattern.
+ * `normalizeShortlist`). Mount-only mirrors the two existing hydration hooks
+ * rather than introducing a third, different pattern.
+ *
+ * A `popstate` navigation (browser back/forward) on `/compare` does NOT
+ * remount this hook and does NOT re-run URL-vs-storage precedence — see
+ * `compare-explorer.tsx`'s `CompareWorkspace`, which instead calls the
+ * `setLaneIds` seam below directly with the popstate-decoded lane list,
+ * treating it as authoritative the way a mount treats a non-empty
+ * `urlLaneIds`. This was a deliberate choice made when wiring this hook into
+ * `/compare`: remounting to reseed just the shortlist also reset unrelated,
+ * URL-independent view state (`showAll`, `trayExpanded`) that a Back press
+ * should not touch.
  */
 export function useShortlist(
   validLaneIds: ReadonlySet<string>,
   urlLaneIds: string[] = [],
 ): UseShortlistResult {
-  const [laneIds, setLaneIds] = useState<string[]>(() => normalizeShortlist(urlLaneIds, validLaneIds));
+  // Named distinctly from the `setLaneIds` returned below (see
+  // `UseShortlistResult`) — that one is a public, on-demand "replace the
+  // whole list" seam with its own normalize-then-persist behavior, not a
+  // bare re-export of this internal setState function.
+  const [laneIds, setLaneIdsState] = useState<string[]>(() => normalizeShortlist(urlLaneIds, validLaneIds));
   const [message, setMessage] = useState<string | null>(null);
 
   // Refs mirroring the latest render's inputs/state, so the mount-only effect
@@ -114,21 +136,36 @@ export function useShortlist(
       ? laneIdsRef.current
       : normalizeShortlist(readStoredShortlist(), validLaneIdsRef.current);
     writeStoredShortlist(next);
-    setLaneIds(next);
+    setLaneIdsState(next);
   }, []);
 
   const toggle = useCallback((id: string) => {
     const result = toggleShortlistLane(laneIdsRef.current, id);
-    setLaneIds(result.ids);
+    setLaneIdsState(result.ids);
     setMessage(result.message);
     writeStoredShortlist(result.ids);
   }, []);
 
   const reset = useCallback(() => {
-    setLaneIds([]);
+    setLaneIdsState([]);
     setMessage(null);
     writeStoredShortlist([]);
   }, []);
 
-  return { laneIds, toggle, reset, message };
+  // See the `setLaneIds` doc comment on `UseShortlistResult`. This mirrors
+  // exactly what the mount effect above does for a URL-provided list (the
+  // `hadUrlSelectionAtMountRef.current === true` branch: normalize, adopt
+  // in-memory, persist) — just made callable on demand instead of only at
+  // mount, and always treating its input as authoritative the way a mount
+  // treats `urlLaneIds`, rather than falling back to storage the way the
+  // mount effect does when the URL is silent. Reuses `normalizeShortlist`
+  // and `writeStoredShortlist` rather than duplicating either.
+  const setLaneIds = useCallback((ids: string[]) => {
+    const next = normalizeShortlist(ids, validLaneIdsRef.current);
+    setLaneIdsState(next);
+    setMessage(null);
+    writeStoredShortlist(next);
+  }, []);
+
+  return { laneIds, toggle, reset, message, setLaneIds };
 }
