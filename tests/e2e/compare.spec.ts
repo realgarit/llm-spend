@@ -266,6 +266,40 @@ test("the tray expands into a side-by-side comparison once two lanes are pinned"
   await expect(tray.locator(".shortlist-strip")).toHaveCount(0);
 });
 
+test("a pinned shortlist survives a fresh visit via localStorage, not just the URL", async ({ page }) => {
+  // Every other shortlist-persistence assertion in this file revisits
+  // `/compare` through a URL that already carries `?lanes=...` — the
+  // history-sync effect keeps it synced the instant a lane is pinned — so
+  // those tests only exercise `useShortlist`'s URL-driven restore path
+  // (the `hadUrlSelectionAtMountRef.current === true` branch in
+  // use-shortlist.ts). This test strips the URL back down to a bare
+  // `/compare` before revisiting, so the only way the shortlist can come back
+  // is through the hook's `readStoredShortlist()` fallback — the actual
+  // subject of issue #76's "survives page refresh in local storage"
+  // acceptance criterion.
+  const tray = page.getByRole("region", { name: "Pinned shortlist" });
+  await pinRows(page, 2);
+  const pinnedModels = await tray.locator(".shortlist-chip-label").allInnerTexts();
+  expect(pinnedModels).toHaveLength(2);
+  await expect.poll(() => new URL(page.url()).searchParams.get("lanes")).not.toBeNull();
+
+  // A real navigation to the bare path — not a `page.reload()` of the current
+  // (lanes-carrying) URL, and not an in-app `<Link>` click, either of which
+  // would keep the query string alive. `page.goto` is a genuine top-level
+  // navigation, so the REQUEST itself carries no query string, which is what
+  // lands the fresh mount on the codepath where `useShortlist` has no
+  // `urlLaneIds` to work with and must fall back to storage. (The address bar
+  // does not stay bare for long after that — the moment storage repopulates
+  // `shortlist.laneIds`, this app's own history-sync effect writes `?lanes=...`
+  // right back, which is expected behavior and not asserted against here.)
+  await gotoGuarded(page, "/compare");
+
+  // The same two lanes are pinned again, restored purely from storage.
+  await expect(tray.locator(".shortlist-chip-label")).toHaveText(pinnedModels);
+  await expect(resultRows(page).nth(0).locator("button.pin-button")).toHaveAttribute("aria-pressed", "true");
+  await expect(resultRows(page).nth(1).locator("button.pin-button")).toHaveAttribute("aria-pressed", "true");
+});
+
 test("copy scenario link puts the current state on the clipboard", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
 
@@ -358,6 +392,69 @@ test("back navigation restores the shared decision state", async ({ page }) => {
 
   await page.goForward();
   await expect(page).toHaveURL(/\/budget$/);
+});
+
+// This test pins down a known, ACCEPTED gap rather than a bug: navigating
+// away to a `/models/[laneId]` detail page and pressing Back is a cross-route
+// round trip, and Next.js's own App Router remounts `/compare`'s whole client
+// tree on that specific back-navigation. The shared decision state (pinned
+// lanes, workload, scenario, filters, sort) is re-derived from the restored
+// URL on that fresh mount and comes back correct — but `showAll` and
+// `trayExpanded` are plain, URL-less `useState(false)` inside `CompareWorkspace`
+// with no persistence of their own, so any remount resets them to their
+// defaults regardless of what a visitor had expanded. This is different from
+// the same-route `popstate` case (e.g. two consecutive `/compare` history
+// entries), which `useShortlist`'s `setLaneIds` seam and `CompareWorkspace`'s
+// own `popstate` effect already handle without a remount — that fix is real
+// but only partial, and this test is what proves it does not (and, per the
+// architecture, currently cannot) reach the cross-route case. See AGENTS.md's
+// working notes (2026-09-01, "Decision workspace wired up") for the
+// remount/`setLaneIds` architecture this sits on top of, and
+// `.superpowers/sdd/task-9-carryforward-report.md` ("Finding 2") for the full
+// investigation — including a git-stash A/B test against a real production
+// build — that isolated this specific repro to Next's own router rather than
+// to anything in this app's code. NOT github.com/realgarit/llm-spend/issues/87
+// — that issue tracks a different, unrelated shortlist-chips scope decision.
+// If this ever starts passing with the expanded state preserved, that is a
+// welcome sign the architecture changed and this assertion should flip too.
+test("known limitation: cross-route back navigation restores the shortlist but not the local view state", async ({
+  page,
+}) => {
+  const tray = page.getByRole("region", { name: "Pinned shortlist" });
+  const disclosure = page.locator(".result-disclosure");
+  const { total } = await laneCounts(page);
+  expect(total).toBeGreaterThan(12);
+
+  // Reach SHORTLIST_COMPARE_MIN and both local view toggles the existing
+  // back-navigation test above never touches.
+  await pinRows(page, 2);
+  const pinnedModels = await tray.locator(".shortlist-chip-label").allInnerTexts();
+
+  await disclosure.getByRole("button", { name: `Show all ${total}` }).click();
+  await expect(resultRows(page)).toHaveCount(total);
+
+  await tray.getByRole("button", { name: "Compare shortlist" }).click();
+  await expect(tray.locator(".shortlist-grid")).toBeVisible();
+
+  // Click through to a pinned lane's own detail page, then come back.
+  await resultRows(page).nth(0).locator('td[data-label="Model"] a').click();
+  await expect(page).toHaveURL(/\/models\//);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/compare/);
+
+  // Works today: the same shortlisted lanes are intact — compared as a set,
+  // not an ordered list. `encodeCompareState` (compare-state.ts) sorts the
+  // `lanes` URL param alphabetically for a stable, shareable link, so a
+  // URL-mediated restore like this one is not obligated to preserve pin
+  // order; that is a separate, pre-existing design choice, unrelated to the
+  // local-view-state limitation this test documents.
+  await expect(tray.locator(".shortlist-chip-label")).toHaveCount(pinnedModels.length);
+  const restoredModels = await tray.locator(".shortlist-chip-label").allInnerTexts();
+  expect(restoredModels.slice().sort()).toEqual(pinnedModels.slice().sort());
+
+  // Does not work today: both local view toggles collapsed back to default.
+  await expect(tray.locator(".shortlist-grid")).toHaveCount(0);
+  await expect(resultRows(page)).toHaveCount(12);
 });
 
 test("progressive disclosure reveals the full result set and collapses again", async ({ page }) => {

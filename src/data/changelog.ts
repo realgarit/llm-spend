@@ -23,7 +23,7 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
-    date: "2026-09-01",
+    date: "2026-09-02",
     title: "Comparisons are now shareable, exportable, and keep a shortlist",
     tag: "methodology",
     body: [
@@ -43,7 +43,7 @@ export const changelog: ChangelogEntry[] = [
         href: "https://github.com/realgarit/llm-spend/blob/main/docs/superpowers/specs/2026-08-30-aaa-decision-workspace-design.md",
       },
     ],
-    sourcesVerifiedOn: "2026-09-01",
+    sourcesVerifiedOn: "2026-09-02",
   },
   {
     date: "2026-08-30",

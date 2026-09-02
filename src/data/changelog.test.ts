@@ -33,8 +33,8 @@ test("the newest entry is first, so the rendered changelog reads newest-first", 
 });
 
 test("the decision workspace release states its customer-visible effect on the current date", () => {
-  const entry = changelog.find((candidate) => candidate.date === "2026-09-01");
-  assert.ok(entry, "expected a 2026-09-01 changelog entry for the connected decision workspace");
+  const entry = changelog.find((candidate) => candidate.date === "2026-09-02");
+  assert.ok(entry, "expected a 2026-09-02 changelog entry for the connected decision workspace");
 
   const body = entry.body.join(" ");
   // Every surface this release actually connects has to be described, not just named in a commit.
