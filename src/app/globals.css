@@ -1434,6 +1434,10 @@ table.decision-table tbody tr.is-pinned td {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 0.9rem;
+  /* Without this, a grid/flex ancestor lets this item grow to its
+     unwrapped content width instead of wrapping within the available
+     track — the classic min-width:auto overflow trap. */
+  min-width: 0;
 }
 /*
  * Wider than the tray's chip: this one carries provider + model + tier badge
