@@ -6,12 +6,12 @@
   <a href="https://github.com/realgarit/llm-spend/actions/workflows/azure-static-web-apps.yml"><img src="https://github.com/realgarit/llm-spend/actions/workflows/azure-static-web-apps.yml/badge.svg" alt="Deploy status"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-F6A821?style=flat" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/Next.js-15-000000?style=flat&logo=nextdotjs" alt="Next.js 15">
-  <a href="https://llmcost.realgar.ch"><img src="https://img.shields.io/badge/live-llmcost.realgar.ch-F6A821?style=flat" alt="Live site"></a>
+  <a href="https://llmspend.realgar.ch"><img src="https://img.shields.io/badge/live-llmspend.realgar.ch-F6A821?style=flat" alt="Live site"></a>
 </p>
 
 A reference for what LLM APIs actually cost. It lists real, measured rates per provider (mostly on Azure AI Foundry, plus direct APIs like DeepSeek, Fireworks, Anthropic, OpenAI, and Google), flags hidden cache meters that pricing pages leave out, and shows every price in USD and CHF. Numbers reconciled from billing or inferred from a pattern are marked, so you can tell a published rate from a derived one.
 
-Live site: **https://llmcost.realgar.ch**
+Live site: **https://llmspend.realgar.ch**
 
 ## Stack
 
