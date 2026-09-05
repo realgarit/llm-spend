@@ -453,6 +453,16 @@ const TIERED_ROWS: {
   },
   {
     providerSlug: "gemini",
+    model: "Gemini 3.8 Flash",
+    tier: "Global",
+    tiers: {
+      batch: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      flex: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
+      priority: { inputUsd: 1.35, cachedUsd: 0.135, outputUsd: 6.75 },
+    },
+  },
+  {
+    providerSlug: "gemini",
     model: "Gemini 3.6 Flash",
     tier: "Global",
     tiers: {

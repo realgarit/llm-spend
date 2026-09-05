@@ -227,11 +227,41 @@ test("DeepSeek peak rates are exactly 2x their matching off-peak rates", () => {
   }
 });
 
+test("GPT-6 Astra Foundry rows match Microsoft's published Standard table", () => {
+  const provider = getProvider("openai-azure");
+  const rows = provider?.entries.filter((entry) => entry.model.startsWith("GPT-6 Astra"));
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ model, tier, inputUsd, cachedUsd, outputUsd }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+    })),
+    [
+      { model: "GPT-6 Astra", tier: "Global", inputUsd: 10, cachedUsd: 1, outputUsd: 50 },
+      { model: "GPT-6 Astra Long Context", tier: "Global", inputUsd: 20, cachedUsd: 2, outputUsd: 75 },
+      { model: "GPT-6 Astra", tier: "DataZone", inputUsd: 11, cachedUsd: 1.1, outputUsd: 55 },
+      { model: "GPT-6 Astra Long Context", tier: "DataZone", inputUsd: 22, cachedUsd: 2.2, outputUsd: 82.5 },
+    ],
+  );
+});
+
+test("Gemini 3.8 Flash carries its published model limits", () => {
+  const entry = geminiFlash("Gemini 3.8 Flash");
+
+  assert.equal(entry.contextWindow, 1_048_576);
+  assert.equal(entry.maxOutput, 65_536);
+  assert.equal(entry.confidence, "official");
+});
+
 // ---------------------------------------------------------------------------
-// Gemini 3.6 / 3.7 Flash promo reversion
+// Gemini 3.6 / 3.7 / 3.8 Flash promo reversion
 // ---------------------------------------------------------------------------
 
-for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash"]) {
+for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash", "Gemini 3.8 Flash"]) {
   test(`${model} stays at the promo rate through the last instant of 2026`, () => {
     const resolved = resolveRate(geminiFlash(model), at("2026-12-31T23:59:59Z"));
 
@@ -384,7 +414,7 @@ test("Kimi K2.7 Code stays on its base rate without a service tier (defaults to 
 });
 
 // ---------------------------------------------------------------------------
-// Gemini 3.6 / 3.7 Flash — Batch, Flex, Priority, each combined with the
+// Gemini 3.6 / 3.7 / 3.8 Flash — Batch, Flex, Priority, each combined with the
 // existing 2027-01-01 promo-reversion date. Batch and Flex are numerically
 // identical (both exactly 50% of Standard) but are distinct ServiceTier
 // values, so both are asserted independently rather than assumed equal.
@@ -414,7 +444,7 @@ const GEMINI_TIER_CASES = [
   },
 ];
 
-for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash"]) {
+for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash", "Gemini 3.8 Flash"]) {
   for (const { tier, label, labelAfter, before, after } of GEMINI_TIER_CASES) {
     test(`${model} resolves ${label}'s promo-period numbers before 2027`, () => {
       const resolved = resolveRate(geminiFlash(model), {
@@ -561,13 +591,14 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
   // September)" variant with `{ from: "2026-09-01T00:00:00Z" }` and no
   // `until` — permanently active from that instant on.
   "qwen / Qwen3.7 Max (Promo) (Model Studio (Intl))",
-  // Gemini 3.6/3.7 Flash's "Standard (from 2027)" variant reverts the promo
+  // Gemini 3.6/3.7/3.8 Flash's "Standard (from 2027)" variant reverts the promo
   // rate via `{ from: "2027-01-01T00:00:00Z" }` with no `until` or
   // `serviceTier` — permanently active from that instant on. (Their other
   // Batch/Flex/Priority variants are `serviceTier`-scoped and never match
   // this guard's plain `{ now }` context, so they need no allowlist entry.)
   "gemini / Gemini 3.6 Flash",
   "gemini / Gemini 3.7 Flash",
+  "gemini / Gemini 3.8 Flash",
 ]);
 
 test("guard: every catalog row resolves to its own base rate as of today", () => {
