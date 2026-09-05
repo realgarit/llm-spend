@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-05",
+    title: "GPT-6 Astra and Gemini 3.8 Flash enter the catalog",
+    tag: "model",
+    body: [
+      "GPT-6 Astra is now generally available in Microsoft Foundry. The catalog adds four Standard rows from Microsoft's published table: Global short context at $10/$1/$50 per M, Global long context at $20/$2/$75, US Data Zone short context at $11/$1.10/$55, and US Data Zone long context at $22/$2.20/$82.50 (input/cached input/output). Microsoft also publishes cache-write rates of $12.50, $25, $13.75 and $27.50 per M; cache creation is a separate billing dimension that this schema does not model. Provisioned Throughput is excluded because Microsoft publishes no comparable per-token rate.",
+      "Google's generally available Gemini 3.8 Flash is now the flagship Gemini lane at an introductory $0.75/M input, $0.075/M cached input and $3.75/M output through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Its published Batch, Flex and Priority prices are modeled as service-tier variants, alongside the 1,048,576-token input limit and 65,536-token output limit. Gemini 3.8 Flash Cyber is available only to trusted defenders through Google's Fairwind Program and has no separate public API price, so it is not added.",
+      "The full paged Azure Retail Prices API sweep on 2026-09-05 returned 31,919 Foundry rows and no token meter containing Astra or GPT-6; existing commercial Foundry rates remain unchanged. Astra's four rows therefore use Microsoft's official announcement table and explicitly record that the retail-meter confirmation is still pending.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Azure — GPT-6 Astra Foundry announcement and pricing",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/",
+      },
+      {
+        label: "Google — Introducing Gemini 3.8 Flash and 3.8 Flash Cyber",
+        href: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+      },
+      {
+        label: "Google Gemini Developer API pricing — Gemini 3.8 Flash",
+        href: "https://ai.google.dev/gemini-api/docs/pricing",
+      },
+      {
+        label: "Google Gemini 3.8 Flash model documentation",
+        href: "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Models full sweep and Astra absence check",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-05",
+  },
+  {
     date: "2026-09-02",
     title: "Comparisons are now shareable, exportable, and keep a shortlist",
     tag: "methodology",

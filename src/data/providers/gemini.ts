@@ -4,11 +4,98 @@ export const gemini: Provider = {
   slug: "gemini",
   name: "Gemini",
   org: "Google",
-  tagline: "Gemini 3.7 Flash is the new flagship, and Gemini 3.6 Flash's price is halved to match it — both $0.75/$0.075/$3.75 per M through year-end.",
+  tagline: "Gemini 3.8 Flash is the new flagship at $0.75/$0.075/$3.75 per M through year-end, with the same introductory pricing schedule as 3.7 and 3.6 Flash.",
   intro: [
-    "Gemini 3.7 Flash is now the catalog's flagship Gemini model for agentic and multimodal work. The same pricing update halved Gemini 3.6 Flash to match it exactly: both now $0.75/M input, $0.075/M cached, $3.75/M output, a promotional rate published through 2026-12-31 that reverts to $1.50/$0.15/$7.50 on 2027-01-01. Gemini 3.5 Flash remains listed for comparison, unchanged at $1.50/$0.15/$9.00.",
+    "Gemini 3.8 Flash is now the catalog's flagship Gemini model for long-horizon software engineering, agentic and multimodal work. Google publishes $0.75/M input, $0.075/M cached, $3.75/M output through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Batch, Flex and Priority service tiers are modeled at their published prices, and the model has a 1M-token context window with 65,536 maximum output tokens. Gemini 3.7 and 3.6 Flash remain listed at the same introductory schedule; Gemini 3.5 Flash remains unchanged at $1.50/$0.15/$9.00.",
   ],
   entries: [
+    {
+      model: "Gemini 3.8 Flash",
+      tier: "Global",
+      inputUsd: 0.75,
+      cachedUsd: 0.075,
+      outputUsd: 3.75,
+      contextWindow: 1_048_576,
+      maxOutput: 65_536,
+      confidence: "official",
+      notes:
+        "New flagship Flash model for long-horizon coding and autonomous agents. Introductory Standard rate is $0.75/$0.075/$3.75 per M through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Google also publishes separate Batch, Flex and Priority rates below; cache storage is a separate hourly charge and is not modeled.",
+      sourceNote:
+        "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05: Standard publishes $0.75/M input, $0.075/M cached input and $3.75/M output through December 31, 2026, then $1.50/$0.15/$7.50 from January 1, 2027; Batch, Flex and Priority are modeled as service-tier variants below. Google’s Gemini 3.8 Flash model page (https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash) publishes an input limit of 1,048,576 tokens and output limit of 65,536 tokens. The separate cache-storage price is not part of this token-rate schema.",
+      effectiveDate: "2026-09-02",
+      variants: [
+        {
+          label: "Standard (from 2027)",
+          conditions: { from: "2027-01-01T00:00:00Z" },
+          inputUsd: 1.5,
+          cachedUsd: 0.15,
+          outputUsd: 7.5,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Standard reverts to $1.50/M input, $0.15/M cached input and $7.50/M output starting January 1, 2027.",
+        },
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch", until: "2027-01-01T00:00:00Z" },
+          inputUsd: 0.375,
+          cachedUsd: 0.0375,
+          outputUsd: 1.875,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Batch publishes $0.375/M input, $0.0375/M cached input and $1.875/M output through December 31, 2026.",
+        },
+        {
+          label: "Batch (from 2027)",
+          conditions: { serviceTier: "batch", from: "2027-01-01T00:00:00Z" },
+          inputUsd: 0.75,
+          cachedUsd: 0.075,
+          outputUsd: 3.75,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Batch publishes $0.75/M input, $0.075/M cached input and $3.75/M output starting January 1, 2027.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex", until: "2027-01-01T00:00:00Z" },
+          inputUsd: 0.375,
+          cachedUsd: 0.0375,
+          outputUsd: 1.875,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Flex publishes $0.375/M input, $0.0375/M cached input and $1.875/M output through December 31, 2026.",
+        },
+        {
+          label: "Flex (from 2027)",
+          conditions: { serviceTier: "flex", from: "2027-01-01T00:00:00Z" },
+          inputUsd: 0.75,
+          cachedUsd: 0.075,
+          outputUsd: 3.75,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Flex publishes $0.75/M input, $0.075/M cached input and $3.75/M output starting January 1, 2027.",
+        },
+        {
+          label: "Priority",
+          conditions: { serviceTier: "priority", until: "2027-01-01T00:00:00Z" },
+          inputUsd: 1.35,
+          cachedUsd: 0.135,
+          outputUsd: 6.75,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Priority publishes $1.35/M input, $0.135/M cached input and $6.75/M output through December 31, 2026.",
+        },
+        {
+          label: "Priority (from 2027)",
+          conditions: { serviceTier: "priority", from: "2027-01-01T00:00:00Z" },
+          inputUsd: 2.7,
+          cachedUsd: 0.27,
+          outputUsd: 13.5,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-09-05. Gemini 3.8 Flash Priority publishes $2.70/M input, $0.27/M cached input and $13.50/M output starting January 1, 2027.",
+        },
+      ],
+    },
     {
       model: "Gemini 3.7 Flash",
       tier: "Global",

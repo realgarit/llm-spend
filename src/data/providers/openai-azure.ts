@@ -5,12 +5,64 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "Azure normally resells OpenAI 1:1, but a promotional cut on the GPT-5.6 Sol flagship has opened a fresh gap. Deployment type and Responses-API-only variants are the other catches.",
+  tagline: "GPT-6 Astra is now the newest Foundry-only frontier lane, while Azure still trails OpenAI direct on the GPT-5.6 Sol promotion. Deployment type and Responses-API-only variants are the other catches.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now generally available in Foundry with published Standard Global and Standard US Data Zone rates; its cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
   ],
   entries: [
+    {
+      model: "GPT-6 Astra",
+      tier: "Global",
+      inputUsd: 10.0,
+      cachedUsd: 1.0,
+      outputUsd: 50.0,
+      confidence: "official",
+      notes:
+        "GPT-6 Astra Standard Global short-context rate. Microsoft also publishes a $12.50/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+      sourceNote:
+        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Global short context at $10.00/M input, $1.00/M cached input, $12.50/M cached writes and $50.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-03",
+    },
+    {
+      model: "GPT-6 Astra Long Context",
+      tier: "Global",
+      inputUsd: 20.0,
+      cachedUsd: 2.0,
+      outputUsd: 75.0,
+      confidence: "official",
+      notes:
+        "GPT-6 Astra Standard Global long-context rate. Microsoft also publishes a $25.00/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+      sourceNote:
+        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Global long context at $20.00/M input, $2.00/M cached input, $25.00/M cached writes and $75.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-03",
+    },
+    {
+      model: "GPT-6 Astra",
+      tier: "DataZone",
+      inputUsd: 11.0,
+      cachedUsd: 1.1,
+      outputUsd: 55.0,
+      confidence: "official",
+      notes:
+        "GPT-6 Astra Standard US Data Zone short-context rate. Microsoft also publishes a $13.75/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+      sourceNote:
+        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Data Zone (US) short context at $11.00/M input, $1.10/M cached input, $13.75/M cached writes and $55.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-03",
+    },
+    {
+      model: "GPT-6 Astra Long Context",
+      tier: "DataZone",
+      inputUsd: 22.0,
+      cachedUsd: 2.2,
+      outputUsd: 82.5,
+      confidence: "official",
+      notes:
+        "GPT-6 Astra Standard US Data Zone long-context rate. Microsoft also publishes a $27.50/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+      sourceNote:
+        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Data Zone (US) long context at $22.00/M input, $2.20/M cached input, $27.50/M cached writes and $82.50/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-03",
+    },
     {
       model: "GPT-5.6 Sol",
       tier: "Global",
@@ -208,6 +260,13 @@ export const openaiAzure: Provider = {
     },
   ],
   quirks: [
+    {
+      title: "GPT-6 Astra is Foundry-only in this catalog",
+      tone: "info",
+      body: [
+        "Microsoft announced GPT-6 Astra generally available in Foundry with Standard Global and Standard US Data Zone deployment options. The four rows above use the official announcement's published input, cached-input and output prices; its separate cache-write prices are called out but not modeled here. The full Azure Retail Prices API sweep captured 2026-09-05 did not yet expose an Astra/GPT-6 token meter, so re-check the retail feed before treating the published table as a billing-meter confirmation.",
+      ],
+    },
     {
       title: "Deployment types: Global vs Data Zone vs Regional",
       tone: "info",
