@@ -5,12 +5,108 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6 Astra is now the newest Foundry-only frontier lane, while Azure still trails OpenAI direct on the GPT-5.6 Sol promotion. Deployment type and Responses-API-only variants are the other catches.",
+  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while Azure still trails OpenAI direct on the GPT-5.6 Sol promotion. Deployment type and Responses-API-only variants are the other catches.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now generally available in Foundry with published Standard Global and Standard US Data Zone rates; its cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. Cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
   ],
   entries: [
+    {
+      model: "GPT-6 Astra",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 10.0,
+      cachedUsd: 1.0,
+      outputUsd: 50.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "OpenAI API Standard short-context rate. Prompts above 272K input tokens use the separate long-context row below; Batch and Flex are half price, while Fast mode is 2x Standard.",
+      sourceNote:
+        "OpenAI's official GPT-6 Astra model page (developers.openai.com/api/docs/models/gpt-6-astra), captured 2026-09-07: the live API model is `gpt-6-astra` with a 1,050,000-token context window, 128,000 max output, and $10/M input, $1/M cached input, $12.50/M cache writes and $50/M output. The OpenAI API pricing page confirms the same Standard row and publishes the Batch, Flex and Fast-mode schedules.",
+      effectiveDate: "2026-09-07",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 5.0,
+          cachedUsd: 0.5,
+          outputUsd: 25.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Batch is priced at 50% of Standard; the explicit $5/$0.50/$25 per M values match the OpenAI API pricing table.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 5.0,
+          cachedUsd: 0.5,
+          outputUsd: 25.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Flex is priced at 50% of Standard; the explicit $5/$0.50/$25 per M values match the OpenAI API pricing table.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 20.0,
+          cachedUsd: 2.0,
+          outputUsd: 100.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Fast mode is priced at 2x the applicable Standard rate; the explicit $20/$2/$100 per M values match the OpenAI API pricing table. The catalog's `priority` service-tier value maps to OpenAI's Fast mode label.",
+        },
+      ],
+    },
+    {
+      model: "GPT-6 Astra Long Context",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 20.0,
+      cachedUsd: 2.0,
+      outputUsd: 75.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "OpenAI API Standard long-context rate for prompts above 272K input tokens. Batch and Flex are half price, while Fast mode is 2x Standard.",
+      sourceNote:
+        "OpenAI's official GPT-6 Astra model page (developers.openai.com/api/docs/models/gpt-6-astra), captured 2026-09-07: prompts above 272K input tokens are charged at 2x input/cache rates and 1.5x output, giving $20/M input, $2/M cached input, $25/M cache writes and $75/M output. The OpenAI API pricing page confirms the same long-context Standard row and publishes the Batch, Flex and Fast-mode schedules.",
+      effectiveDate: "2026-09-07",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 10.0,
+          cachedUsd: 1.0,
+          outputUsd: 37.5,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Batch is priced at 50% of the long-context Standard rate; the explicit $10/$1/$37.50 per M values match the OpenAI API pricing table.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 10.0,
+          cachedUsd: 1.0,
+          outputUsd: 37.5,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Flex is priced at 50% of the long-context Standard rate; the explicit $10/$1/$37.50 per M values match the OpenAI API pricing table.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 40.0,
+          cachedUsd: 4.0,
+          outputUsd: 150.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Fast mode is priced at 2x the applicable long-context Standard rate; the explicit $40/$4/$150 per M values match the OpenAI API pricing table. The catalog's `priority` service-tier value maps to OpenAI's Fast mode label.",
+        },
+      ],
+    },
     {
       model: "GPT-6 Astra",
       tier: "Global",
@@ -261,10 +357,10 @@ export const openaiAzure: Provider = {
   ],
   quirks: [
     {
-      title: "GPT-6 Astra is Foundry-only in this catalog",
+      title: "GPT-6 Astra is now direct and Foundry",
       tone: "info",
       body: [
-        "Microsoft announced GPT-6 Astra generally available in Foundry with Standard Global and Standard US Data Zone deployment options. The four rows above use the official announcement's published input, cached-input and output prices; its separate cache-write prices are called out but not modeled here. The full Azure Retail Prices API sweep captured 2026-09-05 did not yet expose an Astra/GPT-6 token meter, so re-check the retail feed before treating the published table as a billing-meter confirmation.",
+        "OpenAI's official API model page now lists GPT-6 Astra as the live `gpt-6-astra` model at $10/$1/$50 per M for Standard short context, with a $20/$2/$75 long-context row above 272K input tokens. Batch and Flex are half price and Fast mode is 2x; the catalog maps Fast mode to its shared Priority service-tier selector. Microsoft separately publishes four Standard Foundry rows at the same Global rates and a 10% US Data Zone premium. The full Azure Retail Prices API sweep captured 2026-09-07 still does not expose an Astra/GPT-6 token meter, so the Foundry rows remain anchored to Microsoft's official announcement until retail-meter confirmation arrives.",
       ],
     },
     {

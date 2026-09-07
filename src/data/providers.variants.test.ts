@@ -107,6 +107,16 @@ function gpt56Global(model: string): PricingEntry {
   return entry;
 }
 
+function gpt6AstraDirect(model: string): PricingEntry {
+  const provider = getProvider("openai-azure");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === model && candidate.host === "OpenAI direct API" && candidate.tier === "Direct",
+  );
+
+  assert.ok(entry, `Expected a direct OpenAI ${model} entry`);
+  return entry;
+}
+
 const at = (iso: string) => ({ now: new Date(iso) });
 
 // ---------------------------------------------------------------------------
@@ -229,7 +239,7 @@ test("DeepSeek peak rates are exactly 2x their matching off-peak rates", () => {
 
 test("GPT-6 Astra Foundry rows match Microsoft's published Standard table", () => {
   const provider = getProvider("openai-azure");
-  const rows = provider?.entries.filter((entry) => entry.model.startsWith("GPT-6 Astra"));
+  const rows = provider?.entries.filter((entry) => entry.model.startsWith("GPT-6 Astra") && entry.tier !== "Direct");
 
   assert.ok(rows);
   assert.deepEqual(
@@ -247,6 +257,98 @@ test("GPT-6 Astra Foundry rows match Microsoft's published Standard table", () =
       { model: "GPT-6 Astra Long Context", tier: "DataZone", inputUsd: 22, cachedUsd: 2.2, outputUsd: 82.5 },
     ],
   );
+});
+
+test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {
+  const provider = getProvider("openai-azure");
+  const rows = provider?.entries.filter(
+    (entry) => entry.model.startsWith("GPT-6 Astra") && entry.host === "OpenAI direct API" && entry.tier === "Direct",
+  );
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ model, tier, host, inputUsd, cachedUsd, outputUsd, contextWindow, maxOutput }) => ({
+      model,
+      tier,
+      host,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+      maxOutput,
+    })),
+    [
+      {
+        model: "GPT-6 Astra",
+        tier: "Direct",
+        host: "OpenAI direct API",
+        inputUsd: 10,
+        cachedUsd: 1,
+        outputUsd: 50,
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6 Astra Long Context",
+        tier: "Direct",
+        host: "OpenAI direct API",
+        inputUsd: 20,
+        cachedUsd: 2,
+        outputUsd: 75,
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+    ],
+  );
+});
+
+test("GPT-6 Astra direct rows resolve OpenAI's Batch, Flex and Fast schedules", () => {
+  const expected = [
+    {
+      model: "GPT-6 Astra",
+      standard: { inputUsd: 10, cachedUsd: 1, outputUsd: 50 },
+      batch: { inputUsd: 5, cachedUsd: 0.5, outputUsd: 25 },
+      flex: { inputUsd: 5, cachedUsd: 0.5, outputUsd: 25 },
+      priority: { inputUsd: 20, cachedUsd: 2, outputUsd: 100 },
+    },
+    {
+      model: "GPT-6 Astra Long Context",
+      standard: { inputUsd: 20, cachedUsd: 2, outputUsd: 75 },
+      batch: { inputUsd: 10, cachedUsd: 1, outputUsd: 37.5 },
+      flex: { inputUsd: 10, cachedUsd: 1, outputUsd: 37.5 },
+      priority: { inputUsd: 40, cachedUsd: 4, outputUsd: 150 },
+    },
+  ] as const;
+
+  for (const { model, standard, batch, flex, priority } of expected) {
+    const entry = gpt6AstraDirect(model);
+    const standardResolved = resolveRate(entry, at("2026-09-07T12:00:00Z"));
+    assert.deepEqual(
+      {
+        inputUsd: standardResolved.inputUsd,
+        cachedUsd: standardResolved.cachedUsd,
+        outputUsd: standardResolved.outputUsd,
+      },
+      standard,
+      `${model} standard`,
+    );
+
+    for (const [serviceTier, rates] of Object.entries({ batch, flex, priority })) {
+      const resolved = resolveRate(entry, {
+        now: new Date("2026-09-07T12:00:00Z"),
+        serviceTier: serviceTier as "batch" | "flex" | "priority",
+      });
+      assert.deepEqual(
+        {
+          inputUsd: resolved.inputUsd,
+          cachedUsd: resolved.cachedUsd,
+          outputUsd: resolved.outputUsd,
+        },
+        rates,
+        `${model} ${serviceTier}`,
+      );
+    }
+  }
 });
 
 test("Gemini 3.8 Flash carries its published model limits", () => {

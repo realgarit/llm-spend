@@ -23,6 +23,38 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-07",
+    title: "GPT-6 Astra reaches the OpenAI API",
+    tag: "model",
+    body: [
+      "GPT-6 Astra is now a live OpenAI API model as `gpt-6-astra`, not only a Microsoft Foundry offering. The catalog adds direct Standard rows at $10/M input, $1/M cached input and $50/M output for prompts up to 272K input tokens, and $20/$2/$75 for longer prompts. Both rows carry OpenAI's published 1,050,000-token context window and 128,000-token maximum output.",
+      "The direct rows also model OpenAI's published service-tier schedules: Batch and Flex at 50% of Standard, and Fast mode at 2x Standard (represented by the shared Priority selector). OpenAI's separate cache-write rates are documented but remain outside this site's cache-read schema. The existing four Astra Foundry rows remain unchanged; the current Azure Retail Prices feed still has no Astra/GPT-6 token meter, so those Foundry rows continue to follow Microsoft's official announcement table pending retail confirmation.",
+    ],
+    sources: [
+      {
+        label: "OpenAI — GPT-6 Astra announcement and API availability",
+        href: "https://openai.com/index/gpt-6-astra/",
+      },
+      {
+        label: "OpenAI API — GPT-6 Astra model documentation and limits",
+        href: "https://developers.openai.com/api/docs/models/gpt-6-astra",
+      },
+      {
+        label: "OpenAI API pricing — GPT-6 Astra Standard, Batch, Flex and Fast rates",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+      {
+        label: "Microsoft Azure — GPT-6 Astra Foundry pricing table",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Models Astra absence check",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-07",
+  },
+  {
     date: "2026-09-05",
     title: "GPT-6 Astra and Gemini 3.8 Flash enter the catalog",
     tag: "model",
