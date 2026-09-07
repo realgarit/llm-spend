@@ -480,6 +480,28 @@ const TIERED_ROWS: {
   },
   {
     providerSlug: "openai-azure",
+    model: "GPT-6 Astra",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 25.0 },
+      flex: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 25.0 },
+      priority: { inputUsd: 20.0, cachedUsd: 2.0, outputUsd: 100.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6 Astra Long Context",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
+      flex: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
+      priority: { inputUsd: 40.0, cachedUsd: 4.0, outputUsd: 150.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
     model: "GPT-5.6 Sol",
     tier: "Global",
     tiers: { priority: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 60.0 } },
