@@ -23,6 +23,35 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-10",
+    title: "Astra retail meters and GLM-5.3 Foundry lanes arrive",
+    tag: "model",
+    body: [
+      "Microsoft's Azure Retail Prices API now publishes the GPT-6 Astra token meters that were pending in the September 5 entry. The effective 2026-09-01 Global and US Data Zone groups match the announced Standard rates: Global $10/$1/$50 per M for short context and $20/$2/$75 for long context; US Data Zone $11/$1.10/$55 and $22/$2.20/$82.50 (input/cached input/output). The four existing Foundry Astra rows are now backed by official retail meters rather than announcement-only provenance.",
+      "The same feed also carries a separate 14-region non-US Data Zone group at $12/$1.20/$60 for short context and $24/$2.40/$90 for long context, or 1.20x Global. The catalog keeps the published US Data Zone rate as its single primary Data Zone lane and documents the regional split in the row notes, following the existing one-rate-per-tier convention.",
+      "Fireworks-hosted GLM-5.3 is now available on Microsoft Foundry with two official token lanes, effective 2026-09-01: Global at $1.75/$0.325/$5.50 per M and Data Zone at $2.10/$0.39/$6.60 (input/cached input/output). Z.ai's current model guide confirms the 1M-token context window and 128K maximum output. The full paged feed now has 33 pages, 32,480 rows and 24 products; no row is effective on or after 2026-09-02.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — current Foundry Models feed, Astra and GLM-5.3 meters",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      {
+        label: "Microsoft Azure — GPT-6 Astra Foundry announcement and published US rates",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/",
+      },
+      {
+        label: "Z.ai — current model pricing, including GLM-5.3",
+        href: "https://docs.z.ai/guides/overview/pricing",
+      },
+      {
+        label: "Z.ai — GLM-5.3 model limits and availability",
+        href: "https://docs.z.ai/guides/llm/glm-5.3",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-10",
+  },
+  {
     date: "2026-09-07",
     title: "GPT-6 Astra reaches the OpenAI API",
     tag: "model",

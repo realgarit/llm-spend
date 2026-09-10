@@ -6,10 +6,10 @@ export const glm: Provider = {
   slug: "glm",
   name: "GLM",
   org: "Zhipu / Z.ai",
-  tagline: "GLM-5.3-Flash adds a multimodal, half-price direct lane, while GLM-5.3, 5.1 and 5.2 remain aligned on the full-rate tier.",
+  tagline: "GLM-5.3 now has Fireworks-hosted Foundry Global and Data Zone lanes, while GLM-5.3-Flash remains the cheapest multimodal direct lane.",
   intro: [
     "GLM-5.3-Flash is now the newest and cheapest 5.x lane: Z.ai's native multimodal model is currently 50% off at $0.075/M input, $0.015/M cached input and $0.25/M output. The promotion ends at 24:00 on 2026-09-09 UTC+8, after which it returns to $0.15/$0.03/$0.50. It keeps a 1M-token window, 128K max output and always-enabled reasoning.",
-    "GLM-5.3 remains direct-API only so far with no Foundry meter published. It prices identically to 5.1 and 5.2 on all three dimensions ($1.40/M input, $0.26/M cached input, $4.40/M output), keeps the same 1M-token window with 128K max output, and always runs with reasoning enabled — three effort levels (low, high, max) rather than an on/off toggle.",
+    "GLM-5.3 is now also resold through Fireworks on Microsoft Foundry: Global is $1.75/$0.325/$5.50 per M and Data Zone is $2.10/$0.39/$6.60 (input/cached/output). Z.ai direct remains $1.40/$0.26/$4.40, and the model keeps a 1M-token window with 128K max output and always-enabled reasoning — three effort levels (low, high, max) rather than an on/off toggle.",
     "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
     "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
     "GLM-5-Turbo sits between GLM-5 and 5.1/5.2 at $1.20/M input and $4.00/M output, and is Z.ai-direct only with no Foundry meter.",
@@ -56,6 +56,38 @@ export const glm: Provider = {
       sourceNote:
         "Azure Retail Prices API 'FW GLM 5.2' meters, captured 2026-07-22 (effective 2026-07-01): input $0.00154/1K, output $0.00484/1K, cached input $0.00015/1K, uniform across regions. Earlier estimate (equal to GLM 5.1) was right on input/output but high on cache.",
       effectiveDate: "2026-07-01",
+    },
+    {
+      model: "GLM 5.3",
+      host: "Fireworks-hosted",
+      tier: "Global",
+      inputUsd: 1.75,
+      cachedUsd: 0.325,
+      outputUsd: 5.5,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "New Fireworks-hosted Global lane. Its 1.25x markup over Z.ai direct applies to input, cached input and output alike.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure Fireworks Models', captured 2026-09-10: effective 2026-09-01 meters 'FW GLM 5.3 Inp Tokens' $0.00175/1K ($1.75/M), 'FW GLM 5.3 Cd Inp Tokens' $0.000325/1K ($0.325/M), and 'FW GLM 5.3 Opt Tokens' $0.0055/1K ($5.50/M), grouped consistently across 36 regions. Z.ai's official GLM-5.3 guide confirms the 1M-token context window and 128K maximum output.",
+      effectiveDate: "2026-09-01",
+    },
+    {
+      model: "GLM 5.3",
+      host: "Fireworks-hosted",
+      tier: "DataZone",
+      inputUsd: 2.1,
+      cachedUsd: 0.39,
+      outputUsd: 6.6,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Fireworks-hosted Data Zone lane. The new model's Data Zone meter group is 1.20x its Global rate, not the older 1.10x pattern used by GLM 5/5.1/5.2.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure Fireworks Models', captured 2026-09-10: effective 2026-09-01 meters 'FW GLM 5.3 DZ Inp Tokens' $0.0021/1K ($2.10/M), 'FW GLM 5.3 DZ Cd Inp Tokens' $0.00039/1K ($0.39/M), and 'FW GLM 5.3 DZ Opt Tokens' $0.0066/1K ($6.60/M), grouped consistently across 23 US/EU Data Zone regions. Z.ai's official GLM-5.3 guide confirms the 1M-token context window and 128K maximum output.",
+      effectiveDate: "2026-09-01",
     },
     {
       model: "GLM-5",
@@ -161,6 +193,13 @@ export const glm: Provider = {
     },
   ],
   quirks: [
+    {
+      title: "GLM 5.3 now has official Foundry meters",
+      tone: "info",
+      body: [
+        "The Azure Retail Prices API now publishes named Fireworks-hosted GLM 5.3 meters effective 2026-09-01: Global at $1.75/$0.325/$5.50 per M and Data Zone at $2.10/$0.39/$6.60. The Global lane is 1.25x Z.ai direct on all three dimensions; this is the first GLM model in the catalog with both a Global and a Data Zone meter.",
+      ],
+    },
     {
       title: "GLM 5's Data Zone rate is a clean 1.1x",
       tone: "insight",

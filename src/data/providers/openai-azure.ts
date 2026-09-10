@@ -7,7 +7,7 @@ export const openaiAzure: Provider = {
   name: "OpenAI / Azure OpenAI",
   tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while Azure still trails OpenAI direct on the GPT-5.6 Sol promotion. Deployment type and Responses-API-only variants are the other catches.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. Cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. The current retail feed also carries a separate 20% Data Zone group for 14 non-US regions on Astra; the catalog keeps the published US Data Zone row as its primary Data Zone lane and records the split below. Cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
   ],
   entries: [
@@ -117,8 +117,8 @@ export const openaiAzure: Provider = {
       notes:
         "GPT-6 Astra Standard Global short-context rate. Microsoft also publishes a $12.50/M cache-write rate; this catalog models cached-input reads, not cache creation.",
       sourceNote:
-        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Global short context at $10.00/M input, $1.00/M cached input, $12.50/M cached writes and $50.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
-      effectiveDate: "2026-09-03",
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra ShortCo Inp Std Gl 1M Tokens' $10.00/M, '6-astra ShortCo Cd Inp Std Gl 1M Tokens' $1.00/M, '6-astra ShortCo Cd Wr Std Gl 1M Tokens' $12.50/M and '6-astra ShortCo Opt Std Gl 1M Tokens' $50.00/M, grouped consistently across 27 Global regions. These retail meters confirm the Global figures published in Microsoft's September 3 Foundry announcement; cache writes remain outside this schema.",
+      effectiveDate: "2026-09-01",
     },
     {
       model: "GPT-6 Astra Long Context",
@@ -130,8 +130,8 @@ export const openaiAzure: Provider = {
       notes:
         "GPT-6 Astra Standard Global long-context rate. Microsoft also publishes a $25.00/M cache-write rate; this catalog models cached-input reads, not cache creation.",
       sourceNote:
-        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Global long context at $20.00/M input, $2.00/M cached input, $25.00/M cached writes and $75.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
-      effectiveDate: "2026-09-03",
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra LongCo Inp Std Gl 1M Tokens' $20.00/M, '6-astra LongCo Cd Inp Std Gl 1M Tokens' $2.00/M, '6-astra LongCo Cd Wr Std Gl 1M Tokens' $25.00/M and '6-astra LongCo Opt Std Gl 1M Tokens' $75.00/M, grouped consistently across 27 Global regions. These retail meters confirm the Long Context figures published in Microsoft's September 3 Foundry announcement; cache writes remain outside this schema.",
+      effectiveDate: "2026-09-01",
     },
     {
       model: "GPT-6 Astra",
@@ -141,10 +141,10 @@ export const openaiAzure: Provider = {
       outputUsd: 55.0,
       confidence: "official",
       notes:
-        "GPT-6 Astra Standard US Data Zone short-context rate. Microsoft also publishes a $13.75/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+        "GPT-6 Astra Standard US Data Zone short-context rate. Microsoft also publishes a $13.75/M cache-write rate; this catalog models cached-input reads, not cache creation. The same retail meter is $12.00/$1.20/$60.00 in a separate 14-region non-US Data Zone group; this catalog keeps one primary Data Zone rate per lane.",
       sourceNote:
-        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Data Zone (US) short context at $11.00/M input, $1.10/M cached input, $13.75/M cached writes and $55.00/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
-      effectiveDate: "2026-09-03",
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra ShortCo Inp Std DZ 1M Tokens' $11.00/M, '6-astra ShortCo Cd Inp Std DZ 1M Tokens' $1.10/M, '6-astra ShortCo Cd Wr Std DZ 1M Tokens' $13.75/M and '6-astra ShortCo Opt Std DZ 1M Tokens' $55.00/M across seven US regions. The same meter names are $12.00/$1.20/$15.00/$60.00 across 14 non-US regions; the catalog's single DataZone row represents the published US group and records the second group in its note. Cache writes remain outside this schema.",
+      effectiveDate: "2026-09-01",
     },
     {
       model: "GPT-6 Astra Long Context",
@@ -154,10 +154,10 @@ export const openaiAzure: Provider = {
       outputUsd: 82.5,
       confidence: "official",
       notes:
-        "GPT-6 Astra Standard US Data Zone long-context rate. Microsoft also publishes a $27.50/M cache-write rate; this catalog models cached-input reads, not cache creation.",
+        "GPT-6 Astra Standard US Data Zone long-context rate. Microsoft also publishes a $27.50/M cache-write rate; this catalog models cached-input reads, not cache creation. The same retail meter is $24.00/$2.40/$90.00 in a separate 14-region non-US Data Zone group; this catalog keeps one primary Data Zone rate per lane.",
       sourceNote:
-        "Microsoft Azure Foundry announcement (https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/), published 2026-09-03 and captured 2026-09-05: the GPT-6 Astra pricing table lists Standard Data Zone (US) long context at $22.00/M input, $2.20/M cached input, $27.50/M cached writes and $82.50/M output. A fresh full paged Azure Retail Prices API sweep on 2026-09-05 found no meter containing Astra or GPT-6 yet, so this row follows Microsoft's published Foundry table pending retail-meter publication. Cache writes are outside this schema.",
-      effectiveDate: "2026-09-03",
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra LongCo Inp Std DZ 1M Tokens' $22.00/M, '6-astra LongCo Cd Inp Std DZ 1M Tokens' $2.20/M, '6-astra LongCo Cd Wr Std DZ 1M Tokens' $27.50/M and '6-astra LongCo Opt Std DZ 1M Tokens' $82.50/M across seven US regions. The same meter names are $24.00/$2.40/$30.00/$90.00 across 14 non-US regions; the catalog's single DataZone row represents the published US group and records the second group in its note. Cache writes remain outside this schema.",
+      effectiveDate: "2026-09-01",
     },
     {
       model: "GPT-5.6 Sol",
@@ -360,7 +360,7 @@ export const openaiAzure: Provider = {
       title: "GPT-6 Astra is now direct and Foundry",
       tone: "info",
       body: [
-        "OpenAI's official API model page now lists GPT-6 Astra as the live `gpt-6-astra` model at $10/$1/$50 per M for Standard short context, with a $20/$2/$75 long-context row above 272K input tokens. Batch and Flex are half price and Fast mode is 2x; the catalog maps Fast mode to its shared Priority service-tier selector. Microsoft separately publishes four Standard Foundry rows at the same Global rates and a 10% US Data Zone premium. The full Azure Retail Prices API sweep captured 2026-09-07 still does not expose an Astra/GPT-6 token meter, so the Foundry rows remain anchored to Microsoft's official announcement until retail-meter confirmation arrives.",
+        "OpenAI's official API model page now lists GPT-6 Astra as the live `gpt-6-astra` model at $10/$1/$50 per M for Standard short context, with a $20/$2/$75 long-context row above 272K input tokens. Batch and Flex are half price and Fast mode is 2x; the catalog maps Fast mode to its shared Priority service-tier selector. Microsoft's Azure Retail Prices API now publishes 16 effective-2026-09-01 Astra token meters under Azure OpenAI GPT6. The Global and seven-region US Data Zone groups match Microsoft's announcement; a separate 14-region non-US Data Zone group is 1.20x Global, so the catalog's primary Data Zone rows explicitly document the regional split.",
       ],
     },
     {
