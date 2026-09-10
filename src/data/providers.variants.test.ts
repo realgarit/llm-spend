@@ -259,6 +259,55 @@ test("GPT-6 Astra Foundry rows match Microsoft's published Standard table", () =
   );
 });
 
+test("GPT-6 Astra Foundry rows are backed by the current retail feed", () => {
+  const provider = getProvider("openai-azure");
+  const rows = provider?.entries.filter((entry) => entry.model.startsWith("GPT-6 Astra") && entry.tier !== "Direct");
+
+  assert.ok(rows);
+  assert.equal(rows.length, 4);
+  assert.ok(rows.every((entry) => entry.sourceNote?.includes("Azure OpenAI GPT6")));
+  assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-10")));
+  assert.ok(rows.every((entry) => !entry.sourceNote?.includes("pending retail")));
+});
+
+test("GLM-5.3 Foundry rows match the current Fireworks retail meters", () => {
+  const provider = getProvider("glm");
+  const rows = provider?.entries.filter(
+    (entry) => entry.model === "GLM 5.3" && entry.host === "Fireworks-hosted",
+  );
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ tier, inputUsd, cachedUsd, outputUsd, contextWindow, maxOutput }) => ({
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+      maxOutput,
+    })),
+    [
+      {
+        tier: "Global",
+        inputUsd: 1.75,
+        cachedUsd: 0.325,
+        outputUsd: 5.5,
+        contextWindow: 1_000_000,
+        maxOutput: 128_000,
+      },
+      {
+        tier: "DataZone",
+        inputUsd: 2.1,
+        cachedUsd: 0.39,
+        outputUsd: 6.6,
+        contextWindow: 1_000_000,
+        maxOutput: 128_000,
+      },
+    ],
+  );
+  assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-10")));
+});
+
 test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {
   const provider = getProvider("openai-azure");
   const rows = provider?.entries.filter(
