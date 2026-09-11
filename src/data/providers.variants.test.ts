@@ -172,11 +172,11 @@ test("DeepSeek-V4 Pro (Direct) resolves Off-peak outside the peak windows", () =
 });
 
 // ---------------------------------------------------------------------------
-// DeepSeek-V4 Flash (Direct)
+// DeepSeek-V4.1 Flash (Direct)
 // ---------------------------------------------------------------------------
 
-test("DeepSeek-V4 Flash (Direct) resolves to today's base rate before the switch", () => {
-  const resolved = resolveRate(directDeepSeek("DeepSeek-V4 Flash"), at("2026-08-15T12:00:00Z"));
+test("DeepSeek-V4.1 Flash (Direct) resolves to the legacy base rate before the V4.1 switch", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-08-15T12:00:00Z"));
 
   assert.equal(resolved.variant, null);
   assert.equal(resolved.inputUsd, 0.14);
@@ -184,39 +184,57 @@ test("DeepSeek-V4 Flash (Direct) resolves to today's base rate before the switch
   assert.equal(resolved.outputUsd, 0.28);
 });
 
-test("DeepSeek-V4 Flash (Direct) stays on the base rate one second before the switch", () => {
-  const resolved = resolveRate(directDeepSeek("DeepSeek-V4 Flash"), at("2026-08-16T15:59:59Z"));
+test("DeepSeek-V4.1 Flash (Direct) stays on the legacy base rate one second before the old schedule", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-08-16T15:59:59Z"));
 
   assert.equal(resolved.variant, null);
   assert.equal(resolved.inputUsd, 0.14);
 });
 
-test("DeepSeek-V4 Flash (Direct) flips to a variant at the exact switch instant", () => {
-  const resolved = resolveRate(directDeepSeek("DeepSeek-V4 Flash"), at("2026-08-16T16:00:00Z"));
+test("DeepSeek-V4.1 Flash (Direct) enters the legacy off-peak schedule at its old switch", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-08-16T16:00:00Z"));
 
   assert.notEqual(resolved.variant, null);
-  assert.equal(resolved.label, "Off-peak");
+  assert.equal(resolved.label, "Off-peak (legacy V4 Flash)");
   assert.equal(resolved.inputUsd, 0.22);
   assert.equal(resolved.cachedUsd, 0.007);
   assert.equal(resolved.outputUsd, 0.66);
 });
 
-test("DeepSeek-V4 Flash (Direct) resolves Peak inside a peak window", () => {
-  const resolved = resolveRate(directDeepSeek("DeepSeek-V4 Flash"), at("2026-08-17T02:00:00Z"));
+test("DeepSeek-V4.1 Flash (Direct) resolves the legacy Peak inside a peak window", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-08-17T02:00:00Z"));
 
-  assert.equal(resolved.label, "Peak");
+  assert.equal(resolved.label, "Peak (legacy V4 Flash)");
   assert.equal(resolved.inputUsd, 0.44);
   assert.equal(resolved.cachedUsd, 0.014);
   assert.equal(resolved.outputUsd, 1.32);
 });
 
-test("DeepSeek-V4 Flash (Direct) resolves Off-peak outside the peak windows", () => {
-  const resolved = resolveRate(directDeepSeek("DeepSeek-V4 Flash"), at("2026-08-17T12:00:00Z"));
+test("DeepSeek-V4.1 Flash (Direct) resolves legacy Off-peak outside the peak windows", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-08-17T12:00:00Z"));
 
-  assert.equal(resolved.label, "Off-peak");
+  assert.equal(resolved.label, "Off-peak (legacy V4 Flash)");
   assert.equal(resolved.inputUsd, 0.22);
   assert.equal(resolved.cachedUsd, 0.007);
   assert.equal(resolved.outputUsd, 0.66);
+});
+
+test("DeepSeek-V4.1 Flash (Direct) switches to the new off-peak rate at 04:00 UTC", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-09-10T04:00:00Z"));
+
+  assert.equal(resolved.label, "Off-peak");
+  assert.equal(resolved.inputUsd, 0.15);
+  assert.equal(resolved.cachedUsd, 0.003);
+  assert.equal(resolved.outputUsd, 0.6);
+});
+
+test("DeepSeek-V4.1 Flash (Direct) resolves the new Peak schedule", () => {
+  const resolved = resolveRate(directDeepSeek("DeepSeek-V4.1 Flash"), at("2026-09-10T06:00:00Z"));
+
+  assert.equal(resolved.label, "Peak");
+  assert.equal(resolved.inputUsd, 0.3);
+  assert.equal(resolved.cachedUsd, 0.006);
+  assert.equal(resolved.outputUsd, 1.2);
 });
 
 // ---------------------------------------------------------------------------
@@ -224,7 +242,7 @@ test("DeepSeek-V4 Flash (Direct) resolves Off-peak outside the peak windows", ()
 // ---------------------------------------------------------------------------
 
 test("DeepSeek peak rates are exactly 2x their matching off-peak rates", () => {
-  for (const model of ["DeepSeek-V4 Pro", "DeepSeek-V4 Flash"]) {
+  for (const model of ["DeepSeek-V4 Pro", "DeepSeek-V4.1 Flash"]) {
     const variants = directDeepSeek(model).variants ?? [];
     const peak = variants.find((v) => v.label === "Peak");
     const offPeak = variants.find((v) => v.label === "Off-peak");
@@ -306,6 +324,45 @@ test("GLM-5.3 Foundry rows match the current Fireworks retail meters", () => {
     ],
   );
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-10")));
+});
+
+test("Grok 4.6 Foundry rows use the official Global meters only", () => {
+  const provider = getProvider("xai");
+  const rows = provider?.entries.filter((entry) => entry.model.startsWith("Grok 4.6") && entry.tier !== "Direct");
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ model, tier, inputUsd, cachedUsd, outputUsd, contextWindow, maxOutput }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+      maxOutput,
+    })),
+    [
+      {
+        model: "Grok 4.6",
+        tier: "Global",
+        inputUsd: 2,
+        cachedUsd: 0.5,
+        outputUsd: 6,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "Grok 4.6 Long Context",
+        tier: "Global",
+        inputUsd: 4,
+        cachedUsd: 1,
+        outputUsd: 12,
+        contextWindow: 200_000,
+        maxOutput: 128_000,
+      },
+    ],
+  );
+  assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-11")));
 });
 
 test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {
@@ -719,25 +776,20 @@ for (const { model, base, priority } of GPT56_PRIORITY_CASES) {
 // equal its base rate exactly.
 // ---------------------------------------------------------------------------
 
-// Rows that are EXPECTED to resolve to a non-null variant once the pinned
-// `now` above is bumped forward past a certain instant — a periodic
-// maintenance task done by hand (see AGENTS.md working notes). Each row below
-// has a variant whose `conditions` contain only `from` (no `until`, no
-// `serviceTier`, no `contextBand`): once real time crosses that `from`
-// instant, the variant matches forever and the row can never go back to
-// `variant: null`. Without this allowlist, the first `now` bump past that
-// instant would fail the guard even though nothing is actually wrong — the
-// variant is doing exactly what it was authored to do.
+// Rows that are EXPECTED to resolve to a non-null variant at the pinned
+// historical `now` below — a periodic maintenance task done by hand (see
+// AGENTS.md working notes). Without this allowlist, a scheduled rate regime
+// would fail the guard even though nothing is actually wrong — the variant is
+// doing exactly what it was authored to do.
 //
 // Before adding a row here, confirm its active variant is intentional (not an
 // authoring mistake, e.g. a `from` date wrongly set in the past) by checking
 // the variant's own `sourceNote`.
 const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
-  // DeepSeek's Peak/Off-peak pair partitions all time from 2026-08-16 16:00Z
-  // onward with no gap: Off-peak's conditions are `{ from }` only, so once
-  // `now` reaches that instant, Peak or Off-peak always matches.
+  // DeepSeek's legacy Peak/Off-peak pair is active at the pinned 2026-08-26
+  // instant; the V4.1 transition later bounds that legacy regime.
   "deepseek / DeepSeek-V4 Pro (DeepSeek direct API)",
-  "deepseek / DeepSeek-V4 Flash (DeepSeek direct API)",
+  "deepseek / DeepSeek-V4.1 Flash (DeepSeek direct API)",
   // Qwen3.7 Max's promo reverts to list price via a "List price (from
   // September)" variant with `{ from: "2026-09-01T00:00:00Z" }` and no
   // `until` — permanently active from that instant on.

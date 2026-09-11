@@ -1,14 +1,15 @@
 import type { Provider } from "../types";
 
 const CAPTURED = "2026-07-11";
+const FLASH_TRANSITION = "2026-09-10T04:00:00Z";
 
 export const deepseek: Provider = {
   slug: "deepseek",
   name: "DeepSeek",
-  tagline: "1M-token context, cheap direct pricing, and Microsoft Foundry resale markups from ~10% to a reported 4.5x — with one Data Zone lane that undercuts Global.",
+  tagline: "V4.1 Flash now lowers the direct API price, while Microsoft Foundry still exposes the older V4 Flash meters with resale markups from ~10% to a reported 4.5x.",
   intro: [
-    "DeepSeek V4 Pro and V4 Flash ship real 1M-token windows (max output up to 384K). Pricing is a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. Numbers below.",
-    "Both models are now tracked across all four Foundry lanes. V4 Pro and V4 Flash each have a first-party Global listing, a first-party Data Zone listing at the usual ~10% premium, and a Fireworks-hosted Data Zone listing. For V4 Pro the Fireworks lane is slightly the more expensive of the two Data Zone options; for V4 Flash it is dramatically the cheapest lane of all four, below even Global.",
+    "DeepSeek V4.1 Flash and V4 Pro ship real 1M-token windows (max output up to 384K). The direct `deepseek-flash` endpoint now serves V4.1 Flash with lower peak/off-peak rates, while legacy V4 Flash names route to the same model. Microsoft Foundry still exposes V4 Flash-named meters, so the current catalog keeps those Foundry rows separate rather than silently relabeling them.",
+    "Pricing remains a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. V4 Pro and the Foundry V4 Flash snapshot retain their existing lanes; the direct Flash row carries the September 10 transition and both published schedules.",
   ],
   entries: [
     {
@@ -84,23 +85,25 @@ export const deepseek: Provider = {
       ],
     },
     {
-      model: "DeepSeek-V4 Flash",
+      model: "DeepSeek-V4.1 Flash",
       host: "DeepSeek direct API",
       tier: "Direct",
       inputUsd: 0.14,
       cachedUsd: 0.0028,
       outputUsd: 0.28,
       contextWindow: 1_000_000,
+      maxOutput: 384_000,
       confidence: "official",
       notes:
-        "First-party published cache-hit, cache-miss, and output rates. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.007/$0.22/$0.66, peak $0.014/$0.44/$1.32 — see the changelog for detail.",
-      sourceNote: "DeepSeek's own direct API pricing, including the published cached-input rate.",
-      effectiveDate: CAPTURED,
+        "The `deepseek-flash` endpoint now serves V4.1 Flash. Before 2026-09-10 04:00 UTC, this row's base and legacy variants preserve the V4 Flash schedule; from the transition onward, off-peak is $0.15/$0.003/$0.60 and weekday peak is $0.30/$0.006/$1.20 per M (cache hit / cache miss / output order is shown in the source table; the catalog fields are input / cached input / output).",
+      sourceNote:
+        "DeepSeek's official API pricing page and September 10 V4.1 Flash announcement, re-read 2026-09-11: `deepseek-flash` is DeepSeek-V4.1-Flash with a 1M context and 384K maximum output; legacy `deepseek-v4-flash` names route to it. The base fields retain the pre-transition V4 Flash off-peak rate for deterministic historical resolution, while the variants below carry the current V4.1 Flash schedule.",
+      effectiveDate: "2026-09-10",
       variants: [
         {
           label: "Peak",
           conditions: {
-            from: "2026-08-16T16:00:00Z",
+            from: FLASH_TRANSITION,
             utcHourWindows: [
               { startHourUtc: 1, endHourUtc: 4 },
               { startHourUtc: 6, endHourUtc: 10 },
@@ -108,22 +111,50 @@ export const deepseek: Provider = {
             // Monday-Friday. Weekends fall through to the Off-peak variant below.
             utcDaysOfWeek: [1, 2, 3, 4, 5],
           },
+          inputUsd: 0.3,
+          cachedUsd: 0.006,
+          outputUsd: 1.2,
+          confidence: "official",
+          sourceNote:
+            "DeepSeek's September 10, 2026 V4.1 Flash announcement and API pricing page, re-read 2026-09-11: the new schedule starts at 04:00 UTC on September 10, off-peak is half of peak, and peak is 01:00-04:00 and 06:00-10:00 UTC Monday-Friday. The published V4.1 Flash peak row is $0.30/M input, $0.006/M cache hit and $1.20/M output.",
+        },
+        {
+          label: "Off-peak",
+          conditions: { from: FLASH_TRANSITION },
+          inputUsd: 0.15,
+          cachedUsd: 0.003,
+          outputUsd: 0.6,
+          confidence: "official",
+          sourceNote:
+            "DeepSeek's September 10, 2026 V4.1 Flash announcement and API pricing page, re-read 2026-09-11: off-peak is half of peak and the published V4.1 Flash off-peak row is $0.15/M input, $0.003/M cache hit and $0.60/M output. Weekends and all hours outside the two weekday peak windows are off-peak.",
+        },
+        {
+          label: "Peak (legacy V4 Flash)",
+          conditions: {
+            from: "2026-08-16T16:00:00Z",
+            until: FLASH_TRANSITION,
+            utcHourWindows: [
+              { startHourUtc: 1, endHourUtc: 4 },
+              { startHourUtc: 6, endHourUtc: 10 },
+            ],
+            utcDaysOfWeek: [1, 2, 3, 4, 5],
+          },
           inputUsd: 0.44,
           cachedUsd: 0.014,
           outputUsd: 1.32,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
+            "DeepSeek's prior V4 Flash schedule from the API pricing page, captured 2026-08-26. This bounded variant preserves historical resolution until the V4.1 Flash transition at 2026-09-10 04:00 UTC.",
         },
         {
-          label: "Off-peak",
-          conditions: { from: "2026-08-16T16:00:00Z" },
+          label: "Off-peak (legacy V4 Flash)",
+          conditions: { from: "2026-08-16T16:00:00Z", until: FLASH_TRANSITION },
           inputUsd: 0.22,
           cachedUsd: 0.007,
           outputUsd: 0.66,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
+            "DeepSeek's prior V4 Flash schedule from the API pricing page, captured 2026-08-26. This bounded variant preserves historical resolution until the V4.1 Flash transition at 2026-09-10 04:00 UTC.",
         },
       ],
     },
@@ -221,7 +252,7 @@ export const deepseek: Provider = {
       title: "1M context is a real autonomy lever",
       tone: "info",
       body: [
-        "V4 Pro and V4 Flash carry 1M-token windows (max output up to 384K). Bigger windows mean less forced compaction, so less babysitting.",
+        "V4 Pro and V4.1 Flash carry 1M-token windows (max output up to 384K). Bigger windows mean less forced compaction, so less babysitting.",
       ],
     },
     {

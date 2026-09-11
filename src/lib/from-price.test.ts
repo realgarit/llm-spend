@@ -5,19 +5,19 @@ import { providers } from "../data/providers";
 import { fromPrice } from "./from-price";
 import { rateRange } from "./rates";
 
-// Both instants are well after DeepSeek's peak/off-peak switch
-// (2026-08-16T16:00:00Z, see deepseek.ts). One lands inside a published peak
-// window (01:00-04:00 UTC), the other outside it.
-const OFF_PEAK_NOW = new Date("2026-08-20T12:00:00Z");
-const PEAK_NOW = new Date("2026-08-20T02:00:00Z");
+// Both instants are after DeepSeek V4.1 Flash's 2026-09-10T04:00:00Z
+// transition. One lands inside a published peak window (01:00-04:00 UTC),
+// the other outside it.
+const OFF_PEAK_NOW = new Date("2026-09-11T12:00:00Z");
+const PEAK_NOW = new Date("2026-09-11T02:00:00Z");
 
-// The cheapest reachable DeepSeek input rate. It was the $0.19 Global V4 Flash
-// row until 2026-08-22, when the Fireworks-hosted V4 Flash Data Zone lane
-// ($0.15) was added and undercut it — Data Zone below Global, because the two
-// are different sellers rather than two tiers of one seller (see deepseek.ts).
+// The cheapest reachable DeepSeek input rate remains the Fireworks-hosted V4
+// Flash Data Zone lane ($0.15), which undercuts the direct V4.1 Flash
+// off-peak rate and the first-party Foundry lanes because these are different
+// sellers rather than two tiers of one seller (see deepseek.ts).
 const DEEPSEEK_FROM = 0.15;
 
-test("DeepSeek's from-price is the cheapest reachable rate, never the stale Direct base ($0.14)", () => {
+test("DeepSeek's from-price is the cheapest reachable rate, not the legacy Direct base", () => {
   const price = fromPrice("deepseek", OFF_PEAK_NOW);
 
   assert.equal(price, DEEPSEEK_FROM);

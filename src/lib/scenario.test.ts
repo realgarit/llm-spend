@@ -586,9 +586,11 @@ test("guard: the preview opt-in never leaks into the default 'Now' scenario, for
 });
 
 test("the real DeepSeek catalog rows preview their peak rate before the split starts, and only they do", () => {
-  // Ties the abstract fixtures above to the actual catalog: today (14 Aug,
-  // before the 16 Aug 16:00Z start) picking "Peak" must reveal DeepSeek's
-  // peak numbers, labelled as a preview, and must leave every other row alone.
+  // Ties the abstract fixtures above to the actual catalog: on 14 Aug,
+  // picking "Peak" must reveal DeepSeek's next scheduled peak numbers,
+  // labelled as a preview, and must leave every other row alone. V4 Pro's
+  // existing schedule starts on 16 Aug; the newly-added V4.1 Flash schedule
+  // starts on 10 Sep.
   //
   // The date must be a WEEKDAY. DeepSeek's peak window is Monday-Friday, and
   // `resolveScenarioTime` deliberately overrides only the hour and keeps the
@@ -603,7 +605,12 @@ test("the real DeepSeek catalog rows preview their peak rate before the split st
   assert.ok(previewing.length > 0, "expected at least DeepSeek's direct rows to preview");
   for (const c of previewing) {
     assert.equal(c.preview?.variant.label, "Peak");
-    assert.equal(c.preview?.startsAt?.toISOString(), "2026-08-16T16:00:00.000Z");
+    assert.equal(
+      c.preview?.startsAt?.toISOString(),
+      c.row.model === "DeepSeek-V4.1 Flash"
+        ? "2026-09-10T04:00:00.000Z"
+        : "2026-08-16T16:00:00.000Z",
+    );
     assert.equal(c.resolved.label, "Peak");
     assert.equal(c.scenarioPriced, true);
   }

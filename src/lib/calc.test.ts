@@ -14,13 +14,8 @@ function directDeepSeek(model: string) {
   return entry;
 }
 
-// Both direct DeepSeek entries now carry Peak/Off-peak variants effective
-// 2026-08-16T16:00:00Z (see providers.ts), so computeCost's default `ctx.now`
-// (the real clock) would otherwise make these two tests' expectations flip
-// from base to variant pricing the moment that instant passes — a failure
-// with nothing to do with any code change. Pin `now` to a date safely before
-// that boundary so these stay the "base rate" assertions they're named for,
-// forever, regardless of when the suite runs.
+// Pin historical checks to explicit instants: DeepSeek's direct rows now carry
+// both the old V4 schedule and the V4.1 Flash transition (see providers.ts).
 const BEFORE_DEEPSEEK_PEAK_SPLIT = { now: new Date("2026-08-15T00:00:00Z") };
 
 test("uses DeepSeek's published V4 Pro direct cache-hit rate", () => {
@@ -40,19 +35,19 @@ test("uses DeepSeek's published V4 Pro direct cache-hit rate", () => {
   assert.ok(Math.abs(result.totalUsd - 2.80575) < 1e-12);
 });
 
-test("uses DeepSeek's published V4 Flash direct cache-hit rate", () => {
+test("uses DeepSeek's published V4.1 Flash direct cache-hit rate", () => {
   const result = computeCost(
-    directDeepSeek("DeepSeek-V4 Flash"),
+    directDeepSeek("DeepSeek-V4.1 Flash"),
     {
       inputTokens: 1_000_000,
       outputTokens: 0,
       cacheHitRate: 1,
     },
-    BEFORE_DEEPSEEK_PEAK_SPLIT,
+    { now: new Date("2026-09-11T12:00:00Z") },
   );
 
   assert.equal(result.cacheApplied, true);
-  assert.equal(result.totalUsd, 0.0028);
+  assert.equal(result.totalUsd, 0.003);
 });
 
 test("prices DeepSeek's direct V4 Pro at its Peak variant once that regime is in force", () => {

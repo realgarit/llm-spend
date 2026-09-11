@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-11",
+    title: "Grok 4.6 reaches Foundry and DeepSeek Flash moves to V4.1",
+    tag: "model",
+    body: [
+      "Microsoft Foundry now publishes Grok 4.6 token meters effective 2026-09-01. The catalog adds the official Global Standard short-context lane at $2/$0.50/$6 per M and its 200K-threshold long-context lane at $4/$1/$12 (input/cached input/output). Microsoft's current deployment guide marks Grok 4.6 as public preview with a 200K context window and 128K maximum output, and documents Global Standard only; although the retail feed also emits separate 4.6 Data Zone meters, no Data Zone row is inferred until that deployment path is confirmed.",
+      "DeepSeek launched V4.1 Flash on September 10. The direct `deepseek-flash` endpoint now serves the 1M-context, 384K-output model at $0.15/$0.003/$0.60 per M off-peak and $0.30/$0.006/$1.20 during the published weekday peak windows (input/cached input/output), effective 04:00 UTC on September 10. Legacy `deepseek-v4-flash` names route to V4.1 Flash; V4 Pro remains available with its existing schedule. The direct catalog row now carries the transition while Foundry's separately metered V4 Flash lanes remain unchanged.",
+      "The full Azure Retail Prices feed grew to 34 pages and 33,757 rows. The additional rows include Grok 4.6 plus new media/image/page and provisioned-hourly meters; no other tracked text-token lane changed in this check.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Learn — deploy and use Grok 4.6 in Microsoft Foundry",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok",
+      },
+      {
+        label: "Azure Retail Prices API — Grok 4.6 Foundry meters",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20Grok%20Models%27%20and%20contains%28tolower%28meterName%29%2C%274.6%27%29",
+      },
+      {
+        label: "xAI — Grok 4.6 on Microsoft Foundry",
+        href: "https://x.ai/news/grok-4-6-microsoft-foundry",
+      },
+      {
+        label: "DeepSeek — V4.1 Flash launch and pricing transition",
+        href: "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+      },
+      {
+        label: "DeepSeek API — current V4.1 Flash and V4 Pro prices",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-11",
+  },
+  {
     date: "2026-09-10",
     title: "Astra retail meters and GLM-5.3 Foundry lanes arrive",
     tag: "model",
