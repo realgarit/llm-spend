@@ -6,10 +6,10 @@ const FLASH_TRANSITION = "2026-09-10T04:00:00Z";
 export const deepseek: Provider = {
   slug: "deepseek",
   name: "DeepSeek",
-  tagline: "V4.1 Flash now lowers the direct API price, while Microsoft Foundry still exposes the older V4 Flash meters with resale markups from ~10% to a reported 4.5x.",
+  tagline: "V4.1 Flash now lowers the direct API price, while V4 Pro remains available after DeepSeek reversed its planned September 14 reroute. Microsoft Foundry still exposes the older V4 Flash meters with resale markups from ~10% to a reported 4.5x.",
   intro: [
     "DeepSeek V4.1 Flash and V4 Pro ship real 1M-token windows (max output up to 384K). The direct `deepseek-flash` endpoint now serves V4.1 Flash with lower peak/off-peak rates, while legacy V4 Flash names route to the same model. Microsoft Foundry still exposes V4 Flash-named meters, so the current catalog keeps those Foundry rows separate rather than silently relabeling them.",
-    "Pricing remains a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. V4 Pro and the Foundry V4 Flash snapshot retain their existing lanes; the direct Flash row carries the September 10 transition and both published schedules.",
+    "Pricing remains a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. DeepSeek's current API Quick Start and pricing pages now say V4 Pro service continues after 2026-09-14 with billing unchanged, although the September 10 launch article still carries the earlier reroute notice. The catalog therefore retains V4 Pro's separate direct lane and schedule; the Foundry V4 Flash snapshot remains separate, while the direct Flash row carries the September 10 transition and both published schedules.",
   ],
   entries: [
     {
@@ -50,8 +50,9 @@ export const deepseek: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail.",
-      sourceNote: "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate.",
+        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail. DeepSeek's current API docs say this model remains available after 2026-09-14 with billing unchanged.",
+      sourceNote:
+        "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate. The API Quick Start and Models & Pricing pages, re-read 2026-09-12, state that V4 Pro service continues after September 14, 2026 with billing unchanged; the September 10 launch article still carries the earlier automatic-reroute notice, so the catalog keeps this V4 Pro lane separate and documents the conflict.",
       effectiveDate: CAPTURED,
       variants: [
         {
@@ -226,6 +227,13 @@ export const deepseek: Provider = {
     },
   ],
   quirks: [
+    {
+      title: "V4 Pro remains available after the planned switch",
+      tone: "warning",
+      body: [
+        "DeepSeek's current API Quick Start and Models & Pricing pages say V4 Pro service continues after September 14, 2026, with billing unchanged. The September 10 V4.1 Flash launch article still says V4 Pro requests would route to Flash at Flash rates from that date, so the official pages are inconsistent; the catalog keeps the published V4 Pro lane and its own peak/off-peak schedule until DeepSeek clarifies the conflict.",
+      ],
+    },
     {
       title: "Resale markup: ~10% to a reported 4.5x",
       tone: "insight",
