@@ -5,9 +5,9 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while Azure still trails OpenAI direct on the GPT-5.6 Sol promotion. Deployment type and Responses-API-only variants are the other catches.",
+  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while GPT-Rosalind Research adds a future-dated specialist lane. Azure still trails OpenAI direct on the GPT-5.6 Sol promotion.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. The current retail feed also carries a separate 20% Data Zone group for 14 non-US regions on Astra; the catalog keeps the published US Data Zone row as its primary Data Zone lane and records the split below. Cache-write prices are published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. The current retail feed also carries a separate 20% Data Zone group for 14 non-US regions on Astra; the catalog keeps the published US Data Zone row as its primary Data Zone lane and records the split below. OpenAI now also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. Cache-write prices are otherwise published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
   ],
   entries: [
@@ -106,6 +106,20 @@ export const openaiAzure: Provider = {
             "OpenAI's official GPT-6 Astra model page, captured 2026-09-07, states that Fast mode is priced at 2x the applicable long-context Standard rate; the explicit $40/$4/$150 per M values match the OpenAI API pricing table. The catalog's `priority` service-tier value maps to OpenAI's Fast mode label.",
         },
       ],
+    },
+    {
+      model: "GPT-Rosalind Research",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 5.0,
+      cachedUsd: 0.5,
+      outputUsd: 25.0,
+      confidence: "official",
+      notes:
+        "Specialized life-sciences research model. API access is limited to approved internal research; published billing begins 2026-10-05. No cache-write charge applies.",
+      sourceNote:
+        "OpenAI's official API pricing page (developers.openai.com/api/docs/pricing), re-read 2026-09-12: `gpt-rosalind-research` is listed at $5/M input, $0.50/M cached input and $25/M output. The same page says billing begins 2026-10-05, cache-write pricing does not apply, and access is limited to approved internal research. The full Azure Retail Prices Foundry feed checked 2026-09-12 contains no Rosalind token meter, so this is a Direct-only lane.",
+      effectiveDate: "2026-10-05",
     },
     {
       model: "GPT-6 Astra",

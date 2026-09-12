@@ -117,6 +117,19 @@ function gpt6AstraDirect(model: string): PricingEntry {
   return entry;
 }
 
+function gptRosalindResearch(): PricingEntry {
+  const provider = getProvider("openai-azure");
+  const entry = provider?.entries.find(
+    (candidate) =>
+      candidate.model === "GPT-Rosalind Research" &&
+      candidate.host === "OpenAI direct API" &&
+      candidate.tier === "Direct",
+  );
+
+  assert.ok(entry, "Expected a direct GPT-Rosalind Research entry");
+  return entry;
+}
+
 const at = (iso: string) => ({ now: new Date(iso) });
 
 // ---------------------------------------------------------------------------
@@ -455,6 +468,37 @@ test("GPT-6 Astra direct rows resolve OpenAI's Batch, Flex and Fast schedules", 
       );
     }
   }
+});
+
+test("GPT-Rosalind Research carries OpenAI's future billing date and specialist rate", () => {
+  const entry = gptRosalindResearch();
+
+  assert.deepEqual(
+    {
+      model: entry.model,
+      host: entry.host,
+      tier: entry.tier,
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      confidence: entry.confidence,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      model: "GPT-Rosalind Research",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 5,
+      cachedUsd: 0.5,
+      outputUsd: 25,
+      confidence: "official",
+      effectiveDate: "2026-10-05",
+    },
+  );
+  assert.match(entry.notes ?? "", /approved internal research/i);
+  assert.match(entry.notes ?? "", /2026-10-05/);
+  assert.match(entry.sourceNote ?? "", /gpt-rosalind-research/);
+  assert.match(entry.sourceNote ?? "", /no Rosalind token meter/i);
 });
 
 test("Gemini 3.8 Flash carries its published model limits", () => {

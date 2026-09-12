@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-12",
+    title: "GPT-Rosalind gets an API price date; DeepSeek keeps V4 Pro",
+    tag: "model",
+    body: [
+      "OpenAI's current API pricing page now lists `gpt-rosalind-research`, a specialized life-sciences model for approved internal research, at $5/$0.50/$25 per M for input, cached input and output. Published billing begins October 5, 2026, and cache-write pricing does not apply; the catalog adds the future-dated Direct lane without claiming a Microsoft Foundry meter.",
+      "DeepSeek's current API Quick Start and Models & Pricing pages now say that V4 Pro API service continues after September 14, 2026, with billing unchanged. This supersedes the September 10 launch article's planned automatic reroute to V4.1 Flash, which remains visible on that article; the catalog retains V4 Pro's own published peak/off-peak schedule and records the official-page conflict rather than silently switching its model identity or rate.",
+      "The full Azure Retail Prices feed remains unchanged at 34 pages and 33,757 rows, with no Rosalind token meter or other new tracked text-token lane. Alibaba's September 12 pricing refresh confirms the already-tracked Qwen International rates; newly listed open-weight and coder entries remain outside the catalog's deliberately focused lanes.",
+    ],
+    sources: [
+      {
+        label: "OpenAI API pricing — GPT-Rosalind Research",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+      {
+        label: "DeepSeek API Quick Start — current model availability",
+        href: "https://api-docs.deepseek.com/",
+      },
+      {
+        label: "DeepSeek API Models & Pricing — V4 Pro continuation and rates",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+      {
+        label: "DeepSeek — V4.1 Flash launch and prior V4 Pro routing plan",
+        href: "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+      },
+      {
+        label: "Azure Retail Prices API — full Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-12",
+  },
+  {
     date: "2026-09-11",
     title: "Grok 4.6 reaches Foundry and DeepSeek Flash moves to V4.1",
     tag: "model",
