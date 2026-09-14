@@ -23,6 +23,31 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-14",
+    title: "GPT-5.6 Sol promotion reaches Foundry retail meters",
+    tag: "pricing",
+    body: [
+      "Microsoft's Azure Retail Prices API now publishes the commercial GPT-5.6 Sol promotion effective September 1, 2026. The catalog adds the dated Foundry Standard rates: Global short context at $4/$0.40/$20 per M and long context at $8/$0.80/$30, matching OpenAI's direct promotional prices for input, cached input and output.",
+      "The same retail tranche carries the corresponding Data Zone rates ($4.40/$0.44/$22 short and $8.80/$0.88/$33 long) and Priority Processing rates ($8/$0.80/$40 short and $16/$1.60/$60 long globally; $8.80/$0.88/$44 and $17.60/$1.76/$66 in the commercial Data Zone). The catalog now includes Sol's long-context Data Zone lane and the newly published long-context Priority variants for Sol, Terra and Luna. Higher US-Government meter outliers remain excluded from the commercial-majority rows.",
+      "This closes the previous Foundry/direct Sol gap for the commercial meters. The full paged Foundry feed remains at 34 pages and 33,757 rows (33,587 Consumption / 170 Reservation), with 24 products, 1,864 product/meter pairs, 1,839 meter names and no row effective on or after September 2; the canonical fingerprint remains unchanged at 450ca6831ff5ba80b6ea7f7592eb6cd49c2f984fd33098608c21d90b8cee49e4.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — full Foundry Models feed and GPT-5.6 Sol meters",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      {
+        label: "Microsoft Azure — GPT-5.6 Foundry pricing and Sol promotion",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-5-6-now-available-in-microsoft-foundry/",
+      },
+      {
+        label: "OpenAI API pricing — GPT-5.6 Sol current promotion",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-14",
+  },
+  {
     date: "2026-09-12",
     title: "GPT-Rosalind gets an API price date; DeepSeek keeps V4 Pro",
     tag: "model",

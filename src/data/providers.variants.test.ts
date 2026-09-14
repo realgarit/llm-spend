@@ -107,6 +107,14 @@ function gpt56Global(model: string): PricingEntry {
   return entry;
 }
 
+function gpt56Tier(model: string, tier: "Global" | "DataZone"): PricingEntry {
+  const provider = getProvider("openai-azure");
+  const entry = provider?.entries.find((candidate) => candidate.model === model && candidate.tier === tier);
+
+  assert.ok(entry, `Expected a ${tier} ${model} entry`);
+  return entry;
+}
+
 function gpt6AstraDirect(model: string): PricingEntry {
   const provider = getProvider("openai-azure");
   const entry = provider?.entries.find(
@@ -812,6 +820,87 @@ for (const { model, base, priority } of GPT56_PRIORITY_CASES) {
     assert.equal(resolved.outputUsd, base.outputUsd);
   });
 }
+
+test("GPT-5.6 Sol resolves the commercial September 1 retail tranche", () => {
+  const cases = [
+    {
+      model: "GPT-5.6 Sol",
+      tier: "Global" as const,
+      standard: { inputUsd: 4.0, cachedUsd: 0.4, outputUsd: 20.0 },
+      priority: { inputUsd: 8.0, cachedUsd: 0.8, outputUsd: 40.0 },
+    },
+    {
+      model: "GPT-5.6 Sol",
+      tier: "DataZone" as const,
+      standard: { inputUsd: 4.4, cachedUsd: 0.44, outputUsd: 22.0 },
+      priority: { inputUsd: 8.8, cachedUsd: 0.88, outputUsd: 44.0 },
+    },
+    {
+      model: "GPT-5.6 Sol Long Context",
+      tier: "Global" as const,
+      standard: { inputUsd: 8.0, cachedUsd: 0.8, outputUsd: 30.0 },
+      priority: { inputUsd: 16.0, cachedUsd: 1.6, outputUsd: 60.0 },
+    },
+    {
+      model: "GPT-5.6 Sol Long Context",
+      tier: "DataZone" as const,
+      standard: { inputUsd: 8.8, cachedUsd: 0.88, outputUsd: 33.0 },
+      priority: { inputUsd: 17.6, cachedUsd: 1.76, outputUsd: 66.0 },
+    },
+  ] as const;
+
+  for (const { model, tier, standard, priority } of cases) {
+    const entry = gpt56Tier(model, tier);
+    const standardResolved = resolveRate(entry, at("2026-09-14T12:00:00Z"));
+    assert.deepEqual(
+      {
+        inputUsd: standardResolved.inputUsd,
+        cachedUsd: standardResolved.cachedUsd,
+        outputUsd: standardResolved.outputUsd,
+      },
+      standard,
+      `${model} ${tier} standard`,
+    );
+
+    const priorityResolved = resolveRate(entry, {
+      now: new Date("2026-09-14T12:00:00Z"),
+      serviceTier: "priority",
+    });
+    assert.deepEqual(
+      {
+        inputUsd: priorityResolved.inputUsd,
+        cachedUsd: priorityResolved.cachedUsd,
+        outputUsd: priorityResolved.outputUsd,
+      },
+      priority,
+      `${model} ${tier} priority`,
+    );
+    assert.equal(priorityResolved.confidence, "official");
+  }
+});
+
+test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority meters", () => {
+  for (const [model, expected] of [
+    ["GPT-5.6 Terra Long Context", { inputUsd: 8.0, cachedUsd: 0.8, outputUsd: 36.0 }],
+    ["GPT-5.6 Luna Long Context", { inputUsd: 0.8, cachedUsd: 0.08, outputUsd: 3.6 }],
+  ] as const) {
+    const resolved = resolveRate(gpt56Global(model), {
+      now: new Date("2026-09-14T12:00:00Z"),
+      serviceTier: "priority",
+    });
+
+    assert.equal(resolved.label, "Priority (from 2026-09-01)");
+    assert.deepEqual(
+      {
+        inputUsd: resolved.inputUsd,
+        cachedUsd: resolved.cachedUsd,
+        outputUsd: resolved.outputUsd,
+      },
+      expected,
+      model,
+    );
+  }
+});
 
 // ---------------------------------------------------------------------------
 // Guard: this migration must not change what the site shows today. Rendering

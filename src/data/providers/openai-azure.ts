@@ -5,10 +5,10 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while GPT-Rosalind Research adds a future-dated specialist lane. Azure still trails OpenAI direct on the GPT-5.6 Sol promotion.",
+  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while GPT-Rosalind Research adds a future-dated specialist lane. GPT-5.6 Sol's commercial Foundry meters now carry the direct promotional rate.",
   intro: [
     "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. The current retail feed also carries a separate 20% Data Zone group for 14 non-US regions on Astra; the catalog keeps the published US Data Zone row as its primary Data Zone lane and records the split below. OpenAI now also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. Cache-write prices are otherwise published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
-    "That 1:1 parity is not holding. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. Then on 2026-08-21 OpenAI cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\" — and the Foundry Sol meters have not moved. Every Sol row below is the Azure meter, still on its original 2026-07-01 tranche, which now runs 1.25x OpenAI's direct input rate and 1.50x its direct output rate. Terra and Luna remain at parity.",
+    "That 1:1 parity briefly broke. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. OpenAI then cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\". The commercial Foundry retail feed now carries those Sol rates effective 2026-09-01, plus the corresponding 10% Data Zone and Priority Processing meters, so the previous Foundry/direct gap is closed for the published commercial lanes.",
   ],
   entries: [
     {
@@ -181,20 +181,40 @@ export const openaiAzure: Provider = {
       outputUsd: 30.0,
       confidence: "official",
       notes:
-        "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09. No longer at parity with OpenAI direct: OpenAI cut Sol to $4.00/$0.40/$20.00 on 2026-08-21 as promotional pricing, and this Foundry meter has not followed — Foundry is 1.25x direct on input and cached input, and 1.50x on output.",
+        "Flagship (hardest reasoning / coding / agentic). GA 2026-07-09. The original Foundry Global meter was $5.00/$0.50/$30.00; a commercial retail tranche effective 2026-09-01 now carries $4.00/$0.40/$20.00, matching OpenAI's promotional direct rate.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std Gl, effective 2026-07-01; captured 2026-07-21, re-verified unchanged in a full paged sweep on 2026-08-22 — all sol meters still carry the single 2026-07-01 tranche, with no 2026-08-01 tranche of the kind that carried the Terra and Luna cuts). Cache write bills at 1.25x uncached input ($6.25/M meter); reads stay ~90% off. OpenAI's own rate for gpt-5.6-sol, read via raw DOM from developers.openai.com/api/docs/pricing on 2026-08-22, is $4.00/$0.40/$20.00 with a $5.00/M cache write, labelled promotional and \"available at least through November 21, 2026\".",
+        "Azure Retail Prices API, serviceName 'Foundry Models', captured 2026-09-14: the original '5.6 sol ShortCo Inp/Cd Inp/Opt Std Gl 1M Tokens' meters were $5.00/$0.50/$30.00 effective 2026-07-01; the commercial '5.6 sol ShortCo Inp Std Gl', '5.6 sol ShortCo Cd Inp Std Gl', '5.6 sol ShortCo Cd Wr Std Gl' and '5.6 sol ShortCo Opt Std Gl 1M Tokens' meters are $4.00/$0.40/$5.00/$20.00 per M effective 2026-09-01 across 24 Global regions. OpenAI's official API pricing page lists the matching $4.00/$0.40/$20.00 direct promotion through at least November 21, 2026; the dated Standard variant below represents the current Azure retail rate.",
       effectiveDate: "2026-07-21",
       variants: [
         {
           label: "Priority",
-          conditions: { serviceTier: "priority" },
+          conditions: { until: "2026-09-01T00:00:00Z", serviceTier: "priority" },
           inputUsd: 10.0,
           cachedUsd: 1.0,
           outputUsd: 60.0,
           confidence: "official",
           sourceNote:
-            "Azure Retail Prices API 'Foundry Models', queried live 2026-08-15 for meterName containing both '5.6' and 'pp' (444 items, no pagination): '5.6 sol ShortCo Inp PP Gl' $10.00/M, '5.6 sol ShortCo Cd Inp PP Gl' $1.00/M, '5.6 sol ShortCo Opt PP Gl' $60.00/M — exactly 2x this row's Standard Global rate on every dimension, uniform across all 24 Global regions sampled, single effective date 2026-07-01. Azure calls this tier 'PP' (priority processing) in its meter names; it maps to this schema's 'priority' service tier. Short-context (ShortCo) only — a full sweep of the same query found zero 'LongCo' PP meters for any GPT-5.6 variant.",
+            "Azure Retail Prices API 'Foundry Models', captured 2026-09-14: the pre-promotion '5.6 sol ShortCo Inp/Cd Inp/Opt PP Gl' meters were $10.00/$1.00/$60.00 per M effective 2026-07-01. Azure calls this tier 'PP' (priority processing); it maps to this schema's 'priority' service tier. The later commercial September 1 tranche is represented by the dated Priority variant below.",
+        },
+        {
+          label: "Standard (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z" },
+          inputUsd: 4.0,
+          cachedUsd: 0.4,
+          outputUsd: 20.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol ShortCo Inp Std Gl', '5.6 sol ShortCo Cd Inp Std Gl' and '5.6 sol ShortCo Opt Std Gl 1M Tokens' meters are $4.00/$0.40/$20.00 per M effective 2026-09-01 across 24 Global regions; the companion cache-write meter is $5.00/M and is outside this schema.",
+        },
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 8.0,
+          cachedUsd: 0.8,
+          outputUsd: 40.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol ShortCo Inp PP Gl', '5.6 sol ShortCo Cd Inp PP Gl' and '5.6 sol ShortCo Opt PP Gl 1M Tokens' meters are $8.00/$0.80/$40.00 per M effective 2026-09-01 across 24 Global regions; the companion cache-write meter is $10.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
         },
       ],
     },
@@ -206,10 +226,32 @@ export const openaiAzure: Provider = {
       outputUsd: 33.0,
       confidence: "official",
       notes:
-        "~10% Data Zone premium over Global. Because the Global Sol meter did not follow OpenAI's 2026-08-21 promotional cut, this row is roughly 1.38x OpenAI's direct input rate and 1.65x its direct output rate.",
+        "~10% Data Zone premium over the commercial Global Sol rate. The original Foundry Data Zone meter was $5.50/$0.55/$33.00; the commercial September 1, 2026 tranche now carries $4.40/$0.44/$22.00.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol Std DZ, effective 2026-07-01; captured 2026-07-21, re-verified unchanged 2026-08-22 across the 13 US/EU Data Zone regions).",
+        "Azure Retail Prices API, serviceName 'Foundry Models', captured 2026-09-14: the commercial '5.6 sol ShortCo Inp Std DZ', '5.6 sol ShortCo Cd Inp Std DZ', '5.6 sol ShortCo Cd Wr Std DZ' and '5.6 sol ShortCo Opt Std DZ 1M Tokens' meters are $4.40/$0.44/$5.50/$22.00 per M effective 2026-09-01 across 13 US/EU Data Zone regions. Separate US-Government rows are $5.50/$0.55/$27.50 and are excluded from the commercial lane.",
       effectiveDate: "2026-07-21",
+      variants: [
+        {
+          label: "Standard (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z" },
+          inputUsd: 4.4,
+          cachedUsd: 0.44,
+          outputUsd: 22.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol ShortCo Inp Std DZ', '5.6 sol ShortCo Cd Inp Std DZ' and '5.6 sol ShortCo Opt Std DZ 1M Tokens' meters are $4.40/$0.44/$22.00 per M effective 2026-09-01 across 13 US/EU Data Zone regions; the companion cache-write meter is $5.50/M and is outside this schema.",
+        },
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 8.8,
+          cachedUsd: 0.88,
+          outputUsd: 44.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol ShortCo Inp PP DZ', '5.6 sol ShortCo Cd Inp PP DZ' and '5.6 sol ShortCo Opt PP DZ 1M Tokens' meters are $8.80/$0.88/$44.00 per M effective 2026-09-01 across 13 US/EU Data Zone regions; the companion cache-write meter is $11.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
+        },
+      ],
     },
     {
       model: "GPT-5.6 Sol Long Context",
@@ -219,10 +261,57 @@ export const openaiAzure: Provider = {
       outputUsd: 45.0,
       confidence: "official",
       notes:
-        "Long Context tier; all meters roughly double the short-context rates. Also left behind by OpenAI's 2026-08-21 promotional Sol cut, which took the direct long-context rate to $8.00/$0.80/$30.00 — so Foundry is 1.25x direct on input and 1.50x on output here too.",
+        "Long Context tier; the original Foundry rate was $10.00/$1.00/$45.00. The commercial September 1, 2026 retail tranche now carries $8.00/$0.80/$30.00, matching OpenAI's direct long-context promotion.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models' meters (5.6 sol LongCo Std Gl, effective 2026-07-01; captured 2026-07-21, re-verified unchanged 2026-08-22). OpenAI's direct long-context rate for gpt-5.6-sol, read via raw DOM on 2026-08-22, is $8.00/$0.80/$30.00 with a $10.00/M cache write.",
+        "Azure Retail Prices API, serviceName 'Foundry Models', captured 2026-09-14: the original '5.6 sol LongCo Inp/Cd Inp/Opt Std Gl 1M Tokens' meters were $10.00/$1.00/$45.00 effective 2026-07-01; the commercial '5.6 sol LongCo Inp Std Gl', '5.6 sol LongCo Cd Inp Std Gl', '5.6 sol LongCo Cd Wr Std Gl' and '5.6 sol LongCo Opt Std Gl 1M Tokens' meters are $8.00/$0.80/$10.00/$30.00 per M effective 2026-09-01 across 24 Global regions. OpenAI's official API pricing page lists the matching $8.00/$0.80/$30.00 direct long-context promotion; the dated variants below represent the current Azure retail rates.",
       effectiveDate: "2026-07-21",
+      variants: [
+        {
+          label: "Standard (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z" },
+          inputUsd: 8.0,
+          cachedUsd: 0.8,
+          outputUsd: 30.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol LongCo Inp Std Gl', '5.6 sol LongCo Cd Inp Std Gl' and '5.6 sol LongCo Opt Std Gl 1M Tokens' meters are $8.00/$0.80/$30.00 per M effective 2026-09-01 across 24 Global regions; the companion cache-write meter is $10.00/M and is outside this schema.",
+        },
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 16.0,
+          cachedUsd: 1.6,
+          outputUsd: 60.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol LongCo Inp PP Gl', '5.6 sol LongCo Cd Inp PP Gl' and '5.6 sol LongCo Opt PP Gl 1M Tokens' meters are $16.00/$1.60/$60.00 per M effective 2026-09-01 across 25 Global regions; the companion cache-write meter is $20.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
+        },
+      ],
+    },
+    {
+      model: "GPT-5.6 Sol Long Context",
+      tier: "DataZone",
+      inputUsd: 8.8,
+      cachedUsd: 0.88,
+      outputUsd: 33.0,
+      confidence: "official",
+      notes:
+        "New commercial Data Zone long-context lane, effective 2026-09-01; it carries the same ~10% Data Zone premium as the short-context row. Priority Processing is also published for this lane.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', captured 2026-09-14: commercial '5.6 sol LongCo Inp Std DZ', '5.6 sol LongCo Cd Inp Std DZ' and '5.6 sol LongCo Opt Std DZ 1M Tokens' meters are $8.80/$0.88/$33.00 per M effective 2026-09-01 across 13 US/EU Data Zone regions. Separate US-Government rows are $11.00/$1.10/$41.25 and are excluded from the commercial lane; the companion cache-write meter is $11.00/M.",
+      effectiveDate: "2026-09-01",
+      variants: [
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 17.6,
+          cachedUsd: 1.76,
+          outputUsd: 66.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol LongCo Inp PP DZ', '5.6 sol LongCo Cd Inp PP DZ' and '5.6 sol LongCo Opt PP DZ 1M Tokens' meters are $17.60/$1.76/$66.00 per M effective 2026-09-01 across 13 US/EU Data Zone regions; the companion cache-write meter is $22.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
+        },
+      ],
     },
     {
       model: "GPT-5.6 Terra",
@@ -245,7 +334,7 @@ export const openaiAzure: Provider = {
           outputUsd: 24.0,
           confidence: "official",
           sourceNote:
-            "Azure Retail Prices API 'Foundry Models', full paged sweep captured 2026-08-20: '5.6 terra ShortCo Inp PP Gl 1M Tokens' $4.00/M, 'Cd Inp PP Gl' $0.40/M, 'Opt PP Gl' $24.00/M — effective 2026-08-01, exactly 2x this row's Standard Global rate on every dimension. The PP meters were cut alongside the Standard ones, so this tier tracks 2x the post-cut rate (it read $5.00/$0.50/$30.00 before 2026-08-01). Azure calls this tier 'PP' (priority processing); it maps to this schema's 'priority' service tier, and OpenAI renamed the same tier 'Fast mode' on 2026-07-30. Short-context (ShortCo) only — zero 'LongCo' PP meters exist for any GPT-5.6 variant.",
+            "Azure Retail Prices API 'Foundry Models', captured 2026-08-20: '5.6 terra ShortCo Inp PP Gl 1M Tokens' $4.00/M, 'Cd Inp PP Gl' $0.40/M and 'Opt PP Gl' $24.00/M are effective 2026-08-01, exactly 2x this row's Standard Global rate on every dimension. The PP meters were cut alongside the Standard ones, so this tier tracks 2x the post-cut rate. Azure calls this tier 'PP' (priority processing); it maps to this schema's 'priority' service tier, and OpenAI renamed the same tier 'Fast mode' on 2026-07-30. The feed now also publishes LongCo PP meters on the long-context rows effective 2026-09-01.",
         },
       ],
     },
@@ -257,10 +346,22 @@ export const openaiAzure: Provider = {
       outputUsd: 18.0,
       confidence: "official",
       notes:
-        "Long Context tier, for prompts past the short-context threshold; input and cached input are 2x the short-context rates, output 1.5x. Cut from $5.00/$0.50/$22.50 in the same 2026-08-01 Foundry tranche as the short-context Terra row, matching OpenAI's direct long-context rate exactly.",
+        "Long Context tier, for prompts past the short-context threshold; input and cached input are 2x the short-context rates, output 1.5x. Cut from $5.00/$0.50/$22.50 in the 2026-08-01 Foundry tranche as the short-context Terra row, matching OpenAI's direct long-context rate exactly. A commercial long-context Priority Processing meter arrived in the 2026-09-01 tranche.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models', full paged sweep captured 2026-08-20: '5.6 terra LongCo Inp Std Gl 1M Tokens' $4.00/M, 'Cd Inp Std Gl' $0.40/M, 'Cd Wr Std Gl' $5.00/M, 'Opt Std Gl' $18.00/M — effective 2026-08-01, with no 2026-07-01 terra tranche remaining. Equals OpenAI's published direct long-context rate for gpt-5.6-terra ($4.00/$0.40/$18.00), read via raw DOM from developers.openai.com/api/docs/pricing the same day. No LongCo priority (PP) meter exists for any GPT-5.6 variant.",
+        "Azure Retail Prices API 'Foundry Models', captured 2026-09-14: '5.6 terra LongCo Inp Std Gl 1M Tokens' $4.00/M, 'Cd Inp Std Gl' $0.40/M, 'Cd Wr Std Gl' $5.00/M and 'Opt Std Gl' $18.00/M are effective 2026-08-01 across 24 Global regions. The newly published commercial '5.6 terra LongCo Inp PP Gl', '5.6 terra LongCo Cd Inp PP Gl', '5.6 terra LongCo Cd Wr PP Gl' and '5.6 terra LongCo Opt PP Gl 1M Tokens' meters are $8.00/$0.80/$10.00/$36.00 per M effective 2026-09-01 across 25 Global regions; cache writes remain outside this schema.",
       effectiveDate: "2026-08-20",
+      variants: [
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 8.0,
+          cachedUsd: 0.8,
+          outputUsd: 36.0,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 terra LongCo Inp PP Gl', '5.6 terra LongCo Cd Inp PP Gl' and '5.6 terra LongCo Opt PP Gl 1M Tokens' meters are $8.00/$0.80/$36.00 per M effective 2026-09-01 across 25 Global regions; the companion cache-write meter is $10.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
+        },
+      ],
     },
     {
       model: "GPT-5.6 Luna",
@@ -283,7 +384,7 @@ export const openaiAzure: Provider = {
           outputUsd: 2.4,
           confidence: "official",
           sourceNote:
-            "Azure Retail Prices API 'Foundry Models', full paged sweep captured 2026-08-20: '5.6 luna ShortCo Inp PP Gl 1M Tokens' $0.40/M, 'Cd Inp PP Gl' $0.04/M, 'Opt PP Gl' $2.40/M — effective 2026-08-01, exactly 2x this row's Standard Global rate on every dimension. The PP meters were cut alongside the Standard ones, so this tier tracks 2x the post-cut rate (it read $2.00/$0.20/$12.00 before 2026-08-01). Azure calls this tier 'PP' (priority processing); it maps to this schema's 'priority' service tier, and OpenAI renamed the same tier 'Fast mode' on 2026-07-30. Short-context (ShortCo) only — zero 'LongCo' PP meters exist for any GPT-5.6 variant.",
+            "Azure Retail Prices API 'Foundry Models', captured 2026-08-20: '5.6 luna ShortCo Inp PP Gl 1M Tokens' $0.40/M, 'Cd Inp PP Gl' $0.04/M and 'Opt PP Gl' $2.40/M are effective 2026-08-01, exactly 2x this row's Standard Global rate on every dimension. The PP meters were cut alongside the Standard ones, so this tier tracks 2x the post-cut rate. Azure calls this tier 'PP' (priority processing); it maps to this schema's 'priority' service tier, and OpenAI renamed the same tier 'Fast mode' on 2026-07-30. The feed now also publishes LongCo PP meters on the long-context rows effective 2026-09-01.",
         },
       ],
     },
@@ -295,10 +396,22 @@ export const openaiAzure: Provider = {
       outputUsd: 1.8,
       confidence: "official",
       notes:
-        "Long Context tier, for prompts past the short-context threshold; input and cached input are 2x the short-context rates, output 1.5x. Cut from $2.00/$0.20/$9.00 in the same 2026-08-01 Foundry tranche as the short-context Luna row, matching OpenAI's direct long-context rate exactly.",
+        "Long Context tier, for prompts past the short-context threshold; input and cached input are 2x the short-context rates, output 1.5x. Cut from $2.00/$0.20/$9.00 in the 2026-08-01 Foundry tranche as the short-context Luna row, matching OpenAI's direct long-context rate exactly. A commercial long-context Priority Processing meter arrived in the 2026-09-01 tranche.",
       sourceNote:
-        "Azure Retail Prices API 'Foundry Models', full paged sweep captured 2026-08-20: '5.6 luna LongCo Inp Std Gl 1M Tokens' $0.40/M, 'Cd Inp Std Gl' $0.04/M, 'Cd Wr Std Gl' $0.50/M, 'Opt Std Gl' $1.80/M — effective 2026-08-01, with no 2026-07-01 luna tranche remaining. Equals OpenAI's published direct long-context rate for gpt-5.6-luna ($0.40/$0.04/$1.80), read via raw DOM from developers.openai.com/api/docs/pricing the same day. No LongCo priority (PP) meter exists for any GPT-5.6 variant.",
+        "Azure Retail Prices API 'Foundry Models', captured 2026-09-14: '5.6 luna LongCo Inp Std Gl 1M Tokens' $0.40/M, 'Cd Inp Std Gl' $0.04/M, 'Cd Wr Std Gl' $0.50/M and 'Opt Std Gl' $1.80/M are effective 2026-08-01 across 24 Global regions. The newly published commercial '5.6 luna LongCo Inp PP Gl', '5.6 luna LongCo Cd Inp PP Gl', '5.6 luna LongCo Cd Wr PP Gl' and '5.6 luna LongCo Opt PP Gl 1M Tokens' meters are $0.80/$0.08/$1.00/$3.60 per M effective 2026-09-01 across 25 Global regions; cache writes remain outside this schema.",
       effectiveDate: "2026-08-20",
+      variants: [
+        {
+          label: "Priority (from 2026-09-01)",
+          conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 0.8,
+          cachedUsd: 0.08,
+          outputUsd: 3.6,
+          confidence: "official",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 luna LongCo Inp PP Gl', '5.6 luna LongCo Cd Inp PP Gl' and '5.6 luna LongCo Opt PP Gl 1M Tokens' meters are $0.80/$0.08/$3.60 per M effective 2026-09-01 across 25 Global regions; the companion cache-write meter is $1.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
+        },
+      ],
     },
     {
       model: "GPT-5.5",
@@ -409,13 +522,13 @@ export const openaiAzure: Provider = {
       ],
     },
     {
-      title: "Sol is now the model Foundry has not repriced",
+      title: "Sol's Foundry promotion reached the retail feed",
       tone: "warning",
       body: [
         "OpenAI cut GPT-5.6 Terra and Luna on 2026-07-30, and for three weeks the Azure Foundry meters did not follow. That gap closed on 2026-08-01, when a new Foundry tranche picked up the cut rates on Global, Data Zone, long-context and priority meters alike. Terra and Luna are at 1:1 with OpenAI direct today.",
-        "The same thing has now happened to the flagship. On 2026-08-21 OpenAI cut GPT-5.6 Sol to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context — its pricing page calls this promotional and \"available at least through November 21, 2026\" — while every Sol meter in the Azure retail catalog still sits on its original 2026-07-01 tranche at $5.00/$0.50/$30.00. Running Sol on Foundry Global costs 25% more per input token and 50% more per output token than going direct to OpenAI, and Data Zone stacks its usual 10% on top of that.",
-        "Two things follow. If you are on Foundry for Sol specifically and have no data-residency requirement, the direct API is materially cheaper for as long as the promotion runs. And because OpenAI framed the cut as promotional with an open-ended \"at least through\" date rather than a fixed reversion, no reversion rate is published — this catalog does not stage a future price it cannot cite, so the Sol rows track the Azure meter and the gap is described here instead.",
-        "Worth remembering: when Terra and Luna lagged, Azure support answers and at least one downstream cost tracker described the cut as already applied on Azure while the retail catalog still billed the old rate. The retail meter is what bills you.",
+        "The same lag then appeared for the flagship: OpenAI cut GPT-5.6 Sol on 2026-08-21, while the original Foundry meters remained at $5.00/$0.50/$30.00. The commercial Azure retail feed now contains a September 1 tranche at $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, matching the direct promotional rates; its Data Zone and Priority Processing groups carry the corresponding published premiums.",
+        "The direct promotion remains open-ended (at least through November 21, 2026 on OpenAI's page), while Microsoft's Foundry announcement says at least through November 30. The catalog follows the exact Azure retail meter for the current Foundry rate and keeps the original fields so the dated transition remains inspectable.",
+        "Worth remembering: when Terra and Luna lagged, Azure support answers and at least one downstream cost tracker described the cut as already applied on Azure while the retail catalog still billed the old rate. The retail meter is what bills you; this time it has caught up.",
       ],
     },
     {
