@@ -309,6 +309,38 @@ test("GPT-6 Astra Foundry rows are backed by the current retail feed", () => {
   assert.ok(rows.every((entry) => !entry.sourceNote?.includes("pending retail")));
 });
 
+test("MAI-Thinking-1 matches the named commercial Foundry meters", () => {
+  const provider = getProvider("microsoft-ai");
+  const [entry] = provider?.entries ?? [];
+
+  assert.ok(entry);
+  assert.deepEqual(
+    {
+      model: entry.model,
+      tier: entry.tier,
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      contextWindow: entry.contextWindow,
+      maxOutput: entry.maxOutput,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      model: "MAI-Thinking-1",
+      tier: "Global",
+      inputUsd: 2,
+      cachedUsd: 0.2,
+      outputUsd: 8,
+      contextWindow: 256_000,
+      maxOutput: 64_000,
+      effectiveDate: "2026-08-01",
+    },
+  );
+  assert.equal(entry.confidence, "official");
+  assert.ok(entry.sourceNote?.includes("MAI-Thinking-1 Inp glbl 1M Tokens"));
+  assert.ok(entry.sourceNote?.includes("captured 2026-09-16"));
+});
+
 test("GLM-5.3 Foundry rows match the current Fireworks retail meters", () => {
   const provider = getProvider("glm");
   const rows = provider?.entries.filter(

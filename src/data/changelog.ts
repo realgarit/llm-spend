@@ -23,6 +23,31 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-16",
+    title: "MAI-Thinking-1 gets a priced Foundry lane",
+    tag: "model",
+    body: [
+      "The catalog now includes Microsoft's MAI-Thinking-1 public-preview reasoning model as a Microsoft Foundry Global Standard lane at $2.00/$0.20/$8.00 per 1M input, cached-input and output tokens.",
+      "Microsoft's current Learn guide identifies model version 2026-06-01, GlobalStandard deployment, a 256K-token context window and a 64K output cap; PTU deployment is not currently supported. The Azure Retail Prices API exposes matching named input, cached-input and output meters effective 2026-08-01 across 32 commercial regions. Separate US Government rows at $2.50/$0.25/$10.00 are excluded from the commercial-majority lane.",
+      "This resolves the earlier MAI meter-identity gap: the current meter and SKU names both identify MAI-Thinking-1, while the feed has no Data Zone token lane for it. No other tracked provider rate or availability change was confirmed in this audit.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Learn — deploy and use MAI-Thinking-1 in Microsoft Foundry",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai-thinking",
+      },
+      {
+        label: "Microsoft AI — introducing MAI-Thinking-1",
+        href: "https://microsoft.ai/news/introducing-mai-thinking-1/",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-16",
+  },
+  {
     date: "2026-09-14",
     title: "GPT-5.6 Sol promotion reaches Foundry retail meters",
     tag: "pricing",

@@ -14,6 +14,10 @@ const OFFICIAL_SOURCES: Record<ProviderSlug, SourceLink> = {
   qwen: { label: "Model Studio pricing", href: "https://www.alibabacloud.com/help/en/model-studio/model-pricing" },
   mistral: { label: "Mistral inference pricing", href: "https://docs.mistral.ai/inference/pricing" },
   minimax: { label: "MiniMax pay-as-you-go", href: "https://platform.minimax.io/docs/guides/pricing-paygo" },
+  "microsoft-ai": {
+    label: "Microsoft Learn — MAI-Thinking-1 in Foundry",
+    href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai-thinking",
+  },
   embeddings: {
     label: "Azure Retail Prices API — Foundry Models and embeddings",
     href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",

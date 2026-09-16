@@ -26,6 +26,7 @@ import { xai } from "./xai";
 import { qwen } from "./qwen";
 import { mistral } from "./mistral";
 import { minimax } from "./minimax";
+import { microsoftAi } from "./microsoft-ai";
 import { embeddings } from "./embeddings";
 
 export const providers: Provider[] = [
@@ -39,6 +40,7 @@ export const providers: Provider[] = [
   qwen,
   mistral,
   minimax,
+  microsoftAi,
   embeddings,
 ];
 

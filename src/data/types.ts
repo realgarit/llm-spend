@@ -19,6 +19,7 @@ export type ProviderSlug =
   | "qwen"
   | "mistral"
   | "minimax"
+  | "microsoft-ai"
   | "embeddings";
 
 /** A labeled external source used to trace catalog information. */
