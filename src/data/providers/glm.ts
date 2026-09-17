@@ -90,6 +90,21 @@ export const glm: Provider = {
       effectiveDate: "2026-09-01",
     },
     {
+      model: "GLM-5.3-Flash",
+      host: "Fireworks-hosted",
+      tier: "Global",
+      inputUsd: 0.188,
+      cachedUsd: 0.038,
+      outputUsd: 0.625,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes:
+        "New Fireworks-hosted Microsoft Foundry Global lane for the multimodal Flash model. The Foundry rate is separate from Fireworks' direct serverless price.",
+      sourceNote:
+        "Azure Retail Prices API, productName 'Azure Fireworks Models', captured 2026-09-17: effective 2026-09-01 meters 'FW GLM-5.3-Flash Gl Inp Tokens' $0.000188/1K ($0.188/M), 'FW GLM-5.3-Flash Gl Cd Inp Tokens' $0.000038/1K ($0.038/M), and 'FW GLM-5.3-Flash Gl Opt Tokens' $0.000625/1K ($0.625/M), uniform across 20 commercial Global regions. Fireworks' official model page identifies GLM 5.3 Flash as a ready serverless multimodal model with a 1.04M-token context and direct $0.15/$0.03/$0.50 per M rates; this row is the separately metered Foundry resale lane.",
+      effectiveDate: "2026-09-01",
+    },
+    {
       model: "GLM-5",
       host: "Z.ai direct API",
       tier: "Direct",

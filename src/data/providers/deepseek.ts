@@ -160,6 +160,21 @@ export const deepseek: Provider = {
       ],
     },
     {
+      model: "DeepSeek-V4.1 Flash",
+      host: "Fireworks-hosted",
+      tier: "Global",
+      inputUsd: 0.375,
+      cachedUsd: 0.008,
+      outputUsd: 1.5,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes:
+        "New Fireworks-hosted Microsoft Foundry Global lane. Its rates are distinct from both DeepSeek's direct API and Fireworks' own direct endpoint.",
+      sourceNote:
+        "Azure Retail Prices API, productName 'Azure Fireworks Models', captured 2026-09-17: effective 2026-09-01 meters 'FW DS-V4.1-Flash Gl Inp Tokens' $0.000375/1K ($0.375/M), 'FW DS-V4.1-Flash Gl Cd Inp Tokens' $0.000008/1K ($0.008/M), and 'FW DS-V4.1-Flash Gl Opt Tokens' $0.0015/1K ($1.50/M), uniform across 20 commercial Global regions. Fireworks' official model page identifies DeepSeek V4.1 Flash as a ready serverless model with a 1.04M-token context and the direct $0.22/$0.007/$0.66 per M rates; this row is the separately metered Foundry resale lane.",
+      effectiveDate: "2026-09-01",
+    },
+    {
       model: "DeepSeek-V4 Pro",
       host: "Fireworks direct API",
       tier: "Direct",

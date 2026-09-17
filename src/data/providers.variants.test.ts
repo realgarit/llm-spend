@@ -41,7 +41,9 @@ function qwenMaxPromo(): PricingEntry {
 
 function glm53Flash(): PricingEntry {
   const provider = getProvider("glm");
-  const entry = provider?.entries.find((candidate) => candidate.model === "GLM-5.3-Flash");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === "GLM-5.3-Flash" && candidate.tier === "Direct",
+  );
 
   assert.ok(entry, "Expected the GLM-5.3-Flash entry");
   return entry;
@@ -339,6 +341,64 @@ test("MAI-Thinking-1 matches the named commercial Foundry meters", () => {
   assert.equal(entry.confidence, "official");
   assert.ok(entry.sourceNote?.includes("MAI-Thinking-1 Inp glbl 1M Tokens"));
   assert.ok(entry.sourceNote?.includes("captured 2026-09-16"));
+});
+
+test("MAI-Code-1.1-Flash matches the new commercial Foundry meters", () => {
+  const provider = getProvider("microsoft-ai");
+  const entry = provider?.entries.find((candidate) => candidate.model === "MAI-Code-1.1-Flash");
+
+  assert.ok(entry);
+  assert.deepEqual(
+    {
+      tier: entry.tier,
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      tier: "Global",
+      inputUsd: 0.2,
+      cachedUsd: 0.02,
+      outputUsd: 1.2,
+      effectiveDate: "2026-09-01",
+    },
+  );
+  assert.equal(entry.confidence, "official");
+  assert.ok(entry.sourceNote?.includes("Code 1.1 Flash Input glbl 1M Tokens"));
+  assert.ok(entry.sourceNote?.includes("captured 2026-09-17"));
+});
+
+test("new Fireworks Global lanes match the September 1 retail meters", () => {
+  const deepseek = getProvider("deepseek")?.entries.find(
+    (entry) => entry.model === "DeepSeek-V4.1 Flash" && entry.host === "Fireworks-hosted" && entry.tier === "Global",
+  );
+  const glm = getProvider("glm")?.entries.find(
+    (entry) => entry.model === "GLM-5.3-Flash" && entry.host === "Fireworks-hosted" && entry.tier === "Global",
+  );
+  const kimi = getProvider("kimi")?.entries.find(
+    (entry) => entry.model === "Kimi K3" && entry.host === "Fireworks-hosted" && entry.tier === "Global",
+  );
+
+  assert.ok(deepseek);
+  assert.ok(glm);
+  assert.ok(kimi);
+  assert.deepEqual(
+    [deepseek, glm, kimi].map(({ inputUsd, cachedUsd, outputUsd, effectiveDate }) => ({
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      effectiveDate,
+    })),
+    [
+      { inputUsd: 0.375, cachedUsd: 0.008, outputUsd: 1.5, effectiveDate: "2026-09-01" },
+      { inputUsd: 0.188, cachedUsd: 0.038, outputUsd: 0.625, effectiveDate: "2026-09-01" },
+      { inputUsd: 3, cachedUsd: 0.3, outputUsd: 15, effectiveDate: "2026-09-01" },
+    ],
+  );
+  assert.ok(deepseek.sourceNote?.includes("FW DS-V4.1-Flash Gl Inp Tokens"));
+  assert.ok(glm.sourceNote?.includes("FW GLM-5.3-Flash Gl Inp Tokens"));
+  assert.ok(kimi.sourceNote?.includes("FW Kimi-K3 Gl Inp Tokens"));
 });
 
 test("GLM-5.3 Foundry rows match the current Fireworks retail meters", () => {
