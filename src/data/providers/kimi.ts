@@ -76,6 +76,21 @@ export const kimi: Provider = {
     {
       model: "Kimi K3",
       host: "Fireworks-hosted",
+      tier: "Global",
+      inputUsd: 3.0,
+      cachedUsd: 0.3,
+      outputUsd: 15.0,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes:
+        "New Fireworks-hosted Microsoft Foundry Global lane. Its rates match Fireworks' own direct serverless rates; the separate Data Zone lane below carries the 10% premium.",
+      sourceNote:
+        "Azure Retail Prices API, productName 'Azure Fireworks Models', captured 2026-09-17: effective 2026-09-01 meters 'FW Kimi-K3 Gl Inp Tokens' $0.003/1K ($3.00/M), 'FW Kimi-K3 Gl Cd Inp Tokens' $0.0003/1K ($0.30/M), and 'FW Kimi-K3 Gl Opt Tokens' $0.015/1K ($15.00/M), uniform across 20 commercial Global regions. Fireworks' official Kimi K3 model page identifies the Moonshot AI model as ready for serverless inference at the same $3.00/$0.30/$15.00 per M rates with a 1.04M-token context.",
+      effectiveDate: "2026-09-01",
+    },
+    {
+      model: "Kimi K3",
+      host: "Fireworks-hosted",
       tier: "DataZone",
       inputUsd: 3.3,
       cachedUsd: 0.33,
@@ -83,9 +98,9 @@ export const kimi: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "Kimi K3's first Microsoft Foundry lane. Data Zone only — there is no Global meter for K3 under a model-named meter.",
+        "Fireworks-hosted Microsoft Foundry Data Zone counterpart to the Global lane above. Its 10% premium matches the published Fireworks regional pricing pattern.",
       sourceNote:
-        "Azure Retail Prices API, productName 'Azure Fireworks Models', meters 'FW Kimi K3 Inp DZ Tokens' ($0.0033/1K = $3.30/M), 'FW Kimi K3 Cd Inp DZ Tokens' ($0.00033/1K = $0.33/M) and 'FW Kimi K3 Opt DZ Tokens' ($0.0165/1K = $16.50/M), effective 2026-08-01, captured 2026-08-21. One uniform price group across all 20 commercial Data Zone regions, no US-Gov or rounding outlier. Exactly 1.10x Moonshot's direct rate ($3.00/$0.30/$15.00), the same Data Zone premium every other Fireworks-hosted lane on Foundry carries.",
+        "Azure Retail Prices API, productName 'Azure Fireworks Models', meters 'FW Kimi K3 Inp DZ Tokens' ($0.0033/1K = $3.30/M), 'FW Kimi K3 Cd Inp DZ Tokens' ($0.00033/1K = $0.33/M) and 'FW Kimi K3 Opt DZ Tokens' ($0.0165/1K = $16.50/M), effective 2026-08-01, captured 2026-08-21. One uniform price group across all 20 commercial Data Zone regions, no US-Gov or rounding outlier. Exactly 1.10x the new Fireworks Global lane and Moonshot's direct rate ($3.00/$0.30/$15.00), the same Data Zone premium every other Fireworks-hosted lane on Foundry carries.",
       effectiveDate: "2026-08-21",
     },
     {

@@ -23,6 +23,39 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-17",
+    title: "Four new Foundry token lanes arrive",
+    tag: "model",
+    body: [
+      "The Azure Retail Prices feed now exposes four newly named, token-priced lanes effective September 1, 2026: Fireworks-hosted DeepSeek V4.1 Flash Global at $0.375/$0.008/$1.50 per M, Fireworks-hosted GLM-5.3-Flash Global at $0.188/$0.038/$0.625, Fireworks-hosted Kimi K3 Global at $3/$0.30/$15, and Microsoft's MAI-Code-1.1-Flash Global at $0.20/$0.02/$1.20 (input/cached input/output).",
+      "The three Fireworks lanes are uniform across 20 commercial Global regions and are separate Foundry resale meters from Fireworks' own direct API prices. Kimi K3's existing Fireworks Data Zone lane remains listed at $3.30/$0.33/$16.50; the new Global meter closes the earlier Global-lane gap. MAI-Code-1.1-Flash has 35 commercial regions; its two higher-priced US Government rows are excluded from the commercial-majority lane.",
+      "The same feed update includes MAI image, web-grounding, Cohere page, and other non-token meters. Those remain outside this catalog's input/cache/output token schema. The full paged feed is now 35 pages and 34,446 rows (34,276 Consumption / 170 Reservation), with 24 products, 1,890 product/meter pairs, 1,863 meter names, and no row effective on or after September 2. The canonical fingerprint is now `df581e45f51a9ed3a3c3e58bdc0ee54e18c5f777dc3995b05fe3fdc86b6e461`; because no raw prior snapshot is persisted, the row-level cause of the upstream drift remains a watch.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — new Foundry token meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      {
+        label: "Microsoft AI — MAI-Code-1.1-Flash",
+        href: "https://microsoft.ai/news/mai-code-1-1-flash-br-better-faster-at-a-quarter-of-the-cost/",
+      },
+      {
+        label: "Fireworks — DeepSeek V4.1 Flash",
+        href: "https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash",
+      },
+      {
+        label: "Fireworks — GLM 5.3 Flash",
+        href: "https://fireworks.ai/models/fireworks/glm-5p3-flash",
+      },
+      {
+        label: "Fireworks — Kimi K3",
+        href: "https://fireworks.ai/models/fireworks/kimi-k3",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-17",
+  },
+  {
     date: "2026-09-16",
     title: "MAI-Thinking-1 gets a priced Foundry lane",
     tag: "model",
