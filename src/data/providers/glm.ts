@@ -6,9 +6,9 @@ export const glm: Provider = {
   slug: "glm",
   name: "GLM",
   org: "Zhipu / Z.ai",
-  tagline: "GLM-5.3 now has Fireworks-hosted Foundry Global and Data Zone lanes, while GLM-5.3-Flash remains the cheapest multimodal direct lane.",
+  tagline: "GLM-5.3 now has Fireworks-hosted Foundry Global and Data Zone lanes, while Z.ai's Flash and faster FlashX variants anchor the direct multimodal lanes.",
   intro: [
-    "GLM-5.3-Flash is now the newest and cheapest 5.x lane: Z.ai's native multimodal model is currently 50% off at $0.075/M input, $0.015/M cached input and $0.25/M output. The promotion ends at 24:00 on 2026-09-09 UTC+8, after which it returns to $0.15/$0.03/$0.50. It keeps a 1M-token window, 128K max output and always-enabled reasoning.",
+    "GLM-5.3-Flash remains the cheapest 5.x multimodal direct lane: Z.ai's native model is listed at $0.15/M input, $0.03/M cached input and $0.50/M output. Its faster FlashX sibling is now live at $0.37/$0.075/$1.25 and keeps the same 1M-token window and 128K max output. Flash remains 50% off only in the historical launch window already modeled below; FlashX is a separate direct API variant with no Foundry meter.",
     "GLM-5.3 is now also resold through Fireworks on Microsoft Foundry: Global is $1.75/$0.325/$5.50 per M and Data Zone is $2.10/$0.39/$6.60 (input/cached/output). Z.ai direct remains $1.40/$0.26/$4.40, and the model keeps a 1M-token window with 128K max output and always-enabled reasoning — three effort levels (low, high, max) rather than an on/off toggle.",
     "GLM-5.2 lifts the window to a real 1M tokens (up 5x from 5.1's 200K), with 131K max output, the practical win for agentic coding. Input and output match 5.1's Data Zone rate, but Azure now publishes a dedicated 5.2 cached-input meter at $0.15/M, well below 5.1's $0.286/M (see below).",
     "The original GLM-5 is still generally available and is the cheapest lane in this family: $1.10/M input and $3.52/M output on Foundry Data Zone, roughly 29% and 27% under 5.1 and 5.2, with the same 200K window as 5.1. If you do not need 5.2's 1M context, it is the value pick rather than a superseded model.",
@@ -205,6 +205,22 @@ export const glm: Provider = {
             "Z.ai official pricing page, captured 2026-08-28: GLM-5.3-Flash's strikethrough list prices are $0.15/M input, $0.03/M cached input and $0.50/M output; the page says the 50% promotion ends at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC.",
         },
       ],
+    },
+    {
+      model: "GLM-5.3-FlashX",
+      host: "Z.ai direct API",
+      tier: "Direct",
+      inputUsd: 0.37,
+      cachedUsd: 0.075,
+      outputUsd: 1.25,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Faster-serving sibling of GLM-5.3-Flash with the same multimodal 1M-token context and 128K maximum output. Z.ai's model guide says FlashX is live through the API but not yet available on the GLM Coding Plan.",
+      sourceNote:
+        "Z.ai official pricing page (docs.z.ai/guides/overview/pricing), captured 2026-09-18: GLM-5.3-FlashX is listed at $0.37/M input, $0.075/M cached input and $1.25/M output; the separate 'Limited-time Free' label applies to cached-input storage, which this schema does not model. Z.ai's official model guide (docs.z.ai/guides/vlm/glm-5.3-flash), captured 2026-09-18, identifies the API code as glm-5.3-flashx, supports video/image/text/file input, and lists a 1M-token context with 128K maximum output. A full paged Azure Retail Prices API sweep captured 2026-09-18 found no FlashX meter, so this is a direct-only lane.",
+      effectiveDate: "2026-09-18",
     },
   ],
   quirks: [

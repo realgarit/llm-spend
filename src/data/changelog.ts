@@ -23,6 +23,31 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-18",
+    title: "GLM-5.3-FlashX receives a direct API lane",
+    tag: "model",
+    body: [
+      "Z.ai's official pricing page now lists GLM-5.3-FlashX at $0.37/$0.075/$1.25 per 1M input, cached-input and output tokens. It is a separate, faster-serving sibling of GLM-5.3-Flash: the existing Flash lane remains the lower-cost option at its post-promotion $0.15/$0.03/$0.50 list rate.",
+      "The official model guide identifies the API code as `glm-5.3-flashx`, with video, image, text and file input, a 1M-token context window and 128K maximum output. The pricing page's separate limited-time-free cached-input-storage label is not a per-token cache-read rate and remains outside this schema.",
+      "A full paged Azure Retail Prices API sweep captured September 18 found no GLM-5.3-FlashX meter, so the new row is direct-only. The Foundry feed remains at 35 pages and 34,446 rows (34,276 Consumption / 170 Reservation), with 1,890 product/meter pairs and no row effective on or after September 2.",
+    ],
+    sources: [
+      {
+        label: "Z.ai official pricing — GLM-5.3-FlashX",
+        href: "https://docs.z.ai/guides/overview/pricing",
+      },
+      {
+        label: "Z.ai official model guide — GLM-5.3-Flash/FlashX",
+        href: "https://docs.z.ai/guides/vlm/glm-5.3-flash",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-18",
+  },
+  {
     date: "2026-09-17",
     title: "Four new Foundry token lanes arrive",
     tag: "model",

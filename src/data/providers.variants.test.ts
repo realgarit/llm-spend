@@ -439,6 +439,34 @@ test("GLM-5.3 Foundry rows match the current Fireworks retail meters", () => {
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-10")));
 });
 
+test("GLM-5.3-FlashX carries Z.ai's official direct rate and limits", () => {
+  const entry = getProvider("glm")?.entries.find(
+    (candidate) => candidate.model === "GLM-5.3-FlashX" && candidate.tier === "Direct",
+  );
+
+  assert.ok(entry);
+  assert.deepEqual(
+    {
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      contextWindow: entry.contextWindow,
+      maxOutput: entry.maxOutput,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      inputUsd: 0.37,
+      cachedUsd: 0.075,
+      outputUsd: 1.25,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      effectiveDate: "2026-09-18",
+    },
+  );
+  assert.ok(entry.sourceNote?.includes("glm-5.3-flashx"));
+  assert.ok(entry.sourceNote?.includes("no FlashX meter"));
+});
+
 test("Grok 4.6 Foundry rows use the official Global meters only", () => {
   const provider = getProvider("xai");
   const rows = provider?.entries.filter((entry) => entry.model.startsWith("Grok 4.6") && entry.tier !== "Direct");
