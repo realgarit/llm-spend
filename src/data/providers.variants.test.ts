@@ -140,6 +140,16 @@ function gptRosalindResearch(): PricingEntry {
   return entry;
 }
 
+function grokDirect(model: string): PricingEntry {
+  const provider = getProvider("xai");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === model && candidate.host === "xAI direct API" && candidate.tier === "Direct",
+  );
+
+  assert.ok(entry, `Expected a direct xAI ${model} entry`);
+  return entry;
+}
+
 const at = (iso: string) => ({ now: new Date(iso) });
 
 // ---------------------------------------------------------------------------
@@ -504,6 +514,49 @@ test("Grok 4.6 Foundry rows use the official Global meters only", () => {
     ],
   );
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-11")));
+});
+
+test("Grok 4.7 uses xAI's official direct pricing and has no Foundry lane", () => {
+  const provider = getProvider("xai");
+  const entry = grokDirect("Grok 4.7");
+
+  assert.deepEqual(
+    {
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      contextWindow: entry.contextWindow,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      inputUsd: 2,
+      cachedUsd: 0.5,
+      outputUsd: 6,
+      contextWindow: 500_000,
+      effectiveDate: "2026-09-21",
+    },
+  );
+
+  const standard = resolveRate(entry, { now: new Date("2026-09-21T12:00:00Z") });
+  assert.equal(standard.variant, null);
+  assert.deepEqual(
+    { inputUsd: standard.inputUsd, cachedUsd: standard.cachedUsd, outputUsd: standard.outputUsd },
+    { inputUsd: 2, cachedUsd: 0.5, outputUsd: 6 },
+  );
+
+  const long = grokDirect("Grok 4.7 Long Context");
+  assert.equal(long.variants, undefined);
+  assert.deepEqual(
+    { inputUsd: long.inputUsd, cachedUsd: long.cachedUsd, outputUsd: long.outputUsd, contextWindow: long.contextWindow },
+    { inputUsd: 4, cachedUsd: 1, outputUsd: 12, contextWindow: 500_000 },
+  );
+
+  assert.equal(
+    provider?.entries.some((candidate) => candidate.model.startsWith("Grok 4.7") && candidate.tier !== "Direct"),
+    false,
+  );
+  assert.match(entry.sourceNote ?? "", /zero Foundry meters containing 4\.7/);
+  assert.match(long.sourceNote ?? "", /zero Foundry meters containing 4\.7/);
 });
 
 test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {

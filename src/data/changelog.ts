@@ -23,6 +23,35 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-21",
+    title: "Grok 4.7 adds a direct API lane",
+    tag: "model",
+    body: [
+      "xAI released Grok 4.7 as its current flagship for coding and knowledge work. The direct API lane starts at $2/$0.50/$6 per 1M input, cached-input and output tokens, with a 500K-token context window and the same standard price as Grok 4.6.",
+      "xAI's official pricing table applies a long-context band at 200K or more prompt tokens: $4/$1/$12 per M for input, cached input and output. The catalog exposes that band as a separate direct comparison lane so cumulative workload volume is not mistaken for one prompt's context length; xAI's separately announced faster variant is noted but not added as a second speed lane because the pricing page does not publish a separate fast-mode token table.",
+      "A full paged Azure Retail Prices API sweep captured September 21 found no Grok 4.7 meter, so this is a direct-only row. The Foundry feed remains at 35 pages and 34,448 rows (34,276 Consumption / 172 Reservation), with 1,890 product/meter pairs and no row effective on or after September 2.",
+    ],
+    sources: [
+      {
+        label: "xAI — Introducing Grok 4.7",
+        href: "https://x.ai/news/grok-4-7",
+      },
+      {
+        label: "xAI — Grok 4.7 model documentation",
+        href: "https://docs.x.ai/developers/models/grok-4.7",
+      },
+      {
+        label: "xAI API pricing — Grok 4.7 context bands",
+        href: "https://docs.x.ai/developers/pricing",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Models feed and Grok 4.7 absence check",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-21",
+  },
+  {
     date: "2026-09-18",
     title: "GLM-5.3-FlashX receives a direct API lane",
     tag: "model",
