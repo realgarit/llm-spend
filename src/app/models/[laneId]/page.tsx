@@ -48,9 +48,9 @@ export default async function LaneDetailPage({
   return (
     <div className="container-page" style={{ paddingBlock: "3rem" }}>
       <nav aria-label="Breadcrumb" style={{ fontSize: "0.8rem", color: "var(--text-faint)", marginBottom: "1.5rem" }}>
-        <Link href="/">Home</Link>
+        <Link href="/" prefetch={false}>Home</Link>
         <span style={{ margin: "0 0.5rem" }}>/</span>
-        <Link href="/compare">Compare</Link>
+        <Link href="/compare" prefetch={false}>Compare</Link>
         <span style={{ margin: "0 0.5rem" }}>/</span>
         <span style={{ color: "var(--text)" }}>{target.model}</span>
       </nav>

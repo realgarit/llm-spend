@@ -190,3 +190,37 @@ test("the compare page does not shift layout while it is being used", async ({ p
     BUDGET.cls,
   );
 });
+
+test("client navigation avoids background RSC prefetch and signals pending state", async ({ page }) => {
+  const rscRequests: { url: string; prefetch: boolean }[] = [];
+  page.on("request", (request) => {
+    if (!request.url().includes("?_rsc=")) return;
+    rscRequests.push({
+      url: request.url(),
+      prefetch: request.headers()["next-router-prefetch"] === "1",
+    });
+  });
+
+  // Keep the route in-flight long enough to assert the immediate feedback
+  // rather than racing a fast localhost response.
+  await page.route("**/*?_rsc=*", async (route) => {
+    await page.waitForTimeout(250);
+    await route.continue();
+  });
+
+  await page.goto("/compare", { waitUntil: "networkidle" });
+  await page.waitForTimeout(500);
+  expect(rscRequests.filter((request) => request.prefetch)).toHaveLength(0);
+
+  const link = page.locator('nav[aria-label="Primary"] a[href="/budget"]');
+  const box = await link.boundingBox();
+  if (!box) throw new Error("Primary Budget link is not visible");
+
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(page.locator(".navigation-feedback")).toBeAttached();
+  await page.waitForURL("**/budget");
+
+  expect(rscRequests.filter((request) => request.prefetch)).toHaveLength(0);
+  expect(rscRequests.some((request) => request.url.includes("/budget?_rsc=") && !request.prefetch)).toBe(true);
+  await page.unrouteAll({ behavior: "ignoreErrors" });
+});

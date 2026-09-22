@@ -64,7 +64,7 @@ export function ShortlistContextChips({ rows, onRemove }: ShortlistContextChipsP
             key={row.id}
             className={`shortlist-chip shortlist-context-chip${onRemove ? " has-remove" : ""}`}
           >
-            <Link href={`/models/${row.id}`} className="shortlist-chip-label shortlist-context-chip-link">
+            <Link href={`/models/${row.id}`} prefetch={false} className="shortlist-chip-label shortlist-context-chip-link">
               {row.provider} · {row.model}
               {row.host ? ` — ${row.host}` : ""}
             </Link>

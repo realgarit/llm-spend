@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { NavigationFeedback } from "@/components/navigation-feedback";
 import { site } from "@/lib/site";
 
 // Self-hosted via next/font/local: the Azure Static Web Apps build container
@@ -98,6 +99,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteHeader />
+        <NavigationFeedback />
         <main id="main">{children}</main>
         <SiteFooter />
       </body>
