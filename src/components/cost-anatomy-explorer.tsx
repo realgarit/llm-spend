@@ -127,10 +127,10 @@ export function CostAnatomyExplorer({
       <section className="hairline anatomy-footer-nav" style={{ paddingTop: "2rem", marginTop: "1rem" }}>
         <div className="eyebrow" style={{ marginBottom: "1rem" }}>Keep exploring</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
-          <Link href={`/providers/${target.providerSlug}`} className="btn">
+          <Link href={`/providers/${target.providerSlug}`} prefetch={false} className="btn">
             {target.provider} pricing →
           </Link>
-          <Link href="/compare" className="btn btn-primary">
+          <Link href="/compare" prefetch={false} className="btn btn-primary">
             Back to compare →
           </Link>
         </div>
@@ -431,7 +431,7 @@ function DeploymentMarkupSection({ comparison }: { comparison: SameModelDeployme
               {comparison.comparisons.map((c) => (
                 <tr key={c.compared.row.id}>
                   <td>
-                    <Link href={`/models/${c.compared.row.id}`} className="link-underline">{c.compared.row.model}</Link>
+                    <Link href={`/models/${c.compared.row.id}`} prefetch={false} className="link-underline">{c.compared.row.model}</Link>
                     {c.compared.row.host && (
                       <div style={{ fontSize: "0.72rem", color: "var(--text-faint)" }}>{c.compared.row.host}</div>
                     )}
@@ -476,7 +476,7 @@ function AlternativesSection({
       {alternatives.length === 0 ? (
         <p className="callout callout-info" style={{ maxWidth: "44rem" }}>
           Not available — no other catalog lane falls within ±25% of this workload&rsquo;s cost right now. Adjust the
-          workload above, or browse the full <Link href="/compare" className="link-underline">comparison table</Link>.
+          workload above, or browse the full <Link href="/compare" prefetch={false} className="link-underline">comparison table</Link>.
         </p>
       ) : (
         <ul
@@ -485,7 +485,7 @@ function AlternativesSection({
         >
           {alternatives.map((alt) => (
             <li key={alt.compared.row.id} className="card anatomy-alternative-card" style={{ padding: "1rem 1.1rem", minWidth: 0 }}>
-              <Link href={`/models/${alt.compared.row.id}`} className="link-underline" style={{ fontWeight: 500 }}>
+              <Link href={`/models/${alt.compared.row.id}`} prefetch={false} className="link-underline" style={{ fontWeight: 500 }}>
                 {alt.compared.row.model}
               </Link>
               <div style={{ fontSize: "0.78rem", color: "var(--text-faint)", marginTop: "0.2rem" }}>

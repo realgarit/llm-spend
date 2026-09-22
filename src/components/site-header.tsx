@@ -28,7 +28,7 @@ export function SiteHeader() {
       }}
     >
       <div className="container-page" style={{ display: "flex", alignItems: "center", height: "3.75rem", gap: "1rem" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
+        <Link href="/" prefetch={false} style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
           <BrandMark size={26} />
           <BrandWordmark />
         </Link>
@@ -42,6 +42,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               style={{
                 padding: "0.4rem 0.7rem",
                 borderRadius: "0.45rem",
@@ -87,6 +88,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 onClick={() => setOpen(false)}
                 style={{
                   padding: "0.7rem 0.4rem",

@@ -14,8 +14,8 @@ export default function NotFound() {
         That page isn&rsquo;t on the ledger. Head back to the pricing reference.
       </p>
       <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-        <Link href="/" className="btn btn-primary">Home</Link>
-        <Link href="/compare" className="btn">Compare models</Link>
+        <Link href="/" prefetch={false} className="btn btn-primary">Home</Link>
+        <Link href="/compare" prefetch={false} className="btn">Compare models</Link>
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ export default async function ProviderPage({
   return (
     <div className="container-page" style={{ paddingBlock: "3rem", maxWidth: "68rem" }}>
       <nav style={{ fontSize: "0.8rem", color: "var(--text-faint)", marginBottom: "1.5rem" }}>
-        <Link href="/" className="hover:text-fg">Home</Link>
+        <Link href="/" prefetch={false} className="hover:text-fg">Home</Link>
         <span style={{ margin: "0 0.5rem" }}>/</span>
         <span>Providers</span>
         <span style={{ margin: "0 0.5rem" }}>/</span>
@@ -93,11 +93,11 @@ export default async function ProviderPage({
         <div className="eyebrow" style={{ marginBottom: "1rem" }}>Other providers</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
           {others.map((p) => (
-            <Link key={p.slug} href={`/providers/${p.slug}`} className="btn" style={{ fontSize: "0.83rem" }}>
+            <Link key={p.slug} href={`/providers/${p.slug}`} prefetch={false} className="btn" style={{ fontSize: "0.83rem" }}>
               {p.name}
             </Link>
           ))}
-          <Link href="/compare" className="btn btn-primary" style={{ fontSize: "0.83rem" }}>
+          <Link href="/compare" prefetch={false} className="btn btn-primary" style={{ fontSize: "0.83rem" }}>
             Compare all →
           </Link>
         </div>

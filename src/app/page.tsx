@@ -90,8 +90,8 @@ export default function HomePage() {
           Azure AI Foundry), plus direct APIs to compare against.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginTop: "1.8rem" }}>
-          <Link href="/compare" className="btn btn-primary">Open the cost calculator →</Link>
-          <Link href="/cache-economics" className="btn">Read the cache case study</Link>
+          <Link href="/compare" prefetch={false} className="btn btn-primary">Open the cost calculator →</Link>
+          <Link href="/cache-economics" prefetch={false} className="btn">Read the cache case study</Link>
         </div>
       </section>
 
@@ -117,6 +117,7 @@ export default function HomePage() {
             <Link
               key={p.slug}
               href={`/providers/${p.slug}`}
+              prefetch={false}
               className="card"
               style={{ padding: "1.2rem 1.3rem", display: "flex", flexDirection: "column", gap: "0.6rem", transition: "border-color 0.15s ease" }}
             >

@@ -449,12 +449,12 @@ function CompareWorkspace({
                     </button>
                   </td>
                   <td data-label="Provider">
-                    <Link href={`/providers/${row.providerSlug}`} style={{ color: "var(--text-muted)" }} className="link-provider">
+                    <Link href={`/providers/${row.providerSlug}`} prefetch={false} style={{ color: "var(--text-muted)" }} className="link-provider">
                       {row.provider}
                     </Link>
                   </td>
                   <td data-label="Model">
-                    <Link href={`/models/${row.id}`} style={{ fontWeight: 500 }}>{row.model}</Link>
+                    <Link href={`/models/${row.id}`} prefetch={false} style={{ fontWeight: 500 }}>{row.model}</Link>
                     {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
                     {scenarioPriced &&
                       (preview ? (

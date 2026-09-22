@@ -181,7 +181,7 @@ export function BudgetPlanner({ rows, buildAtMs }: { rows: CompareRow[]; buildAt
             {selectedRow.host ? ` · ${selectedRow.host}` : ""}
           </span>
           <TierBadge tier={selectedRow.tier} />
-          <Link href={`/models/${selectedRow.id}`} className="link-underline" style={{ fontSize: "0.82rem" }}>
+          <Link href={`/models/${selectedRow.id}`} prefetch={false} className="link-underline" style={{ fontSize: "0.82rem" }}>
             Full cost anatomy →
           </Link>
         </div>
@@ -510,7 +510,7 @@ function CrossoverSection({
             <li key={markup.compared.row.id} className="card budget-crossover-card" style={{ padding: "1.05rem 1.2rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
                 <span style={{ fontWeight: 500 }}>vs</span>
-                <Link href={`/models/${markup.compared.row.id}`} className="link-underline">
+                <Link href={`/models/${markup.compared.row.id}`} prefetch={false} className="link-underline">
                   {markup.compared.row.model}
                   {markup.compared.row.host ? ` — ${markup.compared.row.host}` : ""}
                 </Link>

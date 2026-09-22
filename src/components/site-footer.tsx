@@ -30,7 +30,7 @@ export function SiteFooter() {
             <ul style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.85rem" }}>
               {nav.map((n) => (
                 <li key={n.href}>
-                  <Link href={n.href} style={{ color: "var(--text-muted)" }} className="hover:text-fg">
+                  <Link href={n.href} prefetch={false} style={{ color: "var(--text-muted)" }} className="hover:text-fg">
                     {n.label}
                   </Link>
                 </li>
@@ -43,7 +43,7 @@ export function SiteFooter() {
             <ul style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.85rem" }}>
               {providers.map((p) => (
                 <li key={p.slug}>
-                  <Link href={`/providers/${p.slug}`} style={{ color: "var(--text-muted)" }}>
+                  <Link href={`/providers/${p.slug}`} prefetch={false} style={{ color: "var(--text-muted)" }}>
                     {p.name}
                   </Link>
                 </li>

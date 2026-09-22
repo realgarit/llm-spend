@@ -175,8 +175,8 @@ export default function CacheEconomicsPage() {
         <p style={{ color: "var(--text-muted)", marginTop: "1.25rem", maxWidth: "44rem" }}>
           Before you downgrade a model to save money, check whether the tier has a cache meter and what your real hit
           rate is. The lever is usually caching, not the model. See the{" "}
-          <Link href="/compare" className="link-underline">interactive calculator</Link> to test your own numbers, or the{" "}
-          <Link href="/" className="link-underline">verification method</Link> for finding an undocumented cache rate.
+          <Link href="/compare" prefetch={false} className="link-underline">interactive calculator</Link> to test your own numbers, or the{" "}
+          <Link href="/" prefetch={false} className="link-underline">verification method</Link> for finding an undocumented cache rate.
         </p>
       </section>
     </div>

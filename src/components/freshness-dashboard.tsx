@@ -332,7 +332,7 @@ function FreshnessRow({ record }: { record: FreshnessRecord }) {
     <tr>
       <td data-label="Provider" style={{ color: "var(--text-muted)" }}>{row.provider}</td>
       <td data-label="Model">
-        <Link href={`/models/${row.id}`} style={{ fontWeight: 500 }}>{row.model}</Link>
+        <Link href={`/models/${row.id}`} prefetch={false} style={{ fontWeight: 500 }}>{row.model}</Link>
         {row.host && <div style={{ fontSize: "0.7rem", color: "var(--text-faint)" }}>{row.host}</div>}
       </td>
       <td data-label="Deployment"><TierBadge tier={row.tier} /></td>
@@ -398,7 +398,7 @@ function TimelineSection({
             <li key={change.id} className="card" style={{ padding: "0.85rem 1rem", minWidth: 0 }} suppressHydrationWarning>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem 1rem", alignItems: "baseline", justifyContent: "space-between" }}>
                 <div>
-                  <Link href={`/models/${change.row.id}`} className="link-underline" style={{ fontWeight: 500 }}>
+                  <Link href={`/models/${change.row.id}`} prefetch={false} className="link-underline" style={{ fontWeight: 500 }}>
                     {change.row.model}
                   </Link>
                   <span style={{ color: "var(--text-faint)", fontSize: "0.78rem", marginLeft: "0.5rem" }}>
