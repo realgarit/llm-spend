@@ -2,13 +2,25 @@ import type { Provider } from "../types";
 
 const CAPTURED = "2026-07-11";
 const FLASH_TRANSITION = "2026-09-10T04:00:00Z";
+const DEEPSEEK_2026_PUBLIC_HOLIDAYS = [
+  "2026-09-25",
+  "2026-09-26",
+  "2026-09-27",
+  "2026-10-01",
+  "2026-10-02",
+  "2026-10-03",
+  "2026-10-04",
+  "2026-10-05",
+  "2026-10-06",
+  "2026-10-07",
+];
 
 export const deepseek: Provider = {
   slug: "deepseek",
   name: "DeepSeek",
   tagline: "V4.1 Flash now lowers the direct API price, while V4 Pro remains available after DeepSeek reversed its planned September 14 reroute. Microsoft Foundry still exposes the older V4 Flash meters with resale markups from ~10% to a reported 4.5x.",
   intro: [
-    "DeepSeek V4.1 Flash and V4 Pro ship real 1M-token windows (max output up to 384K). The direct `deepseek-flash` endpoint now serves V4.1 Flash with lower peak/off-peak rates, while legacy V4 Flash names route to the same model. Microsoft Foundry still exposes V4 Flash-named meters, so the current catalog keeps those Foundry rows separate rather than silently relabeling them.",
+    "DeepSeek V4.1 Flash and V4 Pro ship real 1M-token windows (max output up to 384K). The direct `deepseek-flash` endpoint now serves V4.1 Flash with lower peak/off-peak rates, while legacy V4 Flash names route to the same model. Peak hours are weekdays excluding Chinese public holidays; the published 2026 holiday dates are modeled explicitly, while future annual calendars will need updating when China publishes them.",
     "Pricing remains a resale case study: the direct API is cheap, Microsoft Foundry resells it at a markup, and some Foundry tiers bill a cache meter the public page hides. DeepSeek's current API Quick Start and pricing pages now say V4 Pro service continues after 2026-09-14 with billing unchanged, although the September 10 launch article still carries the earlier reroute notice. The catalog therefore retains V4 Pro's separate direct lane and schedule; the Foundry V4 Flash snapshot remains separate, while the direct Flash row carries the September 10 transition and both published schedules.",
   ],
   entries: [
@@ -50,7 +62,7 @@ export const deepseek: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday only): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail. DeepSeek's current API docs say this model remains available after 2026-09-14 with billing unchanged.",
+        "First-party published cache-hit, cache-miss, and output rates after the 75% direct price cut. Peak/off-peak billing began 2026-08-16 16:00 UTC (peak 01:00-04:00 & 06:00-10:00 UTC, Monday to Friday, excluding Chinese public holidays): off-peak $0.022/$0.66/$1.98, peak $0.044/$1.32/$3.96 — see the changelog for detail. DeepSeek's current API docs say this model remains available after 2026-09-14 with billing unchanged.",
       sourceNote:
         "DeepSeek's own direct (non-cloud-resold) API pricing, including the published cached-input rate. The API Quick Start and Models & Pricing pages, re-read 2026-09-12, state that V4 Pro service continues after September 14, 2026 with billing unchanged; the September 10 launch article still carries the earlier automatic-reroute notice, so the catalog keeps this V4 Pro lane separate and documents the conflict.",
       effectiveDate: CAPTURED,
@@ -63,15 +75,16 @@ export const deepseek: Provider = {
               { startHourUtc: 1, endHourUtc: 4 },
               { startHourUtc: 6, endHourUtc: 10 },
             ],
-            // Monday-Friday. Weekends fall through to the Off-peak variant below.
+            // Weekends and listed Chinese public holidays fall through to Off-peak.
             utcDaysOfWeek: [1, 2, 3, 4, 5],
+            utcExcludedDates: DEEPSEEK_2026_PUBLIC_HOLIDAYS,
           },
           inputUsd: 1.32,
           cachedUsd: 0.044,
           outputUsd: 3.96,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
+            "DeepSeek Models & Pricing (api-docs.deepseek.com/quick_start/pricing/), captured 2026-09-23, says Peak hours are 01:00-04:00 and 06:00-10:00 UTC Monday-Friday except Chinese public holidays, with all other hours off-peak. China's 2026 State Council notice (gov.cn, captured 2026-09-23) identifies September 25-27 and October 1-7 as public holidays; those UTC dates are suppressed from this peak condition. Weekend make-up workdays remain off-peak under the provider's Monday-Friday rule.",
         },
         {
           label: "Off-peak",
@@ -81,7 +94,7 @@ export const deepseek: Provider = {
           outputUsd: 1.98,
           confidence: "official",
           sourceNote:
-            "DeepSeek pricing page (api-docs.deepseek.com/quick_start/pricing/), re-read via raw DOM 2026-08-26. Off-peak is exactly half of peak. Verbatim footnote: \"Peak hours are 01:00 - 04:00 and 06:00 - 10:00 UTC, Monday through Friday (all other hours are off-peak).\" The Chinese edition of the same page agrees, expressing the identical windows in Beijing time (周一至周五 9:00-12:00, 14:00-18:00). Every hour of Saturday and Sunday therefore bills off-peak.",
+            "DeepSeek Models & Pricing (api-docs.deepseek.com/quick_start/pricing/), captured 2026-09-23, says Peak hours are 01:00-04:00 and 06:00-10:00 UTC Monday-Friday except Chinese public holidays, with all other hours off-peak. China's 2026 State Council notice (gov.cn, captured 2026-09-23) identifies September 25-27 and October 1-7 as public holidays; those UTC dates are suppressed from this peak condition. Weekend make-up workdays remain off-peak under the provider's Monday-Friday rule.",
         },
       ],
     },
@@ -96,7 +109,7 @@ export const deepseek: Provider = {
       maxOutput: 384_000,
       confidence: "official",
       notes:
-        "The `deepseek-flash` endpoint now serves V4.1 Flash. Before 2026-09-10 04:00 UTC, this row's base and legacy variants preserve the V4 Flash schedule; from the transition onward, off-peak is $0.15/$0.003/$0.60 and weekday peak is $0.30/$0.006/$1.20 per M (cache hit / cache miss / output order is shown in the source table; the catalog fields are input / cached input / output).",
+        "The `deepseek-flash` endpoint now serves V4.1 Flash. Before 2026-09-10 04:00 UTC, this row's base and legacy variants preserve the V4 Flash schedule; from the transition onward, off-peak is $0.15/$0.003/$0.60 and weekday peak (except Chinese public holidays) is $0.30/$0.006/$1.20 per M (cache hit / cache miss / output order is shown in the source table; the catalog fields are input / cached input / output).",
       sourceNote:
         "DeepSeek's official API pricing page and September 10 V4.1 Flash announcement, re-read 2026-09-11: `deepseek-flash` is DeepSeek-V4.1-Flash with a 1M context and 384K maximum output; legacy `deepseek-v4-flash` names route to it. The base fields retain the pre-transition V4 Flash off-peak rate for deterministic historical resolution, while the variants below carry the current V4.1 Flash schedule.",
       effectiveDate: "2026-09-10",
@@ -109,15 +122,16 @@ export const deepseek: Provider = {
               { startHourUtc: 1, endHourUtc: 4 },
               { startHourUtc: 6, endHourUtc: 10 },
             ],
-            // Monday-Friday. Weekends fall through to the Off-peak variant below.
+            // Weekends and listed Chinese public holidays fall through to Off-peak.
             utcDaysOfWeek: [1, 2, 3, 4, 5],
+            utcExcludedDates: DEEPSEEK_2026_PUBLIC_HOLIDAYS,
           },
           inputUsd: 0.3,
           cachedUsd: 0.006,
           outputUsd: 1.2,
           confidence: "official",
           sourceNote:
-            "DeepSeek's September 10, 2026 V4.1 Flash announcement and API pricing page, re-read 2026-09-11: the new schedule starts at 04:00 UTC on September 10, off-peak is half of peak, and peak is 01:00-04:00 and 06:00-10:00 UTC Monday-Friday. The published V4.1 Flash peak row is $0.30/M input, $0.006/M cache hit and $1.20/M output.",
+            "DeepSeek's September 10, 2026 V4.1 Flash announcement and Models & Pricing page, captured 2026-09-23: the new schedule starts at 04:00 UTC on September 10, off-peak is half of peak, and peak is 01:00-04:00 and 06:00-10:00 UTC Monday-Friday excluding Chinese public holidays. The 2026 State Council holiday notice identifies September 25-27 and October 1-7 as public holidays; these UTC dates are excluded from this variant. The published V4.1 Flash peak row is $0.30/M input, $0.006/M cache hit and $1.20/M output.",
         },
         {
           label: "Off-peak",
@@ -127,7 +141,7 @@ export const deepseek: Provider = {
           outputUsd: 0.6,
           confidence: "official",
           sourceNote:
-            "DeepSeek's September 10, 2026 V4.1 Flash announcement and API pricing page, re-read 2026-09-11: off-peak is half of peak and the published V4.1 Flash off-peak row is $0.15/M input, $0.003/M cache hit and $0.60/M output. Weekends and all hours outside the two weekday peak windows are off-peak.",
+            "DeepSeek's September 10, 2026 V4.1 Flash announcement and Models & Pricing page, captured 2026-09-23: off-peak is half of peak and the published V4.1 Flash off-peak row is $0.15/M input, $0.003/M cache hit and $0.60/M output. Weekends, the 2026 Chinese public holidays and all hours outside the two weekday peak windows are off-peak.",
         },
         {
           label: "Peak (legacy V4 Flash)",

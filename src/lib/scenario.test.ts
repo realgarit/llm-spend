@@ -202,8 +202,24 @@ test("scheduledPreview reports nothing when the base rate resolved", () => {
   assert.equal(scheduledPreview(entry, ctxs.preview, ctxs.live), null);
 });
 
-test("isTimeOfDayPriced separates an hour-scoped row from a plain date reversion", () => {
+test("isTimeOfDayPriced recognizes calendar-scoped rates but not plain date reversions", () => {
   assert.equal(isTimeOfDayPriced(peakPairEntry()), true);
+  assert.equal(
+    isTimeOfDayPriced(
+      peakPairEntry({
+        variants: [
+          {
+            label: "Peak except holiday",
+            conditions: { utcExcludedDates: ["2026-09-25"] },
+            inputUsd: 1,
+            cachedUsd: null,
+            outputUsd: 2,
+          },
+        ],
+      }),
+    ),
+    true,
+  );
   assert.equal(
     isTimeOfDayPriced(
       peakPairEntry({
@@ -498,6 +514,59 @@ const TIERED_ROWS: {
       batch: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
       flex: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
       priority: { inputUsd: 40.0, cachedUsd: 4.0, outputUsd: 150.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6 Sol",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 5.0 },
+      flex: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 5.0 },
+      priority: { inputUsd: 4.0, cachedUsd: 0.4, outputUsd: 20.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6 Sol Long Context",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 7.5 },
+      flex: { inputUsd: 2.0, cachedUsd: 0.2, outputUsd: 7.5 },
+      priority: { inputUsd: 8.0, cachedUsd: 0.8, outputUsd: 30.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6 Luna",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 0.05, cachedUsd: 0.005, outputUsd: 0.25 },
+      flex: { inputUsd: 0.05, cachedUsd: 0.005, outputUsd: 0.25 },
+      priority: { inputUsd: 0.2, cachedUsd: 0.02, outputUsd: 1.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6 Luna Long Context",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.375 },
+      flex: { inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.375 },
+      priority: { inputUsd: 0.4, cachedUsd: 0.04, outputUsd: 1.5 },
+    },
+  },
+  {
+    providerSlug: "claude",
+    model: "Claude Opus 5.5",
+    tier: "Direct",
+    tiers: {
+      batch: { inputUsd: 2.0, cachedUsd: 0.1, outputUsd: 10.0 },
+      priority: { inputUsd: 8.0, cachedUsd: 0.4, outputUsd: 40.0 },
     },
   },
   {

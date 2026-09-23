@@ -6,12 +6,79 @@ export const claude: Provider = {
   slug: "claude",
   name: "Claude",
   org: "Anthropic",
-  tagline: "Claude Fable 5.1's 1M-token frontier lane, Sonnet 5's permanent launch pricing, cheaper cache reads, and Azure CCU billing on Microsoft Foundry.",
+  tagline: "Claude Opus 5.5 cuts first-party rates to $4/$0.20/$20 per M and adds Azure-hosted Foundry Global and US Data Zone lanes billed through CCUs.",
   intro: [
-    "Claude Fable 5.1 is Anthropic's latest generally available model: 1M-token context, 128K max output, and $10/$0.25/$50 per M for input, cached input and output. Invite-only Claude Mythos 5.1 shares those specifications and prices. Claude Opus 5 is GA at $5/$0.50/$25, while Sonnet 5's $2/$0.20/$10 launch rate is now permanent.",
-    "Claude Fable 5.1, Opus 4.8, Sonnet 5, and Haiku 4.5 are natively hosted on Microsoft Foundry (Azure-hosted, not just resold). Foundry usage bills through Azure via Claude Consumption Units (CCU), replacing the old per-model Azure token meters, so this catalog keeps the new 5.1 token prices on Direct rows only.",
+    "Claude Opus 5.5, introduced September 22, is Anthropic's current Opus flagship: 1M-token context, 128K max output, and $4/$0.20/$20 per M for input, cached input and output, 20% below Opus 5's standard rate. The first-party API also publishes Batch pricing at $2/$0.10/$10 and Fast mode at $8/$0.40/$40. Claude Fable 5.1 remains GA at $10/$0.25/$50, while invite-only Mythos 5.1 shares those prices; Sonnet 5's $2/$0.20/$10 launch rate is permanent.",
+    "Opus 5.5 is GA on Azure-hosted Foundry in Global Standard and US Data Zone. Microsoft bills Claude through CCUs, converting token usage at Anthropic's published per-model prices before marketplace discounts; the Foundry Global row therefore uses the exact standard token rates and the US Data Zone row the documented 1.1x uplift. Fable 5.1 and Mythos 5.1 are listed as Anthropic-hosted previews rather than Azure-hosted deployments.",
   ],
   entries: [
+    {
+      model: "Claude Opus 5.5",
+      tier: "Direct",
+      inputUsd: 4.0,
+      cachedUsd: 0.2,
+      outputUsd: 20.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Current Opus flagship. Anthropic includes the full 1M-token context at this rate; Batch is half price and first-party Fast mode is $8/$0.40/$40 per M.",
+      sourceNote:
+        "Anthropic's Opus 5.5 announcement and official pricing page, captured 2026-09-23: standard rates are $4/M input, $0.20/M cache hits, and $20/M output; the model has a 1M context and 128K max output. Cache writes are $5/M for 5 minutes and $8/M for one hour, outside this schema.",
+      effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 2.0,
+          cachedUsd: 0.1,
+          outputUsd: 10.0,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's pricing page, captured 2026-09-23, publishes Opus 5.5 Batch at $2/M input and $10/M output (50% of Standard). Prompt-cache discounts stack with Batch; the published 0.05x cache-hit factor yields $0.10/M. Batch is a first-party API option, not a Foundry deployment tier.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 8.0,
+          cachedUsd: 0.4,
+          outputUsd: 40.0,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's pricing page, captured 2026-09-23, publishes first-party Opus 5.5 Fast mode at $8/M input and $40/M output. Fast mode is first-party API only; its 2x input rate and the published 0.05x cache-hit factor yield $0.40/M cached input. The catalog's `priority` service tier maps to Fast mode.",
+        },
+      ],
+    },
+    {
+      model: "Claude Opus 5.5",
+      tier: "Global",
+      inputUsd: 4.0,
+      cachedUsd: 0.2,
+      outputUsd: 20.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted Microsoft Foundry Global Standard. The published long-context offer has the same rates; cache writes are outside this schema. Foundry invoices token-equivalent usage through CCUs.",
+      sourceNote:
+        "Microsoft's September 22 Foundry Opus 5.5 announcement publishes Global Standard at $4/M input, $0.20/M cache hit, and $20/M output, with the same rates for its long-context offer. Microsoft Learn lists Azure-hosted Opus 5.5 as GA with a 1M context and 128K max output; CCU billing converts usage at Anthropic's per-model rates. Captured 2026-09-23; no per-model token meter is expected in the Azure Retail Prices feed.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "Claude Opus 5.5",
+      tier: "DataZone",
+      inputUsd: 4.4,
+      cachedUsd: 0.22,
+      outputUsd: 22.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted US Data Zone Standard. The Foundry launch table lists Global and US Data Zone together without a separate zone price; Anthropic explicitly documents the 1.1x US multiplier used here. The deployment has no per-model Retail Prices token meter because it bills through CCUs.",
+      sourceNote:
+        "Microsoft Learn lists Azure-hosted Claude Opus 5.5 as GA in US Data Zone Standard; the Foundry launch table combines Global and US Data Zone offers without separate figures. Anthropic's pricing page, captured 2026-09-23, explicitly says Foundry US Data Zone Standard uses the same 1.1x multiplier as `inference_geo: us`; applying that published multiplier to the $4/$0.20/$20 Global rates gives the explicit $4.40/$0.22/$22 per M rates stored here. CCU billing converts token usage at Anthropic's published rates before marketplace discounts.",
+      effectiveDate: "2026-09-22",
+    },
     {
       model: "Claude Opus 5",
       tier: "Direct",
@@ -56,11 +123,11 @@ export const claude: Provider = {
       inputUsd: 2.0,
       cachedUsd: 0.20,
       outputUsd: 10.0,
-      confidence: "estimate",
+      confidence: "official",
       notes:
-        "Hosted-on-Azure Foundry deployment, billed via CCU. Launched at this rate as introductory pricing through 2026-08-31; Anthropic cancelled the planned 2026-09-01 rise to $3/$0.30/$15 and confirmed this rate is now permanent.",
+        "Azure-hosted Foundry Global Standard, billed via CCU. Microsoft's billing documentation confirms token usage converts at Anthropic's published model rates, so the standard token-equivalent rate is official; private marketplace discounts can change an individual invoice.",
       sourceNote:
-        "Microsoft's CCU billing docs state the CCU price converts Anthropic's own published per-model rates; no Anthropic per-token meter exists in Azure's Retail Prices API, so this stays an estimate. Anthropic (@claudeai) on X, 2026-08-10: introductory pricing made permanent (see the Direct row above for the exact quote and URL) — the original announcement. Anthropic's pricing page (platform.claude.com/docs/en/about-claude/pricing) has since caught up: a 2026-08-12 raw-DOM read confirms the $2/$10 rate is now the standard price and the planned September 1 increase will not occur (see the Direct row above for the verbatim quote), captured 2026-08-12. Cache hit rate inherited from Anthropic's direct pricing ($0.20/MTok).",
+        "Microsoft Learn's CCU billing page, captured 2026-09-23, states that Foundry converts token usage using Anthropic's published per-model rates at $0.01 per CCU before any private-offer discount. Anthropic's official pricing page publishes Sonnet 5 at $2/M input, $0.20/M cache hit, and $10/M output and says its scheduled September 1 increase will not occur. Azure invoices aggregate usage under CCUs rather than per-model token meters; the official standard token-equivalent rate is unchanged.",
       effectiveDate: CAPTURED,
     },
     {
@@ -137,7 +204,7 @@ export const claude: Provider = {
       title: "Foundry billing switched to Claude Consumption Units",
       tone: "info",
       body: [
-        "Claude usage on Microsoft Foundry is now billed in Claude Consumption Units (CCU) instead of the old per-model Azure token meters. A single CCU line shows up in Azure Cost Management, but the CCU price is designed to convert Anthropic's own per-token rates, so the effective $/M cost should track the direct-API numbers above rather than introduce an independent markup. Microsoft doesn't publish an exact CCU-to-dollar conversion ratio, so treat the direct rate as the best available proxy.",
+        "Claude usage on Microsoft Foundry is billed in Claude Consumption Units (CCU), replacing the old per-model Azure token meters. Microsoft and Anthropic now document the exact conversion: token usage is rated at Anthropic's published per-model prices, converted at $0.01 per CCU, then adjusted for any private-offer discount. Azure Cost Management shows aggregated CCUs, while standard token-equivalent rates remain official; US Data Zone Standard carries Anthropic's explicit 1.1x multiplier for eligible models.",
       ],
     },
   ],

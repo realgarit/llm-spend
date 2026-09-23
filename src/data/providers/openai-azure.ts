@@ -5,9 +5,9 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6 Astra is now available on OpenAI's direct API and Microsoft Foundry, while GPT-Rosalind Research adds a future-dated specialist lane. GPT-5.6 Sol's commercial Foundry meters now carry the direct promotional rate.",
+  tagline: "GPT-6 Astra, Sol and Luna are available on OpenAI's direct API and Microsoft Foundry; Sol/Luna's published Foundry rates are not yet present in the Azure retail feed.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is now available through OpenAI's direct API as well as Microsoft Foundry: the direct Standard rate is $10/$1/$50 per M for short context and $20/$2/$75 for prompts above 272K, while Foundry publishes matching Global Standard rates and a 10% US Data Zone premium. The current retail feed also carries a separate 20% Data Zone group for 14 non-US regions on Astra; the catalog keeps the published US Data Zone row as its primary Data Zone lane and records the split below. OpenAI now also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. Cache-write prices are otherwise published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is available through OpenAI's direct API and Foundry, with a $10/$1/$50 per M short-context rate, $20/$2/$75 above 272K, and published Global and US Data Zone rates. GPT-6 Sol and Luna became generally available in Foundry on September 22: Microsoft's published Global Standard rates match their OpenAI Direct lanes, with 10% US and 20% EU Data Zone groups. The September 23 Retail Prices feed still has no Sol/Luna meters, so the catalog uses Microsoft's published announcement rates pending meter publication; cache-write and Sol Priority rates are not modeled. OpenAI also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. Cache-write prices are otherwise published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity briefly broke. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. OpenAI then cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\". The commercial Foundry retail feed now carries those Sol rates effective 2026-09-01, plus the corresponding 10% Data Zone and Priority Processing meters, so the previous Foundry/direct gap is closed for the published commercial lanes.",
   ],
   entries: [
@@ -108,6 +108,198 @@ export const openaiAzure: Provider = {
       ],
     },
     {
+      model: "GPT-6 Sol",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 2.0,
+      cachedUsd: 0.2,
+      outputUsd: 10.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Global Standard short-context rate for prompts up to 272K input tokens. Prompts above 272K use the long-context row below. Batch and Flex are half price; Fast mode is 2x. OpenAI's optional 10% regional-processing premium is not represented as a separate Direct lane.",
+      sourceNote:
+        "OpenAI's official GPT-6 Sol model page (developers.openai.com/api/docs/models/gpt-6-sol), captured 2026-09-23: standard pricing is $2/M input, $0.20/M cached input, and $10/M output below 272K prompt tokens, with a 1,050,000-token context and 128,000 max output. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 1.0,
+          cachedUsd: 0.1,
+          outputUsd: 5.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Batch is 50% of Standard; the explicit $1/$0.10/$5 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 1.0,
+          cachedUsd: 0.1,
+          outputUsd: 5.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Flex is 50% of Standard; the explicit $1/$0.10/$5 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 4.0,
+          cachedUsd: 0.4,
+          outputUsd: 20.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Fast mode is 2x Standard; the explicit $4/$0.40/$20 per M rates are stored here. The catalog's `priority` service tier maps to OpenAI Fast mode.",
+        },
+      ],
+    },
+    {
+      model: "GPT-6 Sol Long Context",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 4.0,
+      cachedUsd: 0.4,
+      outputUsd: 15.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Global Standard long-context rate for prompts above 272K input tokens. Batch and Flex are half price; Fast mode is 2x. OpenAI's optional regional-processing premium is not represented as a separate Direct lane.",
+      sourceNote:
+        "OpenAI's official GPT-6 Sol model page (developers.openai.com/api/docs/models/gpt-6-sol), captured 2026-09-23: prompts with more than 272K input tokens use $4/M input, $0.40/M cached input, and $15/M output, with a 1,050,000-token context and 128,000 max output. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 2.0,
+          cachedUsd: 0.2,
+          outputUsd: 7.5,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Batch is 50% of the long-context Standard rate; the explicit $2/$0.20/$7.50 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 2.0,
+          cachedUsd: 0.2,
+          outputUsd: 7.5,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Flex is 50% of the long-context Standard rate; the explicit $2/$0.20/$7.50 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 8.0,
+          cachedUsd: 0.8,
+          outputUsd: 30.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Sol model page, captured 2026-09-23, states Fast mode is 2x the long-context Standard rate; the explicit $8/$0.80/$30 per M rates are stored here. The catalog's `priority` service tier maps to OpenAI Fast mode.",
+        },
+      ],
+    },
+    {
+      model: "GPT-6 Luna",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 0.1,
+      cachedUsd: 0.01,
+      outputUsd: 0.5,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Global Standard short-context rate for prompts up to 272K input tokens. Prompts above 272K use the long-context row below. Batch and Flex are half price; Fast mode is 2x. OpenAI's optional regional-processing premium is not represented as a separate Direct lane.",
+      sourceNote:
+        "OpenAI's official GPT-6 Luna model page (developers.openai.com/api/docs/models/gpt-6-luna), captured 2026-09-23: standard pricing is $0.10/M input, $0.01/M cached input, and $0.50/M output below 272K prompt tokens, with a 1,050,000-token context and 128,000 max output. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.05,
+          cachedUsd: 0.005,
+          outputUsd: 0.25,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Batch is 50% of Standard; the explicit $0.05/$0.005/$0.25 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 0.05,
+          cachedUsd: 0.005,
+          outputUsd: 0.25,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Flex is 50% of Standard; the explicit $0.05/$0.005/$0.25 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 0.2,
+          cachedUsd: 0.02,
+          outputUsd: 1.0,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Fast mode is 2x Standard; the explicit $0.20/$0.02/$1 per M rates are stored here. The catalog's `priority` service tier maps to OpenAI Fast mode.",
+        },
+      ],
+    },
+    {
+      model: "GPT-6 Luna Long Context",
+      host: "OpenAI direct API",
+      tier: "Direct",
+      inputUsd: 0.2,
+      cachedUsd: 0.02,
+      outputUsd: 0.75,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Global Standard long-context rate for prompts above 272K input tokens. Batch and Flex are half price; Fast mode is 2x. OpenAI's optional regional-processing premium is not represented as a separate Direct lane.",
+      sourceNote:
+        "OpenAI's official GPT-6 Luna model page (developers.openai.com/api/docs/models/gpt-6-luna), captured 2026-09-23: prompts with more than 272K input tokens use $0.20/M input, $0.02/M cached input, and $0.75/M output, with a 1,050,000-token context and 128,000 max output. Cache writes are outside this schema.",
+      effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.1,
+          cachedUsd: 0.01,
+          outputUsd: 0.375,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Batch is 50% of the long-context Standard rate; the explicit $0.10/$0.01/$0.375 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex" },
+          inputUsd: 0.1,
+          cachedUsd: 0.01,
+          outputUsd: 0.375,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Flex is 50% of the long-context Standard rate; the explicit $0.10/$0.01/$0.375 per M rates are stored here. Cache-write pricing is outside the schema.",
+        },
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 0.4,
+          cachedUsd: 0.04,
+          outputUsd: 1.5,
+          confidence: "official",
+          sourceNote:
+            "OpenAI's official GPT-6 Luna model page, captured 2026-09-23, states Fast mode is 2x the long-context Standard rate; the explicit $0.40/$0.04/$1.50 per M rates are stored here. The catalog's `priority` service tier maps to OpenAI Fast mode.",
+        },
+      ],
+    },
+    {
       model: "GPT-Rosalind Research",
       host: "OpenAI direct API",
       tier: "Direct",
@@ -172,6 +364,122 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra LongCo Inp Std DZ 1M Tokens' $22.00/M, '6-astra LongCo Cd Inp Std DZ 1M Tokens' $2.20/M, '6-astra LongCo Cd Wr Std DZ 1M Tokens' $27.50/M and '6-astra LongCo Opt Std DZ 1M Tokens' $82.50/M across seven US regions. The same meter names are $24.00/$2.40/$30.00/$90.00 across 14 non-US regions; the catalog's single DataZone row represents the published US group and records the second group in its note. Cache writes remain outside this schema.",
       effectiveDate: "2026-09-01",
+    },
+    {
+      model: "GPT-6 Sol",
+      tier: "Global",
+      inputUsd: 2.0,
+      cachedUsd: 0.2,
+      outputUsd: 10.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes: "GPT-6 Sol Standard Global short-context rate. The published $2.50/M cache-write rate is outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes Global Standard at $2/$0.20/$10 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Sol Long Context",
+      tier: "Global",
+      inputUsd: 4.0,
+      cachedUsd: 0.4,
+      outputUsd: 15.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes: "GPT-6 Sol Standard Global long-context rate for prompts above 272K input tokens. The published $5.00/M cache-write rate is outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context Global Standard at $4/$0.40/$15 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Sol",
+      tier: "DataZone",
+      inputUsd: 2.2,
+      cachedUsd: 0.22,
+      outputUsd: 11.0,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "GPT-6 Sol Standard US Data Zone short-context rate. The EU Data Zone group is $2.40/$0.24/$12.00 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes US Data Zone Standard at $2.20/$0.22/$11 per M input/cached-input/output and EU Data Zone Standard at $2.40/$0.24/$12. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Sol Long Context",
+      tier: "DataZone",
+      inputUsd: 4.4,
+      cachedUsd: 0.44,
+      outputUsd: 16.5,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "GPT-6 Sol Standard US Data Zone long-context rate for prompts above 272K input tokens. The EU Data Zone group is $4.80/$0.48/$18.00 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context US Data Zone Standard at $4.40/$0.44/$16.50 per M input/cached-input/output and EU Data Zone Standard at $4.80/$0.48/$18. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Luna",
+      tier: "Global",
+      inputUsd: 0.1,
+      cachedUsd: 0.01,
+      outputUsd: 0.5,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes: "GPT-6 Luna Standard Global short-context rate. The published $0.125/M cache-write rate is outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes Global Standard at $0.10/$0.01/$0.50 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Luna Long Context",
+      tier: "Global",
+      inputUsd: 0.2,
+      cachedUsd: 0.02,
+      outputUsd: 0.75,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes: "GPT-6 Luna Standard Global long-context rate for prompts above 272K input tokens. The published $0.25/M cache-write rate is outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context Global Standard at $0.20/$0.02/$0.75 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Luna",
+      tier: "DataZone",
+      inputUsd: 0.11,
+      cachedUsd: 0.011,
+      outputUsd: 0.55,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "GPT-6 Luna Standard US Data Zone short-context rate. The EU Data Zone group is $0.12/$0.012/$0.60 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes US Data Zone Standard at $0.11/$0.011/$0.55 per M input/cached-input/output and EU Data Zone Standard at $0.12/$0.012/$0.60. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
+    },
+    {
+      model: "GPT-6 Luna Long Context",
+      tier: "DataZone",
+      inputUsd: 0.22,
+      cachedUsd: 0.022,
+      outputUsd: 0.825,
+      contextWindow: 1_050_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "GPT-6 Luna Standard US Data Zone long-context rate for prompts above 272K input tokens. The EU Data Zone group is $0.24/$0.024/$0.90 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+      sourceNote:
+        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context US Data Zone Standard at $0.22/$0.022/$0.825 per M input/cached-input/output and EU Data Zone Standard at $0.24/$0.024/$0.90. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+      effectiveDate: "2026-09-22",
     },
     {
       model: "GPT-5.6 Sol",

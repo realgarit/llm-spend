@@ -92,7 +92,9 @@ export interface RateConditions {
    * Pairs with `utcHourWindows` for schedules that run only on working days —
    * DeepSeek's peak hours are 01:00-04:00 and 06:00-10:00 UTC *Monday through
    * Friday*, so its Peak variant carries both fields and weekends fall through
-   * to Off-peak. Like `utcHourWindows`, an omitted or empty array places no
+   * to Off-peak. `utcExcludedDates` suppresses a time window on listed UTC
+   * calendar dates, for schedules with dated exceptions such as public
+   * holidays. Like `utcHourWindows`, omitted or empty arrays place no
    * constraint.
    *
    * Days are read in UTC for the same reason hours are: these are absolute
@@ -100,6 +102,8 @@ export interface RateConditions {
    * quote the wrong price for most of the world.
    */
   utcDaysOfWeek?: number[];
+  /** UTC calendar dates (YYYY-MM-DD) on which this time condition is suppressed. */
+  utcExcludedDates?: string[];
   /** Prompt-size band in tokens. `minTokens` inclusive, `maxTokens` exclusive. */
   contextBand?: { minTokens?: number; maxTokens?: number };
   /** Service tier this variant is for. Absent means it applies to "standard". */

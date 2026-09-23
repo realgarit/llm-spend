@@ -23,6 +23,64 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-23",
+    title: "GPT-6 Sol/Luna, Claude Opus 5.5, and holiday-aware DeepSeek rates",
+    tag: "model",
+    body: [
+      "Microsoft made GPT-6 Sol and Luna generally available in Foundry on September 22. Their Global Standard short/long-context rates are Sol $2/$0.20/$10 and $4/$0.40/$15, and Luna $0.10/$0.01/$0.50 and $0.20/$0.02/$0.75 per M input/cached-input/output. OpenAI's direct Standard rates match. The catalog adds Global and US Data Zone rows; Microsoft also publishes EU Data Zone rates at a 20% Global premium, recorded in the row notes. Direct Batch/Flex are 50% and Fast mode is 2x. Cache writes and Foundry Sol Priority rates are not modeled.",
+      "The September 23 Azure Retail Prices query for the GPT6 product still returns only Astra meters, with no Sol or Luna token meters. The new Foundry rows therefore use Microsoft's official September 22 price table pending retail-meter publication. The long-context rates apply above 272K input tokens; the direct rows also use OpenAI's published 1.05M context limit and 128K output cap.",
+      "Anthropic launched Claude Opus 5.5 on September 22 at $4/$0.20/$20 per M input/cache-hit/output, with a 1M context and 128K max output. The direct row includes its published half-price Batch rates and first-party-only Fast mode rates. Azure-hosted Foundry Global Standard uses the same token-equivalent rates. The Foundry launch table does not separate Global and US Data Zone prices; Anthropic explicitly documents the US Data Zone 1.1x multiplier, used for the separate Data Zone row. Microsoft's CCU documentation now states that Foundry rates token use at Anthropic's published per-model prices before converting to CCUs, so the existing Sonnet 5 Foundry row is promoted from estimate to official confidence without changing its rate.",
+      "DeepSeek's current pricing footnote says Chinese public holidays, like weekends, are fully off-peak. The V4 Pro and V4.1 Flash direct Peak variants now exclude the official 2026 holiday dates September 25-27 and October 1-7; the UTC hour windows and rates are unchanged. The 2027 holiday calendar will need to be added when China's State Council publishes it.",
+    ],
+    sources: [
+      {
+        label: "Microsoft — GPT-6 Astra, Sol, and Luna in Foundry",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/",
+      },
+      {
+        label: "OpenAI — GPT-6 Sol model documentation",
+        href: "https://developers.openai.com/api/docs/models/gpt-6-sol",
+      },
+      {
+        label: "OpenAI — GPT-6 Luna model documentation",
+        href: "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      },
+      {
+        label: "Azure Retail Prices API — Azure OpenAI GPT6 meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20OpenAI%20GPT6%27",
+      },
+      {
+        label: "Anthropic — Introducing Claude Opus 5.5",
+        href: "https://www.anthropic.com/claude-opus-5-5",
+      },
+      {
+        label: "Anthropic — Model and feature pricing",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+      {
+        label: "Microsoft Foundry Blog — Claude Opus 5.5",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/claude-opus-5-5-comes-to-microsoft-foundry-for-long-running-coding-and-knowledge/4558051",
+      },
+      {
+        label: "Microsoft Learn — Claude models in Foundry",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models",
+      },
+      {
+        label: "Microsoft Learn — Claude CCU billing",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models-billing",
+      },
+      {
+        label: "DeepSeek — Models & Pricing",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+      {
+        label: "State Council of China — 2026 public holiday schedule",
+        href: "https://www.gov.cn/zhengce/zhengceku/202511/content_7047091.htm",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-23",
+  },
+  {
     date: "2026-09-21",
     title: "Grok 4.7 adds a direct API lane",
     tag: "model",
