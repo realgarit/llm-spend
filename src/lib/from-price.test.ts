@@ -10,6 +10,7 @@ import { rateRange } from "./rates";
 // the other outside it.
 const OFF_PEAK_NOW = new Date("2026-09-11T12:00:00Z");
 const PEAK_NOW = new Date("2026-09-11T02:00:00Z");
+const HOLIDAY_PEAK_HOUR = new Date("2026-09-25T02:00:00Z");
 
 // The cheapest reachable DeepSeek input rate remains the Fireworks-hosted V4
 // Flash Data Zone lane ($0.15), which undercuts the direct V4.1 Flash
@@ -25,9 +26,8 @@ test("DeepSeek's from-price is the cheapest reachable rate, not the legacy Direc
 });
 
 test("DeepSeek's from-price is identical at a peak hour and an off-peak hour", () => {
-  // The whole point of resolving via rateRange() (which waives utcHourWindows,
-  // see rates.ts) instead of resolveRate(): a statically-rendered "from" price
-  // must not depend on what hour the build happens to run at.
+  // rateRange() waives calendar-scoped conditions, so a static "from" price
+  // must not depend on the hour, weekday, or dated exception at build time.
   const offPeakPrice = fromPrice("deepseek", OFF_PEAK_NOW);
   const peakPrice = fromPrice("deepseek", PEAK_NOW);
 
@@ -36,8 +36,12 @@ test("DeepSeek's from-price is identical at a peak hour and an off-peak hour", (
   assert.equal(peakPrice, offPeakPrice);
 });
 
+test("DeepSeek's from-price ignores dated holiday exceptions", () => {
+  assert.equal(fromPrice("deepseek", HOLIDAY_PEAK_HOUR), DEEPSEEK_FROM);
+});
+
 test("regression guard: every provider's from-price matches the minimum minInputUsd rateRange reports reachable", () => {
-  for (const now of [OFF_PEAK_NOW, PEAK_NOW]) {
+  for (const now of [OFF_PEAK_NOW, PEAK_NOW, HOLIDAY_PEAK_HOUR]) {
     for (const provider of providers) {
       const expected = Math.min(...provider.entries.map((e) => rateRange(e, { now }).minInputUsd));
       const actual = fromPrice(provider.slug, now);

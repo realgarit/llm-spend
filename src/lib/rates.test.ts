@@ -373,6 +373,14 @@ const WEEKDAY_PEAK: RateVariant = {
   conditions: { ...PEAK.conditions, utcDaysOfWeek: [1, 2, 3, 4, 5] },
 };
 const weekdayPeakEntry = entry({ variants: [WEEKDAY_PEAK, OFF_PEAK] });
+const HOLIDAY_WEEKDAY_PEAK: RateVariant = {
+  ...WEEKDAY_PEAK,
+  conditions: {
+    ...WEEKDAY_PEAK.conditions,
+    utcExcludedDates: ["2026-09-25", "2026-10-01"],
+  },
+};
+const holidayWeekdayPeakEntry = entry({ variants: [HOLIDAY_WEEKDAY_PEAK, OFF_PEAK] });
 
 test("utcDaysOfWeek matches only the listed UTC days", () => {
   // 2026-08-24 is a Monday, so this run covers Mon..Sun in order.
@@ -390,6 +398,15 @@ test("an omitted or empty utcDaysOfWeek places no constraint", () => {
     assert.equal(matchesConditions({}, at(iso)), true, iso);
     assert.equal(matchesConditions({ utcDaysOfWeek: [] }, at(iso)), true, iso);
   }
+});
+
+test("utcExcludedDates suppresses a condition only on the listed UTC date", () => {
+  const excluded = { utcExcludedDates: ["2026-09-25"] };
+
+  assert.equal(matchesConditions(excluded, at("2026-09-25T02:00:00Z")), false);
+  assert.equal(matchesConditions(excluded, at("2026-09-26T02:00:00Z")), true);
+  assert.equal(matchesConditions({}, at("2026-09-25T02:00:00Z")), true);
+  assert.equal(matchesConditions({ utcExcludedDates: [] }, at("2026-09-25T02:00:00Z")), true);
 });
 
 test("a peak hour on a weekend falls through to off-peak", () => {
@@ -429,4 +446,42 @@ test("nextRateChange finds Monday's peak from Friday, more than 48h out", () => 
   const change = nextRateChange(weekdayPeakEntry, at("2026-08-28T10:00:00Z"));
 
   assert.deepEqual(change, { at: new Date("2026-08-31T01:00:00Z"), label: "Peak" });
+});
+
+test("public-holiday weekdays fall through to off-peak but ordinary weekdays remain peak", () => {
+  for (const iso of ["2026-09-25T02:00:00Z", "2026-10-01T06:30:00Z"]) {
+    const resolved = resolveRate(holidayWeekdayPeakEntry, at(iso));
+    assert.equal(resolved.label, "Off-peak", iso);
+    assert.equal(resolved.inputUsd, 0.5, iso);
+  }
+
+  for (const iso of ["2026-09-24T02:00:00Z", "2026-10-08T02:00:00Z"]) {
+    assert.equal(resolveRate(holidayWeekdayPeakEntry, at(iso)).label, "Peak", iso);
+  }
+
+  // Sep 20 is a Sunday make-up workday in the State Council calendar, but
+  // DeepSeek prices Monday-Friday only, so a Sunday remains off-peak.
+  assert.equal(resolveRate(holidayWeekdayPeakEntry, at("2026-09-20T02:00:00Z")).label, "Off-peak");
+});
+
+test("applicableVariants and rateRange waive dated exceptions", () => {
+  const holiday = at("2026-09-25T02:00:00Z");
+
+  assert.deepEqual(
+    applicableVariants(holidayWeekdayPeakEntry, holiday).map((v) => v.label),
+    ["Peak", "Off-peak"],
+  );
+  assert.deepEqual(rateRange(holidayWeekdayPeakEntry, holiday), {
+    minInputUsd: 0.5,
+    maxInputUsd: 1,
+    minOutputUsd: 1,
+    maxOutputUsd: 2,
+    varies: true,
+  });
+});
+
+test("nextRateChange skips a listed holiday and weekend before Monday peak", () => {
+  const change = nextRateChange(holidayWeekdayPeakEntry, at("2026-09-24T10:00:00Z"));
+
+  assert.deepEqual(change, { at: new Date("2026-09-28T01:00:00Z"), label: "Peak" });
 });

@@ -13,11 +13,11 @@ import { rateRange } from "./rates";
  * `inputUsd` field directly (the bug this replaces) or using `resolveRate`:
  *
  * - `rateRange` is built on `applicableVariants`, which waives
- *   `utcHourWindows` (see rates.ts), so this "from" price does not depend on
- *   what hour a static build happens to run at. `resolveRate` would bake in
- *   whichever half of an hour-scoped pair — DeepSeek Direct's Peak/Off-peak
- *   split, live since 2026-08-16T16:00Z — happened to be in force at build
- *   time.
+ *   `utcHourWindows`, `utcDaysOfWeek`, and `utcExcludedDates` (see rates.ts), so
+ *   this "from" price does not depend on the build's time or dated exceptions.
+ *   `resolveRate` would bake in whichever half of an hour-scoped pair —
+ *   DeepSeek Direct's Peak/Off-peak split, live since 2026-08-16T16:00Z —
+ *   happened to be in force at build time.
  * - A row's flat `inputUsd` is only its base rate; once an always-active
  *   variant supersedes it (as DeepSeek Direct's did at that same instant), the
  *   flat field is a rate no hour actually charges any more. Reading it

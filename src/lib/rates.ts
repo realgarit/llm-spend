@@ -44,10 +44,10 @@ export interface RateContext {
    * lib/scenario.ts, which also owns the "is this a preview or is it really
    * true" test that drives the label).
    *
-   * Everything else still applies: `utcHourWindows`, `contextBand` and
-   * `serviceTier` are enforced exactly as normal, and a `from`/`until` that
-   * does not parse still drops the variant rather than quoting a price off a
-   * typo.
+   * Everything else still applies: `utcHourWindows`, `utcDaysOfWeek`,
+   * `utcExcludedDates`, `contextBand` and `serviceTier` are enforced exactly
+   * as normal, and a `from`/`until` that does not parse still drops the variant
+   * rather than quoting a price off a typo.
    */
   previewScheduledRates?: boolean;
 }
@@ -83,10 +83,10 @@ const HOUR_MS = 3_600_000;
 /**
  * How far ahead `nextRateChange` scans hour-of-day boundaries.
  *
- * Must span a full week plus margin, because a recurring window can be scoped
- * to days as well as hours: DeepSeek's peak hours run Monday-Friday, so from
- * Friday 10:00 UTC the next change is Monday 01:00 UTC — 63 hours out. A
- * 48-hour scan would report "nothing scheduled" for most of the weekend.
+ * Must span a full week plus margin, because an hourly window can be scoped to
+ * weekdays and dated exceptions: DeepSeek's peak window may skip a holiday and
+ * weekend before its next Monday opening. A 48-hour scan would report
+ * "nothing scheduled" for most of those stretches.
  */
 const HOUR_SCAN_LIMIT = 24 * 8;
 
@@ -105,6 +105,8 @@ const HOUR_SCAN_LIMIT = 24 * 8;
  * - `utcDaysOfWeek` matches when the current UTC day (`Date#getUTCDay`, 0 =
  *   Sunday) is in the list. Omitted or empty places no constraint, exactly as
  *   for `utcHourWindows`.
+ * - `utcExcludedDates` prevents a condition from matching on listed UTC
+ *   calendar dates (`YYYY-MM-DD`). Omitted or empty places no constraint.
  * - `contextBand`'s `minTokens` is inclusive and `maxTokens` exclusive; an
  *   absent bound is unbounded. If `ctx.contextTokens` is unknown, a variant
  *   with a band does NOT match — we cannot claim a band price without knowing
@@ -154,16 +156,15 @@ export function resolveRate(entry: PricingEntry, ctx: RateContext): ResolvedRate
 }
 
 /**
- * Every variant that applies to `ctx` **ignoring where we are in the recurring
- * week**, in array order.
+ * Every variant that applies to `ctx` **ignoring the current time-scoped
+ * schedule**, in array order.
  *
- * Date windows, context bands and service tiers still filter; the recurring
- * time scoping — `utcHourWindows` and `utcDaysOfWeek` — is waived. This is what
- * a UI wants when it shows the whole picture: both halves of a peak/off-peak
- * pair, rather than just the one in force this hour. Waiving the day alongside
- * the hour matters for the same reason it matters for the hour — a statically
- * rendered "from $X" or "$0.66-$1.32" range must not change meaning at a
- * weekend boundary.
+ * Start/end dates, context bands and service tiers still filter; the calendar
+ * scoping — `utcHourWindows`, `utcDaysOfWeek` and `utcExcludedDates` — is
+ * waived. This is what a UI wants when it shows the whole picture: both halves
+ * of a peak/off-peak pair, rather than only the rate in force at this instant.
+ * The static "from $X" price and rate range therefore remain stable across
+ * both weekly boundaries and dated exceptions such as public holidays.
  */
 export function applicableVariants(entry: PricingEntry, ctx: RateContext): RateVariant[] {
   return (entry.variants ?? []).filter((variant) => matches(variant.conditions, ctx, true));
@@ -228,20 +229,21 @@ export function nextRateChange(
   const current = resolveRate(entry, scheduled).variant;
   const candidates = new Set<number>();
 
-  let recurring = false;
+  let timeScoped = false;
   for (const variant of variants) {
-    const { from, until, utcHourWindows, utcDaysOfWeek } = variant.conditions;
+    const { from, until, utcHourWindows, utcDaysOfWeek, utcExcludedDates } = variant.conditions;
     for (const iso of [from, until]) {
       if (iso === undefined) continue;
       const ms = Date.parse(iso);
       if (Number.isNaN(ms) || ms <= nowMs) continue;
       candidates.add(ms);
     }
-    if (utcHourWindows && utcHourWindows.length > 0) recurring = true;
-    if (utcDaysOfWeek && utcDaysOfWeek.length > 0) recurring = true;
+    if (utcHourWindows && utcHourWindows.length > 0) timeScoped = true;
+    if (utcDaysOfWeek && utcDaysOfWeek.length > 0) timeScoped = true;
+    if (utcExcludedDates && utcExcludedDates.length > 0) timeScoped = true;
   }
 
-  if (recurring) {
+  if (timeScoped) {
     const firstTick = (Math.floor(nowMs / HOUR_MS) + 1) * HOUR_MS;
     for (let i = 0; i < HOUR_SCAN_LIMIT; i += 1) {
       candidates.add(firstTick + i * HOUR_MS);
@@ -258,7 +260,7 @@ export function nextRateChange(
   return null;
 }
 
-function matches(c: RateConditions, ctx: RateContext, ignoreRecurringTime: boolean): boolean {
+function matches(c: RateConditions, ctx: RateContext, ignoreTimeScoping: boolean): boolean {
   const nowMs = ctx.now.getTime();
   if (!Number.isFinite(nowMs)) return false;
 
@@ -279,7 +281,7 @@ function matches(c: RateConditions, ctx: RateContext, ignoreRecurringTime: boole
     if (!previewing && nowMs >= untilMs) return false;
   }
 
-  if (!ignoreRecurringTime) {
+  if (!ignoreTimeScoping) {
     if (c.utcHourWindows && c.utcHourWindows.length > 0) {
       const hour = ctx.now.getUTCHours();
       if (!c.utcHourWindows.some((window) => containsHour(window, hour))) return false;
@@ -288,6 +290,11 @@ function matches(c: RateConditions, ctx: RateContext, ignoreRecurringTime: boole
     if (c.utcDaysOfWeek && c.utcDaysOfWeek.length > 0) {
       const day = ctx.now.getUTCDay();
       if (!c.utcDaysOfWeek.includes(day)) return false;
+    }
+
+    if (c.utcExcludedDates && c.utcExcludedDates.length > 0) {
+      const date = ctx.now.toISOString().slice(0, 10);
+      if (c.utcExcludedDates.includes(date)) return false;
     }
   }
 

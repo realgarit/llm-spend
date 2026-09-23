@@ -6,11 +6,9 @@ import type { PricingEntry } from "./types";
 import { getProvider, providers } from "./providers";
 
 /**
- * Migration tests for the rate variants added to the DeepSeek, Gemini and Qwen
- * rows (see docs/superpowers/specs/2026-08-14-rate-variants-design.md). These
- * assert against the real catalog data in providers.ts, not fixtures — the
- * generic resolver semantics (matching order, half-open windows, etc.) are
- * already pinned by src/lib/rates.test.ts against synthetic entries.
+ * Catalog integration tests for scheduled, calendar-scoped, and service-tier
+ * rates. These assert against real provider data; generic resolver semantics
+ * are pinned by src/lib/rates.test.ts against synthetic entries.
  */
 
 function directDeepSeek(model: string): PricingEntry {
@@ -270,6 +268,24 @@ test("DeepSeek-V4.1 Flash (Direct) resolves the new Peak schedule", () => {
   assert.equal(resolved.outputUsd, 1.2);
 });
 
+test("DeepSeek direct Peak schedule falls back on 2026 Chinese public holidays", () => {
+  for (const model of ["DeepSeek-V4 Pro", "DeepSeek-V4.1 Flash"]) {
+    const holiday = resolveRate(directDeepSeek(model), at("2026-09-25T02:00:00Z"));
+    assert.equal(holiday.label, "Off-peak", model);
+
+    const nationalDay = resolveRate(directDeepSeek(model), at("2026-10-01T06:30:00Z"));
+    assert.equal(nationalDay.label, "Off-peak", model);
+
+    const ordinaryWeekday = resolveRate(directDeepSeek(model), at("2026-09-24T02:00:00Z"));
+    assert.equal(ordinaryWeekday.label, "Peak", model);
+
+    // September 20 is a Sunday make-up workday, but the provider's rule is
+    // Monday-Friday, not China's adjusted work schedule.
+    const makeUpWorkday = resolveRate(directDeepSeek(model), at("2026-09-20T02:00:00Z"));
+    assert.equal(makeUpWorkday.label, "Off-peak", model);
+  }
+});
+
 // ---------------------------------------------------------------------------
 // Peak is exactly 2x off-peak, on every dimension, for both DeepSeek rows.
 // ---------------------------------------------------------------------------
@@ -319,6 +335,88 @@ test("GPT-6 Astra Foundry rows are backed by the current retail feed", () => {
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("Azure OpenAI GPT6")));
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-10")));
   assert.ok(rows.every((entry) => !entry.sourceNote?.includes("pending retail")));
+});
+
+test("GPT-6 Sol and Luna direct and Foundry rows match the published rates", () => {
+  const rows = getProvider("openai-azure")?.entries.filter((entry) => entry.model.startsWith("GPT-6 Sol") || entry.model.startsWith("GPT-6 Luna"));
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ model, tier, inputUsd, cachedUsd, outputUsd, effectiveDate }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      effectiveDate,
+    })),
+    [
+      { model: "GPT-6 Sol", tier: "Direct", inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Sol Long Context", tier: "Direct", inputUsd: 4, cachedUsd: 0.4, outputUsd: 15, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna", tier: "Direct", inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.5, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna Long Context", tier: "Direct", inputUsd: 0.2, cachedUsd: 0.02, outputUsd: 0.75, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Sol", tier: "Global", inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Sol Long Context", tier: "Global", inputUsd: 4, cachedUsd: 0.4, outputUsd: 15, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Sol", tier: "DataZone", inputUsd: 2.2, cachedUsd: 0.22, outputUsd: 11, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Sol Long Context", tier: "DataZone", inputUsd: 4.4, cachedUsd: 0.44, outputUsd: 16.5, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna", tier: "Global", inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.5, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna Long Context", tier: "Global", inputUsd: 0.2, cachedUsd: 0.02, outputUsd: 0.75, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna", tier: "DataZone", inputUsd: 0.11, cachedUsd: 0.011, outputUsd: 0.55, effectiveDate: "2026-09-22" },
+      { model: "GPT-6 Luna Long Context", tier: "DataZone", inputUsd: 0.22, cachedUsd: 0.022, outputUsd: 0.825, effectiveDate: "2026-09-22" },
+    ],
+  );
+  assert.ok(rows.every((entry) => entry.confidence === "official"));
+  assert.ok(
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("pending retail-meter publication")),
+  );
+});
+
+test("GPT-6 Sol and Luna direct variants use published Batch, Flex and Fast prices", () => {
+  const provider = getProvider("openai-azure");
+  const sol = provider?.entries.find((entry) => entry.model === "GPT-6 Sol" && entry.tier === "Direct");
+  const lunaLong = provider?.entries.find((entry) => entry.model === "GPT-6 Luna Long Context" && entry.tier === "Direct");
+
+  assert.ok(sol);
+  assert.ok(lunaLong);
+  const flex = resolveRate(sol, { ...at("2026-09-23T12:00:00Z"), serviceTier: "flex" });
+  const fast = resolveRate(lunaLong, { ...at("2026-09-23T12:00:00Z"), serviceTier: "priority" });
+  assert.deepEqual(
+    { inputUsd: flex.inputUsd, cachedUsd: flex.cachedUsd, outputUsd: flex.outputUsd, label: flex.label },
+    { inputUsd: 1, cachedUsd: 0.1, outputUsd: 5, label: "Flex" },
+  );
+  assert.deepEqual(
+    { inputUsd: fast.inputUsd, cachedUsd: fast.cachedUsd, outputUsd: fast.outputUsd, label: fast.label },
+    { inputUsd: 0.4, cachedUsd: 0.04, outputUsd: 1.5, label: "Fast mode" },
+  );
+});
+
+test("Claude Opus 5.5 direct and Foundry rows reflect CCU and data-zone pricing", () => {
+  const entries = getProvider("claude")?.entries;
+  const direct = entries?.find((entry) => entry.model === "Claude Opus 5.5" && entry.tier === "Direct");
+  const global = entries?.find((entry) => entry.model === "Claude Opus 5.5" && entry.tier === "Global");
+  const dataZone = entries?.find((entry) => entry.model === "Claude Opus 5.5" && entry.tier === "DataZone");
+  const sonnetFoundry = entries?.find((entry) => entry.model.includes("Sonnet 5") && entry.tier === "Global");
+
+  assert.ok(direct);
+  assert.ok(global);
+  assert.ok(dataZone);
+  assert.ok(sonnetFoundry);
+  assert.deepEqual(
+    [direct, global, dataZone].map(({ inputUsd, cachedUsd, outputUsd, confidence }) => ({
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      confidence,
+    })),
+    [
+      { inputUsd: 4, cachedUsd: 0.2, outputUsd: 20, confidence: "official" },
+      { inputUsd: 4, cachedUsd: 0.2, outputUsd: 20, confidence: "official" },
+      { inputUsd: 4.4, cachedUsd: 0.22, outputUsd: 22, confidence: "official" },
+    ],
+  );
+  assert.equal(sonnetFoundry.confidence, "official");
+  assert.equal(resolveRate(direct, { ...at("2026-09-23T12:00:00Z"), serviceTier: "batch" }).cachedUsd, 0.1);
+  assert.equal(resolveRate(direct, { ...at("2026-09-23T12:00:00Z"), serviceTier: "priority" }).cachedUsd, 0.4);
 });
 
 test("MAI-Thinking-1 matches the named commercial Foundry meters", () => {
@@ -1076,10 +1174,9 @@ test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority me
 });
 
 // ---------------------------------------------------------------------------
-// Guard: this migration must not change what the site shows today. Rendering
-// still reads the flat inputUsd/cachedUsd/outputUsd fields directly (variants
-// are not consumed until Phase 3), so every row's resolved rate "now" must
-// equal its base rate exactly.
+// Guard: keep the resolver's current state explicit as real dates pass. Rows
+// whose dated variants are intentionally active at the pinned instant are
+// allowlisted below; every other row must still resolve to its flat base rate.
 // ---------------------------------------------------------------------------
 
 // Rows that are EXPECTED to resolve to a non-null variant at the pinned
@@ -1092,10 +1189,16 @@ test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority me
 // authoring mistake, e.g. a `from` date wrongly set in the past) by checking
 // the variant's own `sourceNote`.
 const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
-  // DeepSeek's legacy Peak/Off-peak pair is active at the pinned 2026-08-26
+  // DeepSeek's Peak/Off-peak pair is active at the pinned 2026-09-23
   // instant; the V4.1 transition later bounds that legacy regime.
   "deepseek / DeepSeek-V4 Pro (DeepSeek direct API)",
   "deepseek / DeepSeek-V4.1 Flash (DeepSeek direct API)",
+  // Commercial GPT-5.6 Sol Global and Data Zone short-context rows and the
+  // Global long-context row use the new retail tranche effective September 1.
+  "openai-azure / GPT-5.6 Sol",
+  "openai-azure / GPT-5.6 Sol Long Context",
+  // GLM-5.3-Flash's dated promotion reversion became active on September 9.
+  "glm / GLM-5.3-Flash (Z.ai direct API)",
   // Qwen3.7 Max's promo reverts to list price via a "List price (from
   // September)" variant with `{ from: "2026-09-01T00:00:00Z" }` and no
   // `until` — permanently active from that instant on.
@@ -1113,7 +1216,7 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
 test("guard: every catalog row resolves to its own base rate as of today", () => {
   // A literal, not `Date.now()`, so the guard is deterministic — bump it by
   // hand as real time passes, or it stops representing an actual "today".
-  const now = new Date("2026-08-26T12:00:00Z");
+  const now = new Date("2026-09-23T12:00:00Z");
 
   for (const provider of providers) {
     for (const row of provider.entries) {
