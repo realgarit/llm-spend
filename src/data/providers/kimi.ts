@@ -6,9 +6,9 @@ export const kimi: Provider = {
   slug: "kimi",
   name: "Kimi",
   org: "Moonshot AI",
-  tagline: "Kimi K3 is a 1M-context flagship, now on Microsoft Foundry as well as Moonshot's own API; earlier K2 models are resold on Foundry across tiers.",
+  tagline: "Kimi K3, K2.6 and K2.7 Code have first-party API lanes; K2.6/K2.7 Code also publish BatchJob rates, with separate Global and Data Zone Foundry rows.",
   intro: [
-    "Kimi K3 is available directly from Moonshot's API for long-horizon coding and knowledge work, and since 2026-08-01 through a Fireworks-hosted Microsoft Foundry Data Zone listing. Earlier K2 models are resold on Foundry at Global and Data Zone tiers, plus Fireworks-hosted listings. These chat models are generation-only, so pair them with an embeddings model for retrieval.",
+    "Kimi K3, K2.6, and K2.7 Code are available directly from Moonshot's API. K2.6 and K2.7 Code also have official BatchJob prices (60% of standard); K2.7 Code's highspeed option is Direct-only. Their Microsoft Foundry Global and Data Zone rows remain separate cloud-hosted lanes. Kimi K3 is also available through a Fireworks-hosted Foundry Data Zone listing. These chat models are generation-only, so pair them with an embeddings model for retrieval.",
   ],
   entries: [
     {
@@ -26,13 +26,75 @@ export const kimi: Provider = {
     },
     {
       model: "Kimi K2.6",
+      host: "Kimi direct API",
+      tier: "Direct",
+      inputUsd: 0.95,
+      cachedUsd: 0.16,
+      outputUsd: 4.0,
+      contextWindow: 262_144,
+      confidence: "official",
+      notes: "First-party API standard lane. BatchJob is a separate Direct API service tier, not a Foundry deployment.",
+      sourceNote:
+        "Moonshot's official Kimi Model Inference Pricing page (platform.kimi.ai/docs/pricing/chat-k26), captured 2026-09-24, lists kimi-k2.6 at $0.95/M cache-miss input, $0.16/M cache-hit input, and $4/M output with a 262,144-token context. The page gives no rate effective date.",
+      effectiveDate: "2026-09-24",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.57,
+          cachedUsd: 0.1,
+          outputUsd: 2.4,
+          confidence: "official",
+          sourceNote:
+            "Moonshot's official BatchJob Pricing page (platform.kimi.ai/docs/pricing/batch), captured 2026-09-24, lists kimi-k2.6 Batch at $0.57/M cache-miss input, $0.10/M cache-hit input, and $2.40/M output. The page says Batch is 60% of standard pricing; the exact cache-hit price is recorded as published (rounded to $0.10). No effective date is stated.",
+        },
+      ],
+    },
+    {
+      model: "Kimi K2.7 Code",
+      host: "Kimi direct API",
+      tier: "Direct",
+      inputUsd: 0.95,
+      cachedUsd: 0.19,
+      outputUsd: 4.0,
+      contextWindow: 262_144,
+      confidence: "official",
+      notes: "First-party API standard lane. BatchJob and Highspeed are Direct-only service tiers, not Foundry deployment tiers.",
+      sourceNote:
+        "Moonshot's official Kimi Model Inference Pricing page (platform.kimi.ai/docs/pricing/chat-k27-code), captured 2026-09-24, lists kimi-k2.7-code at $0.95/M cache-miss input, $0.19/M cache-hit input, and $4/M output with a 262,144-token context. The page gives no rate effective date.",
+      effectiveDate: "2026-09-24",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.57,
+          cachedUsd: 0.114,
+          outputUsd: 2.4,
+          confidence: "official",
+          sourceNote:
+            "Moonshot's official BatchJob Pricing page (platform.kimi.ai/docs/pricing/batch), captured 2026-09-24, lists kimi-k2.7-code Batch at $0.57/M cache-miss input, $0.114/M cache-hit input, and $2.40/M output (60% of standard). No effective date is stated.",
+        },
+        {
+          label: "Highspeed",
+          conditions: { serviceTier: "highspeed" },
+          inputUsd: 1.9,
+          cachedUsd: 0.38,
+          outputUsd: 8.0,
+          confidence: "official",
+          sourceNote:
+            "Moonshot's official Kimi Model Inference Pricing page (platform.kimi.ai/docs/pricing/chat-k27-code), captured 2026-09-24, lists kimi-k2.7-code-highspeed at $1.90/M cache-miss input, $0.38/M cache-hit input, and $8/M output — exactly 2x standard. This API service tier is Direct-only; Foundry Global remains on Standard pricing.",
+        },
+      ],
+    },
+    {
+      model: "Kimi K2.6",
       tier: "Global",
       inputUsd: 0.95,
       cachedUsd: 0.16,
       cachedConfidence: "official",
       outputUsd: 4.0,
       confidence: "official",
-      notes: "Native Global tier; cached input now officially metered.",
+      notes: "Native Microsoft Foundry Global tier; cached input now officially metered. Kimi's Direct API is listed separately above.",
       sourceNote:
         "Input $0.95/M and output $4.00/M official. Azure Retail Prices API 'K2.6 cached glbl' meter now publishes cached input at $0.00016/1K ($0.16/M), effective 2026-07-01, captured 2026-07-23 — replacing the earlier ~$0.19/M billing-reconciled estimate.",
       effectiveDate: "2026-07-23",
@@ -43,23 +105,13 @@ export const kimi: Provider = {
       inputUsd: 0.95,
       cachedUsd: 0.19,
       outputUsd: 4.0,
+      contextWindow: 262_144,
       confidence: "official",
       notes:
-        "Cached rate officially published for this tier. A 'highspeed' service tier bills exactly 2x on every dimension.",
-      sourceNote: "Official page (input, cached, and output all listed).",
-      effectiveDate: CAPTURED,
-      variants: [
-        {
-          label: "Highspeed",
-          conditions: { serviceTier: "highspeed" },
-          inputUsd: 1.9,
-          cachedUsd: 0.38,
-          outputUsd: 8.0,
-          confidence: "official",
-          sourceNote:
-            "Moonshot's official pricing page (platform.kimi.ai/docs/pricing/chat-k27-code), captured 2026-08-15 via direct DOM table read: kimi-k2.7-code-highspeed lists $1.90/M input (cache miss), $0.38/M cached input (cache hit), $8.00/M output — exactly 2x kimi-k2.7-code on every dimension, same 262,144-token context window. The page describes it as 'the high-speed version of Kimi K2.7 Code, the same model... but with an output speed of approximately 180 Tokens/s.' Selected via the API's service_tier parameter, matching this schema's 'highspeed' tier.",
-        },
-      ],
+        "Native Microsoft Foundry Global tier. Batch and Highspeed are first-party API service tiers and are listed only on the separate Direct row above.",
+      sourceNote:
+        "Azure Retail Prices API, productName 'Azure Kimi', captured 2026-09-24: 'K2.7 Code Inp glbl Tokens' $0.00095/1K, 'K2.7 Code cached glbl Tokens' $0.00019/1K, and 'K2.7 Code Outp glbl Tokens' $0.004/1K, all effective 2026-07-01. The same rates cover 35 commercial Global regions; two US Government rows are 1.25x. Kimi's official model pricing page independently lists the matching Global-standard rates.",
+      effectiveDate: "2026-07-01",
     },
     {
       model: "Kimi K2.5 Thinking",

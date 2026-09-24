@@ -23,6 +23,51 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-24",
+    title: "DeepSeek V4.1 Flash adds an Azure Direct lane; Kimi Direct Batch prices added",
+    tag: "model",
+    body: [
+      "Microsoft's September 23 Foundry announcement adds a Direct from Azure public-preview deployment for DeepSeek V4.1 Flash, billed through the Azure subscription. Its published Global Standard rates are $0.30/M input, $0.006/M cache, and $1.20/M output. No Azure native V4.1 Retail meter appears in the current feed, so this row uses Microsoft's rate table. Microsoft does not publish a peak/off-peak schedule for this path; the row remains flat and separate from DeepSeek's first-party API variants and the existing Fireworks Global lane.",
+      "The same Microsoft post rounds Fireworks Global V4.1 Flash to $0.37/$0.007/$1.50 per M. The current Azure Retail Prices feed has the exact 1K-meter rates $0.375/$0.008/$1.50 per M, effective September 1 across 20 commercial regions; those more precise billable meter values remain in the catalog.",
+      "Moonshot's current pricing documentation publishes first-party API rates for Kimi K2.6 and K2.7 Code, so the catalog now shows Direct comparison lanes beside their existing Global/Foundry offers. Standard rates are $0.95/$0.16/$4.00 per M input/cache-hit/output for K2.6 and $0.95/$0.19/$4.00 for K2.7 Code, each with a 262,144-token context. Its official BatchJob table supports both at 60% of standard: K2.6 is $0.57/$0.10/$2.40 per M and K2.7 Code is $0.57/$0.114/$2.40. K2.7 Code Highspeed is kept on the Direct lane, not the Foundry Global row. The Kimi docs publish no effective date, so these are current rates captured September 24, not a newly dated promotion.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry Blog — DeepSeek V4.1 Flash",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/deepseek-v4-1-flash-is-coming-to-microsoft-foundry/4556431",
+      },
+      {
+        label: "Azure Retail Prices API — native Azure Deepseek meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20Deepseek%20Models%27",
+      },
+      {
+        label: "Azure Retail Prices API — Fireworks V4.1 Flash meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20Fireworks%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27v4.1-flash%27%29",
+      },
+      {
+        label: "Azure Retail Prices API — Kimi K2.7 Code Global meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20Kimi%27%20and%20contains%28tolower%28meterName%29%2C%27k2.7%20code%27%29",
+      },
+      {
+        label: "DeepSeek — Models & Pricing",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+      {
+        label: "Moonshot — Kimi Model Inference Pricing",
+        href: "https://platform.kimi.ai/docs/pricing/chat-k26",
+      },
+      {
+        label: "Moonshot — Kimi K2.7 Code model pricing",
+        href: "https://platform.kimi.ai/docs/pricing/chat-k27-code",
+      },
+      {
+        label: "Moonshot — BatchJob Pricing",
+        href: "https://platform.kimi.ai/docs/pricing/batch",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-24",
+  },
+  {
     date: "2026-09-23",
     title: "GPT-6 Sol/Luna, Claude Opus 5.5, and holiday-aware DeepSeek rates",
     tag: "model",
