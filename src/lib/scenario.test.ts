@@ -454,8 +454,19 @@ const TIERED_ROWS: {
   {
     providerSlug: "kimi",
     model: "Kimi K2.7 Code",
-    tier: "Global",
-    tiers: { highspeed: { inputUsd: 1.9, cachedUsd: 0.38, outputUsd: 8.0 } },
+    tier: "Direct",
+    host: "Kimi direct API",
+    tiers: {
+      batch: { inputUsd: 0.57, cachedUsd: 0.114, outputUsd: 2.4 },
+      highspeed: { inputUsd: 1.9, cachedUsd: 0.38, outputUsd: 8.0 },
+    },
+  },
+  {
+    providerSlug: "kimi",
+    model: "Kimi K2.6",
+    tier: "Direct",
+    host: "Kimi direct API",
+    tiers: { batch: { inputUsd: 0.57, cachedUsd: 0.1, outputUsd: 2.4 } },
   },
   {
     providerSlug: "gemini",

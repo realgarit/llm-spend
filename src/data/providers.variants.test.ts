@@ -73,9 +73,19 @@ function qwen37TextEmbedding(): PricingEntry {
 
 function kimiK27Code(): PricingEntry {
   const provider = getProvider("kimi");
-  const entry = provider?.entries.find((candidate) => candidate.model === "Kimi K2.7 Code");
+  const entry = provider?.entries.find(
+    (candidate) => candidate.model === "Kimi K2.7 Code" && candidate.tier === "Direct",
+  );
 
-  assert.ok(entry, "Expected the Kimi K2.7 Code entry");
+  assert.ok(entry, "Expected the Kimi K2.7 Code Direct entry");
+  return entry;
+}
+
+function kimiK26Direct(): PricingEntry {
+  const provider = getProvider("kimi");
+  const entry = provider?.entries.find((candidate) => candidate.model === "Kimi K2.6" && candidate.tier === "Direct");
+
+  assert.ok(entry, "Expected the Kimi K2.6 Direct entry");
   return entry;
 }
 
@@ -266,6 +276,23 @@ test("DeepSeek-V4.1 Flash (Direct) resolves the new Peak schedule", () => {
   assert.equal(resolved.inputUsd, 0.3);
   assert.equal(resolved.cachedUsd, 0.006);
   assert.equal(resolved.outputUsd, 1.2);
+});
+
+test("DeepSeek V4.1 Flash Direct from Azure stays on Microsoft's flat published rate", () => {
+  const entry = getProvider("deepseek")?.entries.find(
+    (candidate) => candidate.model === "DeepSeek-V4.1 Flash" && candidate.host === "Direct from Azure",
+  );
+
+  assert.ok(entry);
+  assert.equal(entry.tier, "Global");
+  assert.equal(entry.effectiveDate, "2026-09-24");
+  assert.equal(entry.variants, undefined);
+
+  const resolved = resolveRate(entry, { now: new Date("2026-09-24T02:00:00Z") });
+  assert.equal(resolved.inputUsd, 0.3);
+  assert.equal(resolved.cachedUsd, 0.006);
+  assert.equal(resolved.outputUsd, 1.2);
+  assert.equal(resolved.variant, null);
 });
 
 test("DeepSeek direct Peak schedule falls back on 2026 Chinese public holidays", () => {
@@ -944,6 +971,20 @@ test("Kimi K2.7 Code stays on its base rate without a service tier (defaults to 
   }
 });
 
+test("Kimi K2.6 and K2.7 Code Direct Batch rates match the official BatchJob table", () => {
+  const k26 = resolveRate(kimiK26Direct(), { now: new Date("2026-09-24T12:00:00Z"), serviceTier: "batch" });
+  const k27 = resolveRate(kimiK27Code(), { now: new Date("2026-09-24T12:00:00Z"), serviceTier: "batch" });
+
+  assert.deepEqual(
+    { inputUsd: k26.inputUsd, cachedUsd: k26.cachedUsd, outputUsd: k26.outputUsd, label: k26.label },
+    { inputUsd: 0.57, cachedUsd: 0.1, outputUsd: 2.4, label: "Batch" },
+  );
+  assert.deepEqual(
+    { inputUsd: k27.inputUsd, cachedUsd: k27.cachedUsd, outputUsd: k27.outputUsd, label: k27.label },
+    { inputUsd: 0.57, cachedUsd: 0.114, outputUsd: 2.4, label: "Batch" },
+  );
+});
+
 // ---------------------------------------------------------------------------
 // Gemini 3.6 / 3.7 / 3.8 Flash — Batch, Flex, Priority, each combined with the
 // existing 2027-01-01 promo-reversion date. Batch and Flex are numerically
@@ -1189,7 +1230,7 @@ test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority me
 // authoring mistake, e.g. a `from` date wrongly set in the past) by checking
 // the variant's own `sourceNote`.
 const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
-  // DeepSeek's Peak/Off-peak pair is active at the pinned 2026-09-23
+  // DeepSeek's Peak/Off-peak pair is active at the pinned 2026-09-24
   // instant; the V4.1 transition later bounds that legacy regime.
   "deepseek / DeepSeek-V4 Pro (DeepSeek direct API)",
   "deepseek / DeepSeek-V4.1 Flash (DeepSeek direct API)",
@@ -1216,7 +1257,7 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
 test("guard: every catalog row resolves to its own base rate as of today", () => {
   // A literal, not `Date.now()`, so the guard is deterministic — bump it by
   // hand as real time passes, or it stops representing an actual "today".
-  const now = new Date("2026-09-23T12:00:00Z");
+  const now = new Date("2026-09-24T12:00:00Z");
 
   for (const provider of providers) {
     for (const row of provider.entries) {
