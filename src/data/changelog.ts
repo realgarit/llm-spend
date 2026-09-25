@@ -23,6 +23,26 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-25",
+    title: "Azure meters confirm GPT-6 Sol/Luna; Sol Priority pricing added",
+    tag: "pricing",
+    body: [
+      "The Azure Retail Prices API now lists the 48 GPT-6 Sol/Luna token-meter names effective September 1: 32 Sol names across 624 regional rows and 16 Luna names across 312 rows. Their Global and US/EU Data Zone Standard rates match Microsoft's September 22 Foundry announcement, replacing announcement-only provenance for these rows.",
+      "The feed also publishes GPT-6 Sol Priority Processing rates. The catalog now includes Global short/long-context at $4/$0.40/$20 and $8/$0.80/$30 per M input/cached-input/output, and US Data Zone at $4.40/$0.44/$22 and $8.80/$0.88/$33. Microsoft confirms Priority availability for Global and US Data Zone; although the feed also lists EU Data Zone Priority meters, the launch announcement does not confirm that deployment, so the EU offer is not represented as a separate rate. Cache-write meters remain outside this token-rate schema, and no Luna Priority meter appears in the feed.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — GPT-6 meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20OpenAI%20GPT6%27",
+      },
+      {
+        label: "Microsoft Azure — GPT-6 Astra, Sol, and Luna in Foundry",
+        href: "https://azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-25",
+  },
+  {
     date: "2026-09-24",
     title: "DeepSeek V4.1 Flash adds an Azure Direct lane; Kimi Direct Batch prices added",
     tag: "model",
