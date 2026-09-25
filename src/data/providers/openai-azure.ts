@@ -5,9 +5,9 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6 Astra, Sol and Luna are available on OpenAI's direct API and Microsoft Foundry; Sol/Luna's published Foundry rates are not yet present in the Azure retail feed.",
+  tagline: "GPT-6 Astra, Sol and Luna are available on OpenAI's direct API and Microsoft Foundry; Azure retail meters now confirm Sol/Luna rates and Sol Priority pricing.",
   intro: [
-    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is available through OpenAI's direct API and Foundry, with a $10/$1/$50 per M short-context rate, $20/$2/$75 above 272K, and published Global and US Data Zone rates. GPT-6 Sol and Luna became generally available in Foundry on September 22: Microsoft's published Global Standard rates match their OpenAI Direct lanes, with 10% US and 20% EU Data Zone groups. The September 23 Retail Prices feed still has no Sol/Luna meters, so the catalog uses Microsoft's published announcement rates pending meter publication; cache-write and Sol Priority rates are not modeled. OpenAI also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. Cache-write prices are otherwise published but not modeled by this schema, which tracks cache reads. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
+    "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6 Astra is available through OpenAI's direct API and Foundry, with a $10/$1/$50 per M short-context rate, $20/$2/$75 above 272K, and published Global and US Data Zone rates. GPT-6 Sol and Luna became generally available in Foundry on September 22. The Azure Retail Prices API now confirms their Standard Global and US/EU Data Zone meters, effective September 1, and the listed prices match Microsoft's announcement and OpenAI's Direct rates. Azure also publishes GPT-6 Sol Priority Processing meters for Global and US Data Zone; Luna has no Priority meter. Cache-write prices are separately billed and not modeled by this schema, which tracks cached-input reads. OpenAI also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity briefly broke. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. OpenAI then cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\". The commercial Foundry retail feed now carries those Sol rates effective 2026-09-01, plus the corresponding 10% Data Zone and Priority Processing meters, so the previous Foundry/direct gap is closed for the published commercial lanes.",
   ],
   entries: [
@@ -376,8 +376,21 @@ export const openaiAzure: Provider = {
       confidence: "official",
       notes: "GPT-6 Sol Standard Global short-context rate. The published $2.50/M cache-write rate is outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes Global Standard at $2/$0.20/$10 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-sol ShortCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $2.00/$0.20/$10.00 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $2.50/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Sol as generally available.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Priority",
+          conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 4.0,
+          cachedUsd: 0.4,
+          outputUsd: 20.0,
+          confidence: "official",
+          notes: "Foundry Priority Processing (PP); the $5.00/M cache-write meter is outside this schema.",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-25: '6-sol ShortCo Inp PP Gl', 'Cd Inp PP Gl' and 'Opt PP Gl' are $4.00/$0.40/$20.00 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $5.00/M and is outside this schema. Microsoft's September 22 launch confirms Priority Processing for GPT-6 Sol on Global deployments.",
+        },
+      ],
     },
     {
       model: "GPT-6 Sol Long Context",
@@ -390,8 +403,21 @@ export const openaiAzure: Provider = {
       confidence: "official",
       notes: "GPT-6 Sol Standard Global long-context rate for prompts above 272K input tokens. The published $5.00/M cache-write rate is outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context Global Standard at $4/$0.40/$15 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-sol LongCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $4.00/$0.40/$15.00 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $5.00/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Sol as generally available.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Priority",
+          conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 8.0,
+          cachedUsd: 0.8,
+          outputUsd: 30.0,
+          confidence: "official",
+          notes: "Foundry Priority Processing (PP); the $10.00/M cache-write meter is outside this schema.",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-25: '6-sol LongCo Inp PP Gl', 'Cd Inp PP Gl' and 'Opt PP Gl' are $8.00/$0.80/$30.00 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $10.00/M and is outside this schema. Microsoft's September 22 launch confirms Priority Processing for GPT-6 Sol on Global deployments.",
+        },
+      ],
     },
     {
       model: "GPT-6 Sol",
@@ -403,10 +429,23 @@ export const openaiAzure: Provider = {
       maxOutput: 128_000,
       confidence: "official",
       notes:
-        "GPT-6 Sol Standard US Data Zone short-context rate. The EU Data Zone group is $2.40/$0.24/$12.00 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+        "GPT-6 Sol Standard US Data Zone short-context rate. The EU Data Zone group is $2.40/$0.24/$12.00 per M; this catalog keeps the US group as its primary Data Zone lane. Priority is also priced for the US group; cache writes are outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes US Data Zone Standard at $2.20/$0.22/$11 per M input/cached-input/output and EU Data Zone Standard at $2.40/$0.24/$12. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-sol ShortCo Inp Std DZ', 'Cd Inp Std DZ' and 'Opt Std DZ' meters are $2.20/$0.22/$11.00 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $2.75/M. The same meters are $2.40/$0.24/$12.00/$3.00 per M across six EU regions. Microsoft's September 22 announcement confirms Standard availability in US and EU Data Zones; cache writes are outside this schema.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Priority",
+          conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 4.4,
+          cachedUsd: 0.44,
+          outputUsd: 22.0,
+          confidence: "official",
+          notes: "US Data Zone Priority Processing; the retail feed also lists EU meters, but the launch post only confirms US Data Zone Priority availability.",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-25: US-region '6-sol ShortCo Inp PP DZ', 'Cd Inp PP DZ' and 'Opt PP DZ' meters are $4.40/$0.44/$22.00 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $5.50/M. The feed also lists six EU-region PP meters at $4.80/$0.48/$24.00/M (with $6.00/M cache writes), but Microsoft's September 22 launch confirms Priority Processing only for Global and US Data Zone, so this row represents the US offer.",
+        },
+      ],
     },
     {
       model: "GPT-6 Sol Long Context",
@@ -418,10 +457,23 @@ export const openaiAzure: Provider = {
       maxOutput: 128_000,
       confidence: "official",
       notes:
-        "GPT-6 Sol Standard US Data Zone long-context rate for prompts above 272K input tokens. The EU Data Zone group is $4.80/$0.48/$18.00 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
+        "GPT-6 Sol Standard US Data Zone long-context rate for prompts above 272K input tokens. The EU Data Zone group is $4.80/$0.48/$18.00 per M; this catalog keeps the US group as its primary Data Zone lane. Priority is also priced for the US group; cache writes are outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context US Data Zone Standard at $4.40/$0.44/$16.50 per M input/cached-input/output and EU Data Zone Standard at $4.80/$0.48/$18. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Sol meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-sol LongCo Inp Std DZ', 'Cd Inp Std DZ' and 'Opt Std DZ' meters are $4.40/$0.44/$16.50 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $5.50/M. The same meters are $4.80/$0.48/$18.00/$6.00 per M across six EU regions. Microsoft's September 22 announcement confirms Standard availability in US and EU Data Zones; cache writes are outside this schema.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Priority",
+          conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
+          inputUsd: 8.8,
+          cachedUsd: 0.88,
+          outputUsd: 33.0,
+          confidence: "official",
+          notes: "US Data Zone Priority Processing; the retail feed also lists EU meters, but the launch post only confirms US Data Zone Priority availability.",
+          sourceNote:
+            "Azure Retail Prices API, captured 2026-09-25: US-region '6-sol LongCo Inp PP DZ', 'Cd Inp PP DZ' and 'Opt PP DZ' meters are $8.80/$0.88/$33.00 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $11.00/M. The feed also lists six EU-region PP meters at $9.60/$0.96/$36.00/M (with $12.00/M cache writes), but Microsoft's September 22 launch confirms Priority Processing only for Global and US Data Zone, so this row represents the US offer.",
+        },
+      ],
     },
     {
       model: "GPT-6 Luna",
@@ -434,7 +486,7 @@ export const openaiAzure: Provider = {
       confidence: "official",
       notes: "GPT-6 Luna Standard Global short-context rate. The published $0.125/M cache-write rate is outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes Global Standard at $0.10/$0.01/$0.50 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna ShortCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $0.10/$0.01/$0.50 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $0.125/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Luna as generally available.",
       effectiveDate: "2026-09-22",
     },
     {
@@ -448,7 +500,7 @@ export const openaiAzure: Provider = {
       confidence: "official",
       notes: "GPT-6 Luna Standard Global long-context rate for prompts above 272K input tokens. The published $0.25/M cache-write rate is outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context Global Standard at $0.20/$0.02/$0.75 per M input/cached-input/output. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns 384 Astra rows and no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna LongCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $0.20/$0.02/$0.75 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $0.25/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Luna as generally available.",
       effectiveDate: "2026-09-22",
     },
     {
@@ -463,7 +515,7 @@ export const openaiAzure: Provider = {
       notes:
         "GPT-6 Luna Standard US Data Zone short-context rate. The EU Data Zone group is $0.12/$0.012/$0.60 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes US Data Zone Standard at $0.11/$0.011/$0.55 per M input/cached-input/output and EU Data Zone Standard at $0.12/$0.012/$0.60. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna ShortCo Inp Std DZ', 'Cd Inp Std DZ' and 'Opt Std DZ' meters are $0.11/$0.011/$0.55 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $0.1375/M. The same meters are $0.12/$0.012/$0.60/$0.15 per M across six EU regions. Microsoft's September 22 announcement confirms Standard availability in US and EU Data Zones; cache writes are outside this schema.",
       effectiveDate: "2026-09-22",
     },
     {
@@ -478,7 +530,7 @@ export const openaiAzure: Provider = {
       notes:
         "GPT-6 Luna Standard US Data Zone long-context rate for prompts above 272K input tokens. The EU Data Zone group is $0.24/$0.024/$0.90 per M; this catalog keeps the US group as its primary Data Zone lane. Cache writes are outside this schema.",
       sourceNote:
-        "Microsoft's September 22 Azure GPT-6 announcement, captured 2026-09-23, publishes long-context US Data Zone Standard at $0.22/$0.022/$0.825 per M input/cached-input/output and EU Data Zone Standard at $0.24/$0.024/$0.90. The 2026-09-23 Azure Retail Prices API query for product 'Azure OpenAI GPT6' returns no Luna meters; Microsoft's published price table is the current official source pending retail-meter publication.",
+        "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna LongCo Inp Std DZ', 'Cd Inp Std DZ' and 'Opt Std DZ' meters are $0.22/$0.022/$0.825 per M effective 2026-09-01 across seven US Data Zone regions; the companion cache-write meter is $0.275/M. The same meters are $0.24/$0.024/$0.90/$0.30 per M across six EU regions. Microsoft's September 22 announcement confirms Standard availability in US and EU Data Zones; cache writes are outside this schema.",
       effectiveDate: "2026-09-22",
     },
     {

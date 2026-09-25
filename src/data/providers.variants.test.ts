@@ -394,8 +394,9 @@ test("GPT-6 Sol and Luna direct and Foundry rows match the published rates", () 
   );
   assert.ok(rows.every((entry) => entry.confidence === "official"));
   assert.ok(
-    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("pending retail-meter publication")),
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("captured 2026-09-25")),
   );
+  assert.ok(rows.every((entry) => !entry.sourceNote?.includes("pending retail-meter publication")));
 });
 
 test("GPT-6 Sol and Luna direct variants use published Batch, Flex and Fast prices", () => {
@@ -415,6 +416,51 @@ test("GPT-6 Sol and Luna direct variants use published Batch, Flex and Fast pric
     { inputUsd: fast.inputUsd, cachedUsd: fast.cachedUsd, outputUsd: fast.outputUsd, label: fast.label },
     { inputUsd: 0.4, cachedUsd: 0.04, outputUsd: 1.5, label: "Fast mode" },
   );
+});
+
+test("GPT-6 Sol Foundry Priority rates match the retail meters and Luna has no Priority meter", () => {
+  const entries = getProvider("openai-azure")?.entries;
+  const globalShort = entries?.find((entry) => entry.model === "GPT-6 Sol" && entry.tier === "Global");
+  const globalLong = entries?.find((entry) => entry.model === "GPT-6 Sol Long Context" && entry.tier === "Global");
+  const dataZoneShort = entries?.find((entry) => entry.model === "GPT-6 Sol" && entry.tier === "DataZone");
+  const dataZoneLong = entries?.find((entry) => entry.model === "GPT-6 Sol Long Context" && entry.tier === "DataZone");
+  const luna = entries?.find((entry) => entry.model === "GPT-6 Luna" && entry.tier === "Global");
+
+  assert.ok(globalShort);
+  assert.ok(globalLong);
+  assert.ok(dataZoneShort);
+  assert.ok(dataZoneLong);
+  assert.ok(luna);
+
+  const resolved = [globalShort, globalLong, dataZoneShort, dataZoneLong].map((entry) =>
+    resolveRate(entry, { ...at("2026-09-25T12:00:00Z"), serviceTier: "priority" }),
+  );
+  assert.deepEqual(
+    resolved.map(({ inputUsd, cachedUsd, outputUsd, label, confidence }) => ({ inputUsd, cachedUsd, outputUsd, label, confidence })),
+    [
+      { inputUsd: 4, cachedUsd: 0.4, outputUsd: 20, label: "Priority", confidence: "official" },
+      { inputUsd: 8, cachedUsd: 0.8, outputUsd: 30, label: "Priority", confidence: "official" },
+      { inputUsd: 4.4, cachedUsd: 0.44, outputUsd: 22, label: "Priority", confidence: "official" },
+      { inputUsd: 8.8, cachedUsd: 0.88, outputUsd: 33, label: "Priority", confidence: "official" },
+    ],
+  );
+  const solFoundryEntries = [globalShort, globalLong, dataZoneShort, dataZoneLong];
+  assert.ok(
+    solFoundryEntries.every((entry) =>
+      entry.variants?.some(
+        (variant) =>
+          variant.conditions.serviceTier === "priority" &&
+          variant.sourceNote?.includes("captured 2026-09-25"),
+      ),
+    ),
+  );
+  assert.ok(
+    dataZoneShort.variants?.some((variant) => variant.sourceNote?.includes("EU-region PP meters")),
+  );
+
+  const lunaPriority = resolveRate(luna, { ...at("2026-09-25T12:00:00Z"), serviceTier: "priority" });
+  assert.equal(lunaPriority.variant, null);
+  assert.equal(lunaPriority.inputUsd, 0.1);
 });
 
 test("Claude Opus 5.5 direct and Foundry rows reflect CCU and data-zone pricing", () => {
