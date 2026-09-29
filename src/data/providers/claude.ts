@@ -6,10 +6,10 @@ export const claude: Provider = {
   slug: "claude",
   name: "Claude",
   org: "Anthropic",
-  tagline: "Claude Opus 5.5 cuts first-party rates to $4/$0.20/$20 per M and adds Azure-hosted Foundry Global and US Data Zone lanes billed through CCUs.",
+  tagline: "Claude Opus 5.5 and Sonnet 5.5 are available through first-party and Azure-hosted Foundry lanes billed at Anthropic's token-equivalent rates.",
   intro: [
-    "Claude Opus 5.5, introduced September 22, is Anthropic's current Opus flagship: 1M-token context, 128K max output, and $4/$0.20/$20 per M for input, cached input and output, 20% below Opus 5's standard rate. The first-party API also publishes Batch pricing at $2/$0.10/$10 and Fast mode at $8/$0.40/$40. Claude Fable 5.1 remains GA at $10/$0.25/$50, while invite-only Mythos 5.1 shares those prices; Sonnet 5's $2/$0.20/$10 launch rate is permanent.",
-    "Opus 5.5 is GA on Azure-hosted Foundry in Global Standard and US Data Zone. Microsoft bills Claude through CCUs, converting token usage at Anthropic's published per-model prices before marketplace discounts; the Foundry Global row therefore uses the exact standard token rates and the US Data Zone row the documented 1.1x uplift. Fable 5.1 and Mythos 5.1 are listed as Anthropic-hosted previews rather than Azure-hosted deployments.",
+    "Claude Sonnet 5.5, released September 28, is Anthropic's latest Sonnet model: 1M-token context, 128K max output, and $2/$0.20/$10 per M for input, cached input and output. The first-party Batch API is $1/$0.10/$5. Claude Opus 5.5 remains the current Opus flagship at $4/$0.20/$20 per M, with Batch at $2/$0.10/$10 and first-party Fast mode at $8/$0.40/$40. Claude Fable 5.1 remains GA at $10/$0.25/$50, while invite-only Mythos 5.1 shares those prices; Sonnet 5's $2/$0.20/$10 rate remains current.",
+    "Claude Sonnet 5.5 and Opus 5.5 are GA on Azure-hosted Foundry in Global Standard and US Data Zone. Microsoft bills Claude through CCUs, converting token usage at Anthropic's published per-model rates before marketplace discounts; the Foundry Global rows use those standard rates and the US Data Zone rows use the documented 1.1x uplift. Fable 5.1 and Mythos 5.1 are listed as Anthropic-hosted previews rather than Azure-hosted deployments.",
   ],
   entries: [
     {
@@ -78,6 +78,63 @@ export const claude: Provider = {
       sourceNote:
         "Microsoft Learn lists Azure-hosted Claude Opus 5.5 as GA in US Data Zone Standard; the Foundry launch table combines Global and US Data Zone offers without separate figures. Anthropic's pricing page, captured 2026-09-23, explicitly says Foundry US Data Zone Standard uses the same 1.1x multiplier as `inference_geo: us`; applying that published multiplier to the $4/$0.20/$20 Global rates gives the explicit $4.40/$0.22/$22 per M rates stored here. CCU billing converts token usage at Anthropic's published rates before marketplace discounts.",
       effectiveDate: "2026-09-22",
+    },
+    {
+      model: "Claude Sonnet 5.5",
+      tier: "Direct",
+      inputUsd: 2.0,
+      cachedUsd: 0.2,
+      outputUsd: 10.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Released September 28, 2026. Anthropic publishes $2/$0.20/$10 per M for input/cache-hit/output. Its Batch API halves input and output rates; prompt-cache discounts stack with Batch, making cache hits $0.10/M. Batch is a first-party API option, not a Foundry deployment tier.",
+      sourceNote:
+        "Anthropic's official Claude Sonnet 5.5 model and pricing pages, captured 2026-09-29, identify the release date as September 28 and publish $2/M input, $0.20/M cache hits, $10/M output, 1M context and 128K max output. Batch halves input and output and stacks with the standard 0.1x cache-hit multiplier, yielding $1/$0.10/$5 per M. The Foundry-only availability is represented by separate Azure-hosted entries below.",
+      effectiveDate: "2026-09-28",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 1.0,
+          cachedUsd: 0.1,
+          outputUsd: 5.0,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's pricing page, captured 2026-09-29, publishes a 50% Batch discount on input and output and says cache multipliers stack with Batch. Applying the published 0.1x Sonnet 5.5 cache-hit multiplier to Batch input gives $0.10/M cached input; this variant applies only to the first-party API.",
+        },
+      ],
+    },
+    {
+      model: "Claude Sonnet 5.5",
+      tier: "Global",
+      inputUsd: 2.0,
+      cachedUsd: 0.2,
+      outputUsd: 10.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted Microsoft Foundry Global Standard, generally available since September 28, 2026. Anthropic's per-model rates are the token-equivalent prices used for Foundry CCU billing.",
+      sourceNote:
+        "Microsoft's 2026-09-28 Foundry announcement confirms Claude Sonnet 5.5 is generally available and hosted on Azure in Global Standard and US Data Zone. Its price row is mislabeled 'Claude Opus 5.5' while showing $2 input and $10 output; Anthropic's Sonnet 5.5 model and pricing pages publish the exact $2/$0.20/$10 per M input/cache-hit/output rate. Anthropic's Foundry billing documentation says token use is rated at the standard per-model rates and converted to CCUs; no per-model Retail Prices token meter is expected. Captured 2026-09-29.",
+      effectiveDate: "2026-09-28",
+    },
+    {
+      model: "Claude Sonnet 5.5",
+      tier: "DataZone",
+      inputUsd: 2.2,
+      cachedUsd: 0.22,
+      outputUsd: 11.0,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted US Data Zone Standard, generally available since September 28, 2026. The 1.1x multiplier applies to input, cached input and output; invoices aggregate the token-equivalent usage through CCUs.",
+      sourceNote:
+        "Microsoft's 2026-09-28 Foundry announcement confirms Claude Sonnet 5.5 is generally available in US Data Zone. Anthropic's official pricing documentation states that Azure-hosted US Data Zone uses the same 1.1x multiplier as `inference_geo: us` across token pricing categories; applying it to Sonnet 5.5's official $2/$0.20/$10 per M Global rates gives $2.20/$0.22/$11.00. The model bills through CCUs rather than per-model Azure Retail Prices token meters. Captured 2026-09-29.",
+      effectiveDate: "2026-09-28",
     },
     {
       model: "Claude Opus 5",

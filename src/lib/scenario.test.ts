@@ -581,6 +581,12 @@ const TIERED_ROWS: {
     },
   },
   {
+    providerSlug: "claude",
+    model: "Claude Sonnet 5.5",
+    tier: "Direct",
+    tiers: { batch: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 5.0 } },
+  },
+  {
     providerSlug: "openai-azure",
     model: "GPT-5.6 Sol",
     tier: "Global",

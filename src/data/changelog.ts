@@ -23,6 +23,30 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-29",
+    title: "Claude Sonnet 5.5 adds first-party and Foundry pricing lanes",
+    tag: "model",
+    body: [
+      "Anthropic released Claude Sonnet 5.5 on September 28. The 1M-context model is available through its API at $2/$0.20/$10 per M input/cache-hit/output tokens, with a first-party Batch lane at $1/$0.10/$5.",
+      "Microsoft now lists Sonnet 5.5 as generally available in Azure Foundry Global Standard and US Data Zone. Foundry bills Claude through CCUs using Anthropic's standard per-model token rates; the catalog shows $2/$0.20/$10 per M Global and $2.20/$0.22/$11 US Data Zone at the documented 1.1x multiplier. Microsoft's launch post's $2/$10 row is mislabeled Opus 5.5, so the cache-inclusive figures come from Anthropic's model and pricing pages. No per-model Azure Retail Prices token meter is expected for CCU billing.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry — Claude Sonnet 5.5 availability",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/claude-sonnet-5-5-is-now-available-in-microsoft-foundry/4559774",
+      },
+      {
+        label: "Anthropic — Claude Sonnet 5.5 model details and pricing",
+        href: "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+      },
+      {
+        label: "Anthropic — model, Foundry CCU and Data Zone pricing",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-29",
+  },
+  {
     date: "2026-09-25",
     title: "Azure meters confirm GPT-6 Sol/Luna; Sol Priority pricing added",
     tag: "pricing",
