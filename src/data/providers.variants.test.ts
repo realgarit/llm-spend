@@ -492,6 +492,39 @@ test("Claude Opus 5.5 direct and Foundry rows reflect CCU and data-zone pricing"
   assert.equal(resolveRate(direct, { ...at("2026-09-23T12:00:00Z"), serviceTier: "priority" }).cachedUsd, 0.4);
 });
 
+test("Claude Sonnet 5.5 includes direct Batch and Azure Foundry CCU rates", () => {
+  const direct = claudeDirect("Claude Sonnet 5.5");
+  const entries = getProvider("claude")?.entries;
+  const global = entries?.find((entry) => entry.model === "Claude Sonnet 5.5" && entry.tier === "Global");
+  const dataZone = entries?.find((entry) => entry.model === "Claude Sonnet 5.5" && entry.tier === "DataZone");
+
+  assert.ok(global);
+  assert.ok(dataZone);
+  assert.deepEqual(
+    [direct, global, dataZone].map(({ inputUsd, cachedUsd, outputUsd, contextWindow, maxOutput, confidence }) => ({
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+      maxOutput,
+      confidence,
+    })),
+    [
+      { inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+      { inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+      { inputUsd: 2.2, cachedUsd: 0.22, outputUsd: 11, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+    ],
+  );
+  assert.equal(direct.effectiveDate, "2026-09-28");
+  assert.equal(global.effectiveDate, "2026-09-28");
+  assert.equal(dataZone.effectiveDate, "2026-09-28");
+
+  const batch = resolveRate(direct, { ...at("2026-09-29T12:00:00Z"), serviceTier: "batch" });
+  assert.equal(batch.inputUsd, 1);
+  assert.equal(batch.cachedUsd, 0.1);
+  assert.equal(batch.outputUsd, 5);
+});
+
 test("MAI-Thinking-1 matches the named commercial Foundry meters", () => {
   const provider = getProvider("microsoft-ai");
   const [entry] = provider?.entries ?? [];
