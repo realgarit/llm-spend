@@ -529,6 +529,28 @@ const TIERED_ROWS: {
   },
   {
     providerSlug: "openai-azure",
+    model: "GPT-6.1 Sol",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 1.0, cachedUsd: 0.05, outputUsd: 5.0 },
+      flex: { inputUsd: 1.0, cachedUsd: 0.05, outputUsd: 5.0 },
+      priority: { inputUsd: 4.0, cachedUsd: 0.2, outputUsd: 20.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
+    model: "GPT-6.1 Sol Long Context",
+    tier: "Direct",
+    host: "OpenAI direct API",
+    tiers: {
+      batch: { inputUsd: 2.0, cachedUsd: 0.1, outputUsd: 7.5 },
+      flex: { inputUsd: 2.0, cachedUsd: 0.1, outputUsd: 7.5 },
+      priority: { inputUsd: 8.0, cachedUsd: 0.4, outputUsd: 30.0 },
+    },
+  },
+  {
+    providerSlug: "openai-azure",
     model: "GPT-6 Sol",
     tier: "Direct",
     host: "OpenAI direct API",

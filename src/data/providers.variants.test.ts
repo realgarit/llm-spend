@@ -399,6 +399,138 @@ test("GPT-6 Sol and Luna direct and Foundry rows match the published rates", () 
   assert.ok(rows.every((entry) => !entry.sourceNote?.includes("pending retail-meter publication")));
 });
 
+test("GPT-6.1 Sol Direct and Foundry rows match Microsoft's and OpenAI's published rates", () => {
+  const rows = getProvider("openai-azure")?.entries.filter((entry) => entry.model.startsWith("GPT-6.1 Sol"));
+
+  assert.ok(rows);
+  assert.deepEqual(
+    rows.map(({ model, tier, inputUsd, cachedUsd, outputUsd, effectiveDate, contextWindow, maxOutput }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      effectiveDate,
+      contextWindow,
+      maxOutput,
+    })),
+    [
+      {
+        model: "GPT-6.1 Sol",
+        tier: "Direct",
+        inputUsd: 2,
+        cachedUsd: 0.1,
+        outputUsd: 10,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6.1 Sol Long Context",
+        tier: "Direct",
+        inputUsd: 4,
+        cachedUsd: 0.2,
+        outputUsd: 15,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6.1 Sol",
+        tier: "Global",
+        inputUsd: 2,
+        cachedUsd: 0.1,
+        outputUsd: 10,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6.1 Sol Long Context",
+        tier: "Global",
+        inputUsd: 4,
+        cachedUsd: 0.2,
+        outputUsd: 15,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6.1 Sol",
+        tier: "DataZone",
+        inputUsd: 2.2,
+        cachedUsd: 0.11,
+        outputUsd: 11,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+      {
+        model: "GPT-6.1 Sol Long Context",
+        tier: "DataZone",
+        inputUsd: 4.4,
+        cachedUsd: 0.22,
+        outputUsd: 16.5,
+        effectiveDate: "2026-09-29",
+        contextWindow: 1_050_000,
+        maxOutput: 128_000,
+      },
+    ],
+  );
+  assert.ok(rows.every((entry) => entry.confidence === "official"));
+  assert.ok(
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("captured 2026-09-30")),
+  );
+  assert.ok(
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("no GPT-6.1 meter as of September 30")),
+  );
+});
+
+test("GPT-6.1 Sol Direct variants use the published Batch, Flex and Fast rates", () => {
+  const expected = [
+    {
+      model: "GPT-6.1 Sol",
+      standard: { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10 },
+      batch: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+      flex: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+      priority: { inputUsd: 4, cachedUsd: 0.2, outputUsd: 20 },
+    },
+    {
+      model: "GPT-6.1 Sol Long Context",
+      standard: { inputUsd: 4, cachedUsd: 0.2, outputUsd: 15 },
+      batch: { inputUsd: 2, cachedUsd: 0.1, outputUsd: 7.5 },
+      flex: { inputUsd: 2, cachedUsd: 0.1, outputUsd: 7.5 },
+      priority: { inputUsd: 8, cachedUsd: 0.4, outputUsd: 30 },
+    },
+  ] as const;
+
+  for (const { model, standard, batch, flex, priority } of expected) {
+    const entry = getProvider("openai-azure")?.entries.find(
+      (candidate) => candidate.model === model && candidate.host === "OpenAI direct API" && candidate.tier === "Direct",
+    );
+    assert.ok(entry, `Expected a direct GPT-6.1 Sol ${model} row`);
+
+    const standardResolved = resolveRate(entry, at("2026-09-30T12:00:00Z"));
+    assert.deepEqual(
+      { inputUsd: standardResolved.inputUsd, cachedUsd: standardResolved.cachedUsd, outputUsd: standardResolved.outputUsd },
+      standard,
+      `${model} standard`,
+    );
+
+    for (const [serviceTier, rates] of Object.entries({ batch, flex, priority })) {
+      const resolved = resolveRate(entry, {
+        now: new Date("2026-09-30T12:00:00Z"),
+        serviceTier: serviceTier as "batch" | "flex" | "priority",
+      });
+      assert.deepEqual(
+        { inputUsd: resolved.inputUsd, cachedUsd: resolved.cachedUsd, outputUsd: resolved.outputUsd },
+        rates,
+        `${model} ${serviceTier}`,
+      );
+    }
+  }
+});
+
 test("GPT-6 Sol and Luna direct variants use published Batch, Flex and Fast prices", () => {
   const provider = getProvider("openai-azure");
   const sol = provider?.entries.find((entry) => entry.model === "GPT-6 Sol" && entry.tier === "Direct");
