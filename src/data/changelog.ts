@@ -23,6 +23,38 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-30",
+    title: "GPT-6.1 Sol adds Direct and Microsoft Foundry pricing lanes",
+    tag: "model",
+    body: [
+      "OpenAI released GPT-6.1 Sol on September 29, and Microsoft made it generally available in Foundry the same day. OpenAI Direct Standard is $2/$0.10/$10 per M input/cached-input/output for prompts up to 272K tokens and $4/$0.20/$15 above 272K; Batch and Flex are half price and Fast mode is 2x.",
+      "Microsoft publishes matching Global Standard rates and US Data Zone rates of $2.20/$0.11/$11 short-context and $4.40/$0.22/$16.50 long-context. EU and APAC Data Zones are priced at $2.40/$0.12/$12 and $4.80/$0.24/$18. The current Azure Retail Prices feed has no GPT-6.1 meter yet, so the Foundry rows use Microsoft's published launch table, captured September 30. Cache-write rates are outside this catalog's schema.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry Blog — GPT-6.1 Sol availability and tier pricing",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-gpt-6-1-sol-in-microsoft-foundry-advanced-intelligence-optimized-for/4560811",
+      },
+      {
+        label: "OpenAI API changelog — GPT-6.1 Sol release",
+        href: "https://developers.openai.com/api/docs/changelog",
+      },
+      {
+        label: "OpenAI — GPT-6.1 Sol model details and pricing",
+        href: "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      },
+      {
+        label: "OpenAI API pricing — GPT-6.1 Sol processing tiers",
+        href: "https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast",
+      },
+      {
+        label: "Azure Retail Prices API — Azure OpenAI GPT6 meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20OpenAI%20GPT6%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-09-30",
+  },
+  {
     date: "2026-09-29",
     title: "Claude Sonnet 5.5 adds first-party and Foundry pricing lanes",
     tag: "model",
