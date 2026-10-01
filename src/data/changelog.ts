@@ -23,6 +23,30 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-01",
+    title: "Cohere Embed 5 adds two direct embedding rates",
+    tag: "model",
+    body: [
+      "Cohere released Embed 5 Pro and Fast on September 30. Both models are generally available through the Cohere API and Microsoft Foundry. The catalog now lists the direct API text-input rates: $0.12 per 1M tokens for Pro and $0.08 per 1M for Fast. Each model also prices image input at $0.40 per 1M image tokens, outside this text-token comparison.",
+      "The current Azure Retail Prices feed has no Embed 5 meter, so no separate Foundry token-price lane is inferred. The new entries show Cohere API rates only.",
+    ],
+    sources: [
+      {
+        label: "Cohere — Embed 5 availability and API pricing",
+        href: "https://cohere.com/blog/embed-5",
+      },
+      {
+        label: "Cohere API release notes — Embed 5 model IDs and Foundry availability",
+        href: "https://docs.cohere.com/changelog/embed-v5",
+      },
+      {
+        label: "Azure Retail Prices API — Embed 5 Foundry meter search",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27embed%205%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-01",
+  },
+  {
     date: "2026-09-30",
     title: "GPT-6.1 Sol adds Direct and Microsoft Foundry pricing lanes",
     tag: "model",
