@@ -5,9 +5,39 @@ export const embeddings: Provider = {
   name: "Embeddings",
   tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
   intro: [
-    "Embedding models bill per million input tokens only, no output meter. Alibaba's new Qwen3.7 text embedding adds a 128K-token multilingual option at $0.07/M input; Cohere remains the strongest code-retrieval choice, while OpenAI's small model remains the budget pick.",
+    "Embedding models bill per million input tokens only, with no output meter. Cohere Embed 5 adds Pro and Fast choices at $0.12/M and $0.08/M for text input; image tokens have a separate rate. Alibaba's Qwen3.7 text embedding adds a 128K-token multilingual option at $0.07/M, while OpenAI's small model remains the budget pick.",
   ],
   entries: [
+    {
+      model: "Cohere Embed 5 Pro",
+      host: "Cohere API",
+      tier: "Direct",
+      inputUsd: 0.12,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "High-quality multimodal retrieval model with a 128K-token context, 100+ languages, and 256–2048 output dimensions. Text input is $0.12/M; image input is $0.40/M and is outside this text-token comparison. Shares an embedding space with Embed 5 Fast.",
+      sourceNote:
+        "Cohere's official Embed 5 launch post states that the model is generally available through the Cohere API and Microsoft Foundry, at $0.12 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-pro. Captured 2026-10-01. The Azure Retail Prices Foundry feed currently has no Embed 5 meter, so this row records the direct Cohere API text rate only; no Foundry price is inferred.",
+      effectiveDate: "2026-09-30",
+    },
+    {
+      model: "Cohere Embed 5 Fast",
+      host: "Cohere API",
+      tier: "Direct",
+      inputUsd: 0.08,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "Lower-latency, high-throughput multimodal retrieval model with a 128K-token context, 100+ languages, and 256–2048 output dimensions. Text input is $0.08/M; image input is $0.40/M and is outside this text-token comparison. Shares an embedding space with Embed 5 Pro.",
+      sourceNote:
+        "Cohere's official Embed 5 launch post states that the model is generally available through the Cohere API and Microsoft Foundry, at $0.08 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-fast. Captured 2026-10-01. The Azure Retail Prices Foundry feed currently has no Embed 5 meter, so this row records the direct Cohere API text rate only; no Foundry price is inferred.",
+      effectiveDate: "2026-09-30",
+    },
     {
       model: "Qwen3.7 text embedding",
       host: "Model Studio (Intl)",
@@ -102,14 +132,14 @@ export const embeddings: Provider = {
       title: "Cheapest isn't best for code retrieval",
       tone: "insight",
       body: [
-        "text-embedding-3-small is cheapest at $0.02 / CHF 0.016 per M, but for code RAG Cohere embed-v4 ($0.12 / CHF 0.097 per M) wins on retrieval quality (query/document input_type, Matryoshka dims 256/512/1024/1536). ada-002 ($0.10 / CHF 0.081) is legacy: worse than 3-small on price and quality. No reason to pick it for new work.",
+        "text-embedding-3-small remains the budget pick at $0.02 / CHF 0.016 per M. Cohere Embed 5 Pro targets quality-critical retrieval at $0.12/M, while Embed 5 Fast costs $0.08/M for latency-sensitive and high-volume queries; both share an embedding space, so teams can index with Pro and query with Fast. ada-002 ($0.10 / CHF 0.081) is legacy and trails the small model on price and quality.",
       ],
     },
     {
       title: "A reference retrieval stack",
       tone: "info",
       body: [
-        "For code indexing plus RAG: a dedicated embedding model (Cohere embed-v4), a vector store (LanceDB), then a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) over the retrieved chunks.",
+        "For code indexing plus RAG: Cohere Embed 5 Pro for indexing, Embed 5 Fast for lower-latency queries, a vector store (LanceDB), then a strong coding LLM (DeepSeek V4 Pro, Kimi K2.7 Code, or GLM-5.2) over the retrieved chunks.",
       ],
     },
     {
