@@ -26,6 +26,7 @@ import { xai } from "./xai";
 import { qwen } from "./qwen";
 import { mistral } from "./mistral";
 import { minimax } from "./minimax";
+import { perplexity } from "./perplexity";
 import { microsoftAi } from "./microsoft-ai";
 import { embeddings } from "./embeddings";
 
@@ -40,6 +41,7 @@ export const providers: Provider[] = [
   qwen,
   mistral,
   minimax,
+  perplexity,
   microsoftAi,
   embeddings,
 ];
@@ -50,9 +52,9 @@ export function getProvider(slug: string): Provider | undefined {
   return providers.find((p) => p.slug === slug);
 }
 
-/** Chat/generation models only (excludes embeddings); used by compare + calculator. */
+/** Chat/generation models only (excludes embeddings and Perplexity Decisions); used by compare + calculator. */
 export function chatEntries(): { provider: Provider; entry: Provider["entries"][number] }[] {
   return providers
-    .filter((p) => p.slug !== "embeddings")
+    .filter((p) => p.slug !== "embeddings" && p.slug !== "perplexity")
     .flatMap((p) => p.entries.map((entry) => ({ provider: p, entry })));
 }

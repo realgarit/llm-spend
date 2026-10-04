@@ -20,6 +20,7 @@ export type ProviderSlug =
   | "mistral"
   | "minimax"
   | "microsoft-ai"
+  | "perplexity"
   | "embeddings";
 
 /** A labeled external source used to trace catalog information. */
