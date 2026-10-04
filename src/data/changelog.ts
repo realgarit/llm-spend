@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-04",
+    title: "Perplexity adds an input-priced decision model",
+    tag: "model",
+    body: [
+      "Perplexity's Decisions API lists `pplx-decider-v1-27b` at $0.04 per 1M input tokens; output tokens are free and there is no per-request fee. The specialized model returns probabilities for yes/no classification, multiple-choice decisions, and rubric scoring instead of generated text.",
+      "The catalog adds a Direct-only Perplexity provider page for this rate. The current Azure Retail Prices feed has no Perplexity model meter, so no Foundry rate is inferred. Perplexity publishes the model's weights under Apache 2.0; because this API returns structured decisions instead of generated text, it remains outside the generative workload comparison.",
+    ],
+    sources: [
+      {
+        label: "Perplexity API pricing — Decisions API rate",
+        href: "https://docs.perplexity.ai/docs/getting-started/pricing",
+      },
+      {
+        label: "Perplexity Decisions API — model behavior and billing",
+        href: "https://docs.perplexity.ai/docs/decisions/quickstart",
+      },
+      {
+        label: "Perplexity model card — pplx-decider-v1-27b and Apache 2.0 license",
+        href: "https://huggingface.co/perplexity-ai/pplx-decider-v1-27b",
+      },
+      {
+        label: "Azure Retail Prices API — Perplexity model meter search",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27pplx-decider%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-04",
+  },
+  {
     date: "2026-10-01",
     title: "Cohere Embed 5 adds two direct embedding rates",
     tag: "model",
