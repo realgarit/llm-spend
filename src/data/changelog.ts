@@ -23,6 +23,30 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-05",
+    title: "Kimi K3 adds timed cache-write pricing",
+    tag: "pricing",
+    body: [
+      "Moonshot's September 28 context-caching update separates Kimi K3 cache writes and offers 5-minute and 1-hour TTLs. The default 5-minute write is $3 per 1M tokens; a 1-hour write is $6 per 1M. Cache misses remain $3/M and cache hits $0.30/M. Moonshot says the default write split preserves the total cost of existing requests.",
+      "The catalog keeps Kimi K3's existing $3/$0.30/$15 per M input/cache-hit/output rates and now notes both write fees. The shared rate schema cannot represent cache-write TTLs, so those separate charges are documented but not included in compare calculations. Kimi K2.6 and K2.7 Code do not support cache writes.",
+    ],
+    sources: [
+      {
+        label: "Kimi API — context-caching prices, TTLs, and billing behavior",
+        href: "https://platform.kimi.ai/docs/guide/context-caching",
+      },
+      {
+        label: "Moonshot AI — Kimi K3 context-caching upgrade announcement",
+        href: "https://forum.moonshot.ai/t/context-caching-upgrade-5-min-1-hour-ttl-options/613",
+      },
+      {
+        label: "Kimi API Platform — current K3 input, cache-write, cache-hit, and output rates",
+        href: "https://platform.kimi.ai/",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-05",
+  },
+  {
     date: "2026-10-04",
     title: "Perplexity adds an input-priced decision model",
     tag: "model",

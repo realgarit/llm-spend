@@ -20,8 +20,10 @@ export const kimi: Provider = {
       outputUsd: 15.0,
       contextWindow: 1_000_000,
       confidence: "official",
-      notes: "Flagship long-horizon coding and knowledge-work model; max reasoning effort at launch.",
-      sourceNote: "Moonshot's official Kimi K3 API pricing: $3/M cache-miss input, $0.30/M cache-hit input, and $15/M output.",
+      notes:
+        "Flagship long-horizon coding and knowledge-work model; max reasoning effort at launch. Cache writes cost $3/M at the default 5m TTL or $6/M at 1h. TTL-specific cache-write fees are outside this catalog's shared rate schema.",
+      sourceNote:
+        "Moonshot's official Kimi API pricing page, rechecked 2026-10-05, lists Kimi K3 at $3/M cache-miss input, $0.30/M cache-hit input, $15/M output, and $3/M cache write. Its context-caching guide lists the optional 1h cache write at $6/M, with 5m as the default TTL, and says the default write split preserves total cost for existing requests. Cache-write/TTL fees are not represented in this catalog's shared rate schema.",
       effectiveDate: "2026-07-17",
     },
     {
