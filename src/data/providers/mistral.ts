@@ -4,11 +4,50 @@ export const mistral: Provider = {
   slug: "mistral",
   name: "Mistral",
   org: "Mistral AI",
-  tagline: "Mistral Medium 3.5 is now on Microsoft Foundry at the same rate as Mistral's own API.",
+  tagline: "Mistral Large 4 adds a Direct API lane; Medium 3.5 is available on Foundry.",
   intro: [
-    "Under the expanded Microsoft–Mistral partnership announced 2026-07-21, Mistral Medium 3.5 is now resold on Microsoft Foundry as a serverless listing, priced identically to Mistral's first-party API. Foundry publishes Global and Data Zone meters; no cached-input meter exists on either tier yet, so cache-heavy workloads get no discount on this model. (Mistral OCR 4 is billed per page rather than per token, so it is out of this catalog's scope.)",
+    "Mistral Large 4 entered public preview on October 6, 2026. Its first-party API lists a 1M-token context window and Standard rates of $0.68/$0.07/$2.09 per M input/cached input/output. The same pricing page lists Batch at 50% of Standard and Priority at 75% above Standard.",
+    "Under the expanded Microsoft–Mistral partnership announced 2026-07-21, Mistral Medium 3.5 is resold on Microsoft Foundry as a serverless listing, priced identically to Mistral's first-party API. Foundry publishes Global and Data Zone meters; no cached-input meter exists on either tier yet, so cache-heavy workloads get no discount on this model. (Mistral OCR 4 is billed per page rather than per token, so it is out of this catalog's scope.)",
   ],
   entries: [
+    {
+      model: "Mistral Large 4",
+      host: "Mistral direct API",
+      tier: "Direct",
+      inputUsd: 0.68,
+      cachedUsd: 0.07,
+      outputUsd: 2.09,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes: "Public Preview Open (v26.10). Mistral also lists Batch and Priority processing rates.",
+      sourceNote:
+        "Mistral's official Mistral Large 4 model card and inference pricing page, checked 2026-10-06: public preview model ID `mistral-large-4`, 1M-token context, and Standard rates of $0.68/M input, $0.07/M cached input, and $2.09/M output. The Azure Retail Prices Foundry meter query for 'mistral large 4' returned no rows on 2026-10-06, so no Foundry per-token rate is inferred.",
+      effectiveDate: "2026-10-06",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.34,
+          cachedUsd: 0.035,
+          outputUsd: 1.045,
+          confidence: "official",
+          notes: "Batch processing at 50% of Standard.",
+          sourceNote:
+            "Mistral's official inference pricing page, checked 2026-10-06: the Batch (-50%) view lists $0.34/M input, $0.035/M cached input, and $1.045/M output for Mistral Large 4.",
+        },
+        {
+          label: "Priority",
+          conditions: { serviceTier: "priority" },
+          inputUsd: 1.19,
+          cachedUsd: 0.1225,
+          outputUsd: 3.6575,
+          confidence: "official",
+          notes: "Priority processing at 75% above Standard.",
+          sourceNote:
+            "Mistral's official inference pricing page, checked 2026-10-06: the Priority (+75%) view lists $1.19/M input, $0.1225/M cached input, and $3.6575/M output for Mistral Large 4.",
+        },
+      ],
+    },
     {
       model: "Mistral Medium 3.5",
       tier: "Global",
