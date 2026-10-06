@@ -469,6 +469,16 @@ const TIERED_ROWS: {
     tiers: { batch: { inputUsd: 0.57, cachedUsd: 0.1, outputUsd: 2.4 } },
   },
   {
+    providerSlug: "mistral",
+    model: "Mistral Large 4",
+    tier: "Direct",
+    host: "Mistral direct API",
+    tiers: {
+      batch: { inputUsd: 0.34, cachedUsd: 0.035, outputUsd: 1.045 },
+      priority: { inputUsd: 1.19, cachedUsd: 0.1225, outputUsd: 3.6575 },
+    },
+  },
+  {
     providerSlug: "gemini",
     model: "Gemini 3.7 Flash",
     tier: "Global",

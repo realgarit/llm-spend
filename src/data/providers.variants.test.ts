@@ -158,7 +158,43 @@ function grokDirect(model: string): PricingEntry {
   return entry;
 }
 
+function mistralLarge4Direct(): PricingEntry {
+  const provider = getProvider("mistral");
+  const entry = provider?.entries.find(
+    (candidate) =>
+      candidate.model === "Mistral Large 4" &&
+      candidate.host === "Mistral direct API" &&
+      candidate.tier === "Direct",
+  );
+
+  assert.ok(entry, "Expected a direct Mistral Large 4 entry");
+  return entry;
+}
+
 const at = (iso: string) => ({ now: new Date(iso) });
+
+test("Mistral Large 4 carries its published Direct rate, context, and capture date", () => {
+  const entry = mistralLarge4Direct();
+
+  assert.deepEqual(
+    {
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      contextWindow: entry.contextWindow,
+      confidence: entry.confidence,
+      effectiveDate: entry.effectiveDate,
+    },
+    {
+      inputUsd: 0.68,
+      cachedUsd: 0.07,
+      outputUsd: 2.09,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      effectiveDate: "2026-10-06",
+    },
+  );
+});
 
 // ---------------------------------------------------------------------------
 // DeepSeek-V4 Pro (Direct)

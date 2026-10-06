@@ -23,6 +23,30 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-06",
+    title: "Mistral Large 4 adds Direct API pricing",
+    tag: "model",
+    body: [
+      "Mistral Large 4 (`mistral-large-4`) entered public preview on October 6 as an open-weight model with a 1M-token context window. Mistral's API lists Standard rates of $0.68/$0.07/$2.09 per M input/cached input/output, Batch rates of $0.34/$0.035/$1.045, and Priority rates of $1.19/$0.1225/$3.6575.",
+      "The catalog adds these Direct API rates. The Azure Retail Prices query for a Mistral Large 4 meter returned no rows, so no Foundry per-token rate is inferred.",
+    ],
+    sources: [
+      {
+        label: "Mistral Large 4 — public preview, model ID, and context window",
+        href: "https://docs.mistral.ai/models/mistral-large-4-0",
+      },
+      {
+        label: "Mistral inference pricing — Standard, Batch, and Priority rates",
+        href: "https://docs.mistral.ai/inference/pricing",
+      },
+      {
+        label: "Azure Retail Prices API — Mistral Large 4 token-meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27mistral%20large%204%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-06",
+  },
+  {
     date: "2026-10-05",
     title: "Kimi K3 adds timed cache-write pricing",
     tag: "pricing",
