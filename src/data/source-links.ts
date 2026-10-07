@@ -8,6 +8,10 @@ const OFFICIAL_SOURCES: Record<ProviderSlug, SourceLink> = {
     label: "Azure Retail Prices API — Foundry Models",
     href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27",
   },
+  "openai-decisions": {
+    label: "OpenAI Decisions API pricing and availability",
+    href: "https://developers.openai.com/api/docs/guides/decisions",
+  },
   claude: { label: "Anthropic pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
   gemini: { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
   xai: { label: "xAI pricing", href: "https://docs.x.ai/developers/pricing" },

@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { resolveRate } from "../lib/rates";
 import type { PricingEntry } from "./types";
-import { getProvider, providers } from "./providers";
+import { chatEntries, getProvider, providers } from "./providers";
 
 /**
  * Catalog integration tests for scheduled, calendar-scoped, and service-tier
@@ -1459,6 +1459,66 @@ test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority me
       model,
     );
   }
+});
+
+test("Mistral Large 4 launch prices transition to published list rates on October 20", () => {
+  const entry = getProvider("mistral")?.entries.find((candidate) => candidate.model === "Mistral Large 4");
+  assert.ok(entry, "Expected Mistral Large 4 Direct entry");
+
+  const resolve = (date: string, serviceTier?: "standard" | "batch" | "priority") =>
+    resolveRate(entry, {
+      now: new Date(date),
+      ...(serviceTier ? { serviceTier } : {}),
+    });
+
+  const beforeStandard = resolve("2026-10-19T23:59:59Z");
+  assert.deepEqual(
+    { inputUsd: beforeStandard.inputUsd, cachedUsd: beforeStandard.cachedUsd, outputUsd: beforeStandard.outputUsd },
+    { inputUsd: 0.68, cachedUsd: 0.07, outputUsd: 2.09 },
+  );
+
+  const afterStandard = resolve("2026-10-20T00:00:00Z");
+  assert.deepEqual(
+    { inputUsd: afterStandard.inputUsd, cachedUsd: afterStandard.cachedUsd, outputUsd: afterStandard.outputUsd },
+    { inputUsd: 1.36, cachedUsd: 0.14, outputUsd: 4.18 },
+  );
+
+  const beforeBatch = resolve("2026-10-19T23:59:59Z", "batch");
+  assert.deepEqual(
+    { inputUsd: beforeBatch.inputUsd, cachedUsd: beforeBatch.cachedUsd, outputUsd: beforeBatch.outputUsd },
+    { inputUsd: 0.34, cachedUsd: 0.035, outputUsd: 1.045 },
+  );
+  const afterBatch = resolve("2026-10-20T00:00:00Z", "batch");
+  assert.deepEqual(
+    { inputUsd: afterBatch.inputUsd, cachedUsd: afterBatch.cachedUsd, outputUsd: afterBatch.outputUsd },
+    { inputUsd: 0.68, cachedUsd: 0.07, outputUsd: 2.09 },
+  );
+
+  const beforePriority = resolve("2026-10-19T23:59:59Z", "priority");
+  assert.deepEqual(
+    { inputUsd: beforePriority.inputUsd, cachedUsd: beforePriority.cachedUsd, outputUsd: beforePriority.outputUsd },
+    { inputUsd: 1.19, cachedUsd: 0.1225, outputUsd: 3.6575 },
+  );
+  const afterPriority = resolve("2026-10-20T00:00:00Z", "priority");
+  assert.deepEqual(
+    { inputUsd: afterPriority.inputUsd, cachedUsd: afterPriority.cachedUsd, outputUsd: afterPriority.outputUsd },
+    { inputUsd: 2.38, cachedUsd: 0.245, outputUsd: 7.315 },
+  );
+});
+
+test("OpenAI Decisions pricing is catalogued separately from generation comparisons", () => {
+  const provider = getProvider("openai-decisions");
+  const entry = provider?.entries.find((candidate) => candidate.model === "GPT-6 Luna (Decisions API)");
+
+  assert.ok(entry, "Expected the OpenAI Decisions API lane");
+  assert.equal(entry.inputUsd, 0.1);
+  assert.equal(entry.cachedUsd, null);
+  assert.equal(entry.outputUsd, 0);
+  assert.equal(entry.host, "OpenAI Decisions API");
+  assert.equal(
+    chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "openai-decisions"),
+    false,
+  );
 });
 
 // ---------------------------------------------------------------------------

@@ -23,6 +23,78 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-07",
+    title: "Qwen3.6 Max Preview mode availability clarified",
+    tag: "model",
+    body: [
+      "Alibaba Cloud Model Studio's current International pricing page lists `qwen3.6-max-preview` for both Non-Thinking and Thinking modes. The catalog previously described this preview as Thinking-only; its rates are unchanged at $1.30/$7.80 per M through 128K and $2/$12 from 128K to 256K.",
+      "The official lifecycle page still schedules deprecation for October 10, 2026, and names Qwen3.7 Max as the replacement.",
+    ],
+    sources: [
+      {
+        label: "Alibaba Cloud Model Studio pricing — Qwen3.6 Max Preview modes and rates",
+        href: "https://help.aliyun.com/en/model-studio/model-pricing",
+      },
+      {
+        label: "Alibaba Cloud Model Studio lifecycle — October 10 retirement and Qwen3.7 Max replacement",
+        href: "https://www.alibabacloud.com/help/id/model-studio/model-depreciation",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-07",
+  },
+  {
+    date: "2026-10-07",
+    title: "OpenAI adds input-only GPT-6 Luna Decisions pricing",
+    tag: "pricing",
+    body: [
+      "OpenAI's October 6 public beta of `/v1/decisions` uses GPT-6 Luna for typed classification, routing, and scoring. The official guide lists a base rate of $0.10 per 1M input tokens, with no cache-read, cache-write, or output-token charge.",
+      "The catalog adds a Direct-only OpenAI Decisions API lane and keeps it outside generative workload comparisons. Regional processing premiums and long-context input multipliers apply, but the guide does not list their adjusted dollar amounts. The Azure Retail Prices feed has no Decisions-named Foundry meter, so no Foundry rate is inferred.",
+    ],
+    sources: [
+      {
+        label: "OpenAI API changelog — Decisions API beta launch",
+        href: "https://developers.openai.com/api/docs/changelog",
+      },
+      {
+        label: "OpenAI Decisions API — availability and input-only pricing",
+        href: "https://developers.openai.com/api/docs/guides/decisions",
+      },
+      {
+        label: "OpenAI GPT-6 Luna model — context window",
+        href: "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Decisions meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27decisions%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-07",
+  },
+  {
+    date: "2026-10-07",
+    title: "Mistral Large 4 launch pricing returns to list after two weeks",
+    tag: "pricing",
+    body: [
+      "Mistral's October 6 changelog says Large 4 launch pricing is 50% off for two weeks. Its current pricing page shows Standard sale/list rates of $0.68/$0.07/$2.09 and $1.36/$0.14/$4.18 per M input/cached input/output; Batch is $0.34/$0.035/$1.045 on sale and $0.68/$0.07/$2.09 at list; Priority is $1.19/$0.1225/$3.6575 on sale and $2.38/$0.245/$7.315 at list.",
+      "The catalog keeps today's sale rates and schedules the published list prices from October 20, derived as 14 days after launch. Mistral does not publish the exact cutoff time, so the schedule uses the UTC date boundary.",
+    ],
+    sources: [
+      {
+        label: "Mistral changelog — two-week Large 4 launch offer",
+        href: "https://docs.mistral.ai/resources/changelogs",
+      },
+      {
+        label: "Mistral inference pricing — Standard, Batch, Priority, and original prices",
+        href: "https://docs.mistral.ai/inference/pricing",
+      },
+      {
+        label: "Mistral Large 4 model card — public preview and context window",
+        href: "https://docs.mistral.ai/models/mistral-large",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-07",
+  },
+  {
     date: "2026-10-06",
     title: "Mistral Large 4 adds Direct API pricing",
     tag: "model",

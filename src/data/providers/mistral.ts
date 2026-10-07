@@ -4,9 +4,9 @@ export const mistral: Provider = {
   slug: "mistral",
   name: "Mistral",
   org: "Mistral AI",
-  tagline: "Mistral Large 4 adds a Direct API lane; Medium 3.5 is available on Foundry.",
+  tagline: "Mistral Large 4 is on a two-week launch sale; Medium 3.5 is available on Foundry.",
   intro: [
-    "Mistral Large 4 entered public preview on October 6, 2026. Its first-party API lists a 1M-token context window and Standard rates of $0.68/$0.07/$2.09 per M input/cached input/output. The same pricing page lists Batch at 50% of Standard and Priority at 75% above Standard.",
+    "Mistral Large 4 entered public preview on October 6, 2026. Mistral's October 7 pricing page lists a 50% launch sale for Standard, Batch, and Priority rates, and its release note says the offer lasts two weeks. The catalog keeps the sale active and schedules the page's original list prices from October 20; that date is derived from the 14-day offer, since Mistral does not publish an exact cutoff time.",
     "Under the expanded Microsoft–Mistral partnership announced 2026-07-21, Mistral Medium 3.5 is resold on Microsoft Foundry as a serverless listing, priced identically to Mistral's first-party API. Foundry publishes Global and Data Zone meters; no cached-input meter exists on either tier yet, so cache-heavy workloads get no discount on this model. (Mistral OCR 4 is billed per page rather than per token, so it is out of this catalog's scope.)",
   ],
   entries: [
@@ -19,32 +19,66 @@ export const mistral: Provider = {
       outputUsd: 2.09,
       contextWindow: 1_000_000,
       confidence: "official",
-      notes: "Public Preview Open (v26.10). Mistral also lists Batch and Priority processing rates.",
+      notes:
+        "Public Preview Open (v26.10). Current Standard price is a 50%-off launch offer; the published list price is scheduled from October 20. Batch and Priority have the same two-week offer window.",
       sourceNote:
-        "Mistral's official Mistral Large 4 model card and inference pricing page, checked 2026-10-06: public preview model ID `mistral-large-4`, 1M-token context, and Standard rates of $0.68/M input, $0.07/M cached input, and $2.09/M output. The Azure Retail Prices Foundry meter query for 'mistral large 4' returned no rows on 2026-10-06, so no Foundry per-token rate is inferred.",
+        "Mistral's official Mistral Large 4 model card and inference pricing page, checked 2026-10-07: public preview model ID `mistral-large-4`, 1M-token context, and sale Standard rates of $0.68/M input, $0.07/M cached input, and $2.09/M output, against published original prices of $1.36/$0.14/$4.18. Mistral's October 6 changelog says launch pricing is 50% off for two weeks. The list-price transition is scheduled for October 20, derived as 14 days after the launch date; the exact cutoff time is not stated. The full Azure Retail Prices feed still has no matching Mistral Large 4 meter as of 2026-10-07, so no Foundry per-token rate is inferred.",
       effectiveDate: "2026-10-06",
       variants: [
         {
+          label: "List price (from October 20)",
+          conditions: { from: "2026-10-20T00:00:00Z" },
+          inputUsd: 1.36,
+          cachedUsd: 0.14,
+          outputUsd: 4.18,
+          confidence: "official",
+          notes: "Mistral's launch sale is 50% off for two weeks; the change date is inferred as 14 days after the October 6 launch.",
+          sourceNote:
+            "Mistral's October 7 inference pricing page shows original Standard prices of $1.36/M input, $0.14/M cached input, and $4.18/M output, with current sale prices at half those values. Its October 6 changelog says launch pricing is 50% off for two weeks. October 20 is derived as 14 days after launch; Mistral does not publish the precise cutoff time.",
+        },
+        {
           label: "Batch",
-          conditions: { serviceTier: "batch" },
+          conditions: { serviceTier: "batch", until: "2026-10-20T00:00:00Z" },
           inputUsd: 0.34,
           cachedUsd: 0.035,
           outputUsd: 1.045,
           confidence: "official",
-          notes: "Batch processing at 50% of Standard.",
+          notes: "Current 50%-off launch price; Batch remains 50% of Standard after the sale.",
           sourceNote:
-            "Mistral's official inference pricing page, checked 2026-10-06: the Batch (-50%) view lists $0.34/M input, $0.035/M cached input, and $1.045/M output for Mistral Large 4.",
+            "Mistral's official inference pricing page, checked 2026-10-07: the Batch (-50%) view lists sale prices of $0.34/M input, $0.035/M cached input, and $1.045/M output for Mistral Large 4. The two-week launch-sale end is derived as October 20 from Mistral's October 6 changelog; exact cutoff time is not published.",
+        },
+        {
+          label: "List price (from October 20)",
+          conditions: { serviceTier: "batch", from: "2026-10-20T00:00:00Z" },
+          inputUsd: 0.68,
+          cachedUsd: 0.07,
+          outputUsd: 2.09,
+          confidence: "official",
+          notes: "Batch stays 50% of Standard after the launch sale ends.",
+          sourceNote:
+            "Mistral's October 7 inference pricing page shows original Batch prices of $0.68/M input, $0.07/M cached input, and $2.09/M output, with current sale prices at half those values. Its October 6 changelog says launch pricing is 50% off for two weeks. October 20 is derived as 14 days after launch; Mistral does not publish the precise cutoff time.",
         },
         {
           label: "Priority",
-          conditions: { serviceTier: "priority" },
+          conditions: { serviceTier: "priority", until: "2026-10-20T00:00:00Z" },
           inputUsd: 1.19,
           cachedUsd: 0.1225,
           outputUsd: 3.6575,
           confidence: "official",
-          notes: "Priority processing at 75% above Standard.",
+          notes: "Current 50%-off launch price; Priority remains 75% above Standard after the sale.",
           sourceNote:
-            "Mistral's official inference pricing page, checked 2026-10-06: the Priority (+75%) view lists $1.19/M input, $0.1225/M cached input, and $3.6575/M output for Mistral Large 4.",
+            "Mistral's official inference pricing page, checked 2026-10-07: the Priority (+75%) view lists sale prices of $1.19/M input, $0.1225/M cached input, and $3.6575/M output for Mistral Large 4. The two-week launch-sale end is derived as October 20 from Mistral's October 6 changelog; exact cutoff time is not published.",
+        },
+        {
+          label: "List price (from October 20)",
+          conditions: { serviceTier: "priority", from: "2026-10-20T00:00:00Z" },
+          inputUsd: 2.38,
+          cachedUsd: 0.245,
+          outputUsd: 7.315,
+          confidence: "official",
+          notes: "Priority remains 75% above Standard after the launch sale ends.",
+          sourceNote:
+            "Mistral's October 7 inference pricing page shows original Priority prices of $2.38/M input, $0.245/M cached input, and $7.315/M output, with current sale prices at half those values. Its October 6 changelog says launch pricing is 50% off for two weeks. October 20 is derived as 14 days after launch; Mistral does not publish the precise cutoff time.",
         },
       ],
     },
