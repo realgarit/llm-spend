@@ -10,6 +10,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Browser version must match the lockfile; no browser/APT download per job.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      options: --shm-size=1g
+    defaults:
+      run:
+        shell: bash
     name: Build
     steps:
       - name: Checkout
@@ -36,12 +43,9 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Only Chromium: the browser gate checks this app's behavior, not
-      # cross-engine rendering, and a second engine would double the runtime
-      # for no extra signal. Installed after the cheap checks so a typecheck or
-      # lint failure does not pay for a browser download.
-      - name: Install Chromium for Playwright
-        run: npx playwright install --with-deps chromium
+      # The pinned container already has the matching browser and OS libraries.
+      - name: Verify preinstalled Chromium
+        run: node -e "const fs=require('node:fs'); const p=require('playwright/package.json'); if(p.version!=='1.62.1') throw new Error('Update the pinned Playwright CI image to match the lockfile'); fs.accessSync(require('playwright').chromium.executablePath());"
 
       # E2E_SKIP_BUILD reuses the artifact the Build step above just produced —
       # tests/e2e/serve.mjs would otherwise run `npm run build` a second time.
