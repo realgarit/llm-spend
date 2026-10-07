@@ -142,9 +142,9 @@ export const qwen: Provider = {
       outputUsd: 7.8,
       confidence: "official",
       notes:
-        "Thinking-only preview; rates shown are the ≤128K tier (128K-256K bills $2/$12). Scheduled for deprecation on 2026-10-10; Alibaba lists Qwen3.7 Max as the replacement.",
+        "Supports both Non-Thinking and Thinking modes. Rates shown are the ≤128K tier (128K-256K bills $2/$12). Scheduled for deprecation on 2026-10-10; Alibaba lists Qwen3.7 Max as its replacement.",
       sourceNote:
-        "Alibaba Cloud Model Studio pricing page, International endpoint, re-verified 2026-08-01. Cached input derived as 10% of input per the official context-cache doc, which lists this model as supported. Alibaba's official model-lifecycle page schedules qwen3.6-max-preview for deprecation on 2026-10-10 and names qwen3.7-max as the replacement.",
+        "Alibaba Cloud Model Studio pricing page, International endpoint, checked 2026-10-07: qwen3.6-max-preview supports both Non-Thinking and Thinking modes and is priced at $1.30/M input and $7.80/M output through 128K, then $2/M and $12/M through 256K. Cached input is derived as 10% of input per the official context-cache doc, which lists this model as supported. Alibaba's official model-lifecycle page still schedules deprecation on 2026-10-10 and names qwen3.7-max as the replacement.",
       effectiveDate: "2026-07-19",
     },
   ],

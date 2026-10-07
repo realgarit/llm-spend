@@ -13,6 +13,7 @@ export type ProviderSlug =
   | "deepseek"
   | "glm"
   | "openai-azure"
+  | "openai-decisions"
   | "claude"
   | "gemini"
   | "xai"
