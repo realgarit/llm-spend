@@ -25,7 +25,7 @@ jobs:
       # Next.js requires Node 20+. Oryx also honors the "engines" field in
       # package.json (>=20) for its own internal build step.
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
 
