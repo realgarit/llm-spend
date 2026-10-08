@@ -6,12 +6,126 @@ export const claude: Provider = {
   slug: "claude",
   name: "Claude",
   org: "Anthropic",
-  tagline: "Claude Opus 5.5 and Sonnet 5.5 are available through first-party and Azure-hosted Foundry lanes billed at Anthropic's token-equivalent rates.",
+  tagline: "Claude Haiku 5.5 adds context-priced Direct and Foundry lanes, and Sonnet 5.5 cache reads are now cheaper.",
   intro: [
-    "Claude Sonnet 5.5, released September 28, is Anthropic's latest Sonnet model: 1M-token context, 128K max output, and $2/$0.20/$10 per M for input, cached input and output. The first-party Batch API is $1/$0.10/$5. Claude Opus 5.5 remains the current Opus flagship at $4/$0.20/$20 per M, with Batch at $2/$0.10/$10 and first-party Fast mode at $8/$0.40/$40. Claude Fable 5.1 remains GA at $10/$0.25/$50, while invite-only Mythos 5.1 shares those prices; Sonnet 5's $2/$0.20/$10 rate remains current.",
-    "Claude Sonnet 5.5 and Opus 5.5 are GA on Azure-hosted Foundry in Global Standard and US Data Zone. Microsoft bills Claude through CCUs, converting token usage at Anthropic's published per-model rates before marketplace discounts; the Foundry Global rows use those standard rates and the US Data Zone rows use the documented 1.1x uplift. Fable 5.1 and Mythos 5.1 are listed as Anthropic-hosted previews rather than Azure-hosted deployments.",
+    "Claude Haiku 5.5 launched October 7 with a 1M-token context window and 128K max output. Its input, cache-read, and output rates depend on each prompt's length: $0.10/$0.01/$0.50 per M up to 100K tokens and $0.50/$0.05/$2.50 over 100K. The Direct API Batch lane halves input and output. Claude Sonnet 5.5 remains $2/$0.10/$10 per M after its October 7 cache-read price cut; its Batch rates are $1/$0.05/$5. Claude Opus 5.5 remains $4/$0.20/$20, with Batch at $2/$0.10/$10 and first-party Fast mode at $8/$0.40/$40.",
+    "Microsoft Foundry offers Claude Haiku 5.5 in Global Standard and US Data Zone Standard and bills Claude through CCUs at Anthropic's published per-model rates. The US Data Zone carries the documented 1.1x multiplier. The compare workload stores monthly input totals rather than per-request prompt length, so Haiku's two prompt-price bands are shown as separate lanes. Foundry does not support the Message Batches API.",
   ],
   entries: [
+    {
+      model: "Claude Haiku 5.5 Up To 100K Prompt",
+      tier: "Direct",
+      inputUsd: 0.1,
+      cachedUsd: 0.01,
+      outputUsd: 0.5,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Applies when an individual prompt is at most 100,000 tokens. Prompt cache-write fees are outside this schema. The separate over-100K lane keeps monthly workload totals from being mistaken for per-prompt size.",
+      sourceNote:
+        "Anthropic's Claude Haiku 5.5 pricing page, captured 2026-10-08, publishes $0.10/M input, $0.01/M cache reads, and $0.50/M output for prompts up to 100,000 tokens; the model has a 1M context and 128K max output. Five-minute and one-hour cache writes are $0.125/M and $0.20/M, outside this schema. Its 50% Batch discount and cache multiplier are represented in the Direct Batch variant.",
+      effectiveDate: "2026-10-07",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.05,
+          cachedUsd: 0.005,
+          outputUsd: 0.25,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's pricing page, captured 2026-10-08, lists Batch at $0.05/M input and $0.25/M output for prompts up to 100,000 tokens. The documented cache-read multiplier is 0.1x and cache multipliers stack with Batch, yielding $0.005/M cached input. Batch is a Direct API feature, not a Foundry deployment tier.",
+        },
+      ],
+    },
+    {
+      model: "Claude Haiku 5.5 Up To 100K Prompt",
+      tier: "Global",
+      inputUsd: 0.1,
+      cachedUsd: 0.01,
+      outputUsd: 0.5,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Global Standard; the model is available Hosted on Azure or Hosted on Anthropic. Usage is billed through CCUs at Anthropic's standard per-model rates.",
+      sourceNote:
+        "Microsoft Learn's Claude model quota page, captured 2026-10-08, lists claude-haiku-5-5 for Global Standard as both Hosted on Azure and Hosted on Anthropic. Anthropic's Foundry pricing page states that token usage uses the same standard model rates as the Claude API and is converted to CCUs. For prompts up to 100,000 tokens, the official rates are $0.10/M input, $0.01/M cache reads, and $0.50/M output. The full Azure Retail Prices Foundry feed has no Claude, Anthropic, or CCU meter row; no per-model retail token meter is inferred.",
+      effectiveDate: "2026-10-07",
+    },
+    {
+      model: "Claude Haiku 5.5 Up To 100K Prompt",
+      tier: "DataZone",
+      inputUsd: 0.11,
+      cachedUsd: 0.011,
+      outputUsd: 0.55,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted US Data Zone Standard. Anthropic publishes the 1.1x multiplier for all token categories; this lane applies it to the up-to-100K prompt rates.",
+      sourceNote:
+        "Microsoft Learn's Claude model quota page, captured 2026-10-08, lists claude-haiku-5-5 as Hosted on Azure in US Data Zone Standard. Anthropic's Foundry pricing page states this deployment uses the same 1.1x US inference multiplier across token categories. Applying it to the published up-to-100K rates of $0.10/$0.01/$0.50 per M yields $0.11/$0.011/$0.55. Foundry invoices Claude usage through CCUs; no per-model Retail Prices token meter is expected.",
+      effectiveDate: "2026-10-07",
+    },
+    {
+      model: "Claude Haiku 5.5 Over 100K Prompt",
+      tier: "Direct",
+      inputUsd: 0.5,
+      cachedUsd: 0.05,
+      outputUsd: 2.5,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Applies when an individual prompt exceeds 100,000 tokens. Prompt cache-write fees are outside this schema. The separate up-to-100K lane keeps monthly workload totals from being mistaken for per-prompt size.",
+      sourceNote:
+        "Anthropic's Claude Haiku 5.5 pricing page, captured 2026-10-08, publishes $0.50/M input, $0.05/M cache reads, and $2.50/M output for prompts over 100,000 tokens; the model has a 1M context and 128K max output. Five-minute and one-hour cache writes are $0.625/M and $1/M, outside this schema. Its 50% Batch discount and cache multiplier are represented in the Direct Batch variant.",
+      effectiveDate: "2026-10-07",
+      variants: [
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch" },
+          inputUsd: 0.25,
+          cachedUsd: 0.025,
+          outputUsd: 1.25,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's pricing page, captured 2026-10-08, lists Batch at $0.25/M input and $1.25/M output for prompts over 100,000 tokens. The documented cache-read multiplier is 0.1x and cache multipliers stack with Batch, yielding $0.025/M cached input. Batch is a Direct API feature, not a Foundry deployment tier.",
+        },
+      ],
+    },
+    {
+      model: "Claude Haiku 5.5 Over 100K Prompt",
+      tier: "Global",
+      inputUsd: 0.5,
+      cachedUsd: 0.05,
+      outputUsd: 2.5,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Global Standard; the model is available Hosted on Azure or Hosted on Anthropic. Usage is billed through CCUs at Anthropic's standard per-model rates.",
+      sourceNote:
+        "Microsoft Learn's Claude model quota page, captured 2026-10-08, lists claude-haiku-5-5 for Global Standard as both Hosted on Azure and Hosted on Anthropic. Anthropic's Foundry pricing page states that token usage uses the same standard model rates as the Claude API and is converted to CCUs. For prompts over 100,000 tokens, the official rates are $0.50/M input, $0.05/M cache reads, and $2.50/M output. The full Azure Retail Prices Foundry feed has no Claude, Anthropic, or CCU meter row; no per-model retail token meter is inferred.",
+      effectiveDate: "2026-10-07",
+    },
+    {
+      model: "Claude Haiku 5.5 Over 100K Prompt",
+      tier: "DataZone",
+      inputUsd: 0.55,
+      cachedUsd: 0.055,
+      outputUsd: 2.75,
+      contextWindow: 1_000_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Azure-hosted US Data Zone Standard. Anthropic publishes the 1.1x multiplier for all token categories; this lane applies it to the over-100K prompt rates.",
+      sourceNote:
+        "Microsoft Learn's Claude model quota page, captured 2026-10-08, lists claude-haiku-5-5 as Hosted on Azure in US Data Zone Standard. Anthropic's Foundry pricing page states this deployment uses the same 1.1x US inference multiplier across token categories. Applying it to the published over-100K rates of $0.50/$0.05/$2.50 per M yields $0.55/$0.055/$2.75. Foundry invoices Claude usage through CCUs; no per-model Retail Prices token meter is expected.",
+      effectiveDate: "2026-10-07",
+    },
     {
       model: "Claude Opus 5.5",
       tier: "Direct",
@@ -83,26 +197,26 @@ export const claude: Provider = {
       model: "Claude Sonnet 5.5",
       tier: "Direct",
       inputUsd: 2.0,
-      cachedUsd: 0.2,
+      cachedUsd: 0.1,
       outputUsd: 10.0,
       contextWindow: 1_000_000,
       maxOutput: 128_000,
       confidence: "official",
       notes:
-        "Released September 28, 2026. Anthropic publishes $2/$0.20/$10 per M for input/cache-hit/output. Its Batch API halves input and output rates; prompt-cache discounts stack with Batch, making cache hits $0.10/M. Batch is a first-party API option, not a Foundry deployment tier.",
+        "Released September 28, 2026. Anthropic's October 7 update cuts cache reads to $0.10/M; input/output remain $2/$10 per M. Its Batch API halves input/output and the cache-read multiplier stacks, making Batch cache reads $0.05/M.",
       sourceNote:
-        "Anthropic's official Claude Sonnet 5.5 model and pricing pages, captured 2026-09-29, identify the release date as September 28 and publish $2/M input, $0.20/M cache hits, $10/M output, 1M context and 128K max output. Batch halves input and output and stacks with the standard 0.1x cache-hit multiplier, yielding $1/$0.10/$5 per M. The Foundry-only availability is represented by separate Azure-hosted entries below.",
-      effectiveDate: "2026-09-28",
+        "Anthropic's October 7 release note and current Claude Sonnet 5.5 pricing page, captured 2026-10-08, confirm $2/M input, $0.10/M cache reads (down from $0.20/M), and $10/M output. Cache writes remain $2.50/M for 5 minutes and $4/M for one hour, outside this schema. The Batch API halves input and output; the 0.05x cache-read multiplier stacks with Batch to yield $1/$0.05/$5 per M.",
+      effectiveDate: "2026-10-07",
       variants: [
         {
           label: "Batch",
           conditions: { serviceTier: "batch" },
           inputUsd: 1.0,
-          cachedUsd: 0.1,
+          cachedUsd: 0.05,
           outputUsd: 5.0,
           confidence: "official",
           sourceNote:
-            "Anthropic's pricing page, captured 2026-09-29, publishes a 50% Batch discount on input and output and says cache multipliers stack with Batch. Applying the published 0.1x Sonnet 5.5 cache-hit multiplier to Batch input gives $0.10/M cached input; this variant applies only to the first-party API.",
+            "Anthropic's pricing page, captured 2026-10-08, publishes Sonnet 5.5 Batch at $1/M input and $5/M output and a $0.10/M standard cache-read price. Its cache-read multiplier is 0.05x and cache multipliers stack with Batch, yielding $0.05/M cached input; this variant applies only to the first-party API.",
         },
       ],
     },
@@ -110,31 +224,31 @@ export const claude: Provider = {
       model: "Claude Sonnet 5.5",
       tier: "Global",
       inputUsd: 2.0,
-      cachedUsd: 0.2,
+      cachedUsd: 0.1,
       outputUsd: 10.0,
       contextWindow: 1_000_000,
       maxOutput: 128_000,
       confidence: "official",
       notes:
-        "Azure-hosted Microsoft Foundry Global Standard, generally available since September 28, 2026. Anthropic's per-model rates are the token-equivalent prices used for Foundry CCU billing.",
+        "Microsoft Foundry Global Standard, generally available since September 28, 2026. The October 7 cache-read update lowers its token-equivalent rate to $0.10/M; usage is billed through CCUs.",
       sourceNote:
-        "Microsoft's 2026-09-28 Foundry announcement confirms Claude Sonnet 5.5 is generally available and hosted on Azure in Global Standard and US Data Zone. Its price row is mislabeled 'Claude Opus 5.5' while showing $2 input and $10 output; Anthropic's Sonnet 5.5 model and pricing pages publish the exact $2/$0.20/$10 per M input/cache-hit/output rate. Anthropic's Foundry billing documentation says token use is rated at the standard per-model rates and converted to CCUs; no per-model Retail Prices token meter is expected. Captured 2026-09-29.",
-      effectiveDate: "2026-09-28",
+        "Anthropic's October 7 release note and current Sonnet 5.5 pricing page, captured 2026-10-08, confirm $2/M input, $0.10/M cache reads, and $10/M output. Anthropic states that Microsoft Foundry token usage is rated at standard per-model API prices and converted to CCUs; no per-model Retail Prices token meter is expected. Captured 2026-10-08.",
+      effectiveDate: "2026-10-07",
     },
     {
       model: "Claude Sonnet 5.5",
       tier: "DataZone",
       inputUsd: 2.2,
-      cachedUsd: 0.22,
+      cachedUsd: 0.11,
       outputUsd: 11.0,
       contextWindow: 1_000_000,
       maxOutput: 128_000,
       confidence: "official",
       notes:
-        "Azure-hosted US Data Zone Standard, generally available since September 28, 2026. The 1.1x multiplier applies to input, cached input and output; invoices aggregate the token-equivalent usage through CCUs.",
+        "Azure-hosted US Data Zone Standard, generally available since September 28, 2026. The 1.1x multiplier applies to input, cached input and output; the current token-equivalent cache-read rate is $0.11/M and invoices aggregate usage through CCUs.",
       sourceNote:
-        "Microsoft's 2026-09-28 Foundry announcement confirms Claude Sonnet 5.5 is generally available in US Data Zone. Anthropic's official pricing documentation states that Azure-hosted US Data Zone uses the same 1.1x multiplier as `inference_geo: us` across token pricing categories; applying it to Sonnet 5.5's official $2/$0.20/$10 per M Global rates gives $2.20/$0.22/$11.00. The model bills through CCUs rather than per-model Azure Retail Prices token meters. Captured 2026-09-29.",
-      effectiveDate: "2026-09-28",
+        "Microsoft Learn lists Claude Sonnet 5.5 Hosted on Azure in US Data Zone Standard. Anthropic's October 7 release note and current pricing page, captured 2026-10-08, set Global rates at $2/$0.10/$10 per M; its Foundry pricing documentation applies the same 1.1x multiplier to US Data Zone token categories, giving $2.20/$0.11/$11.00. The model is billed through CCUs rather than per-model Azure Retail Prices token meters. Anthropic's Foundry guide currently says Sonnet 5.5 supports Global only, while Microsoft Learn still lists US Data Zone; this deployment-availability discrepancy remains under review.",
+      effectiveDate: "2026-10-07",
     },
     {
       model: "Claude Opus 5",

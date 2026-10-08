@@ -25,6 +25,39 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-08 — Daily audit / Claude Haiku 5.5 and Sonnet cache pricing: the
+  full Azure Retail Prices Foundry feed remains 36 pages / 35,384 rows
+  (35,212 Consumption / 172 Reservation), 24 products, 1,938 product-meter
+  pairs, and 1,911 meter names; latest effective date is 2026-09-01, there
+  are no rows effective from October 1 onward, no `lastUpdatedDate`, and no
+  Claude/Anthropic/CCU meter name. Anthropic launched Haiku 5.5 on October 7
+  at $0.10/$0.01/$0.50 per M input/cache-read/output for prompts up to 100K
+  and $0.50/$0.05/$2.50 over 100K, with a 1M context and 128K max output.
+  Microsoft Learn lists it on Foundry Global Standard (Hosted on Azure and
+  Hosted on Anthropic) and US Data Zone Standard (Hosted on Azure). Foundry
+  uses Anthropic's standard rates through CCUs; US Data Zone applies the
+  documented 1.1x multiplier. Direct Batch halves input/output and cache
+  multipliers stack, but Foundry does not support Message Batches. Since the
+  compare workload input is a monthly cumulative total rather than per-prompt
+  context, keep these two official prompt bands as separately named lanes;
+  do not attach them to `contextBand` until a per-request prompt-size input is
+  available. Sonnet 5.5 cache reads fell from $0.20/M to $0.10/M on Oct 7;
+  Direct Batch is now $1/$0.05/$5, Global is $2/$0.10/$10, and existing US
+  Data Zone token-equivalent pricing is $2.20/$0.11/$11. Source discrepancy:
+  Anthropic's current Foundry guide says Sonnet 5.5 supports only Global,
+  while Microsoft Learn's quota/model availability tables still list US Data
+  Zone; retain the catalog row and recheck before removing it. Other provider
+  release checks found no additional tracked token-price change. Watches
+  remain Qwen3.6 Max Preview retirement Oct 10; Mistral Large 4 sale ending
+  Oct 20 (derived date); native Azure Kimi 6/7 identity; GPT-5.6 Sol's Nov 21
+  Direct / Nov 30 Foundry promotion dates; missing previous raw-feed snapshot;
+  DeepSeek V4 Pro source discrepancy; and deliberate Mistral Small 4 exclusion.
+  Sources checked: full Azure Retail Prices Foundry feed; Anthropic release
+  notes, Haiku 5.5 and Sonnet 5.5 pages, pricing and Microsoft Foundry docs;
+  Microsoft Learn Claude model quota/availability docs; official OpenAI,
+  Google, DeepSeek, xAI, Cohere, Alibaba, Kimi, Z.AI, MiniMax, and Mistral
+  pages.
+
 - 2026-10-08: Dependabot alerts/security updates are enabled. Version updates run
   weekly on Monday at 06:00 Europe/Zurich for the manifests in .github/dependabot.yml.
   Minor/patch updates are grouped, majors stay separate, and merging remains review-driven.

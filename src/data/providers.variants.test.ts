@@ -678,19 +678,58 @@ test("Claude Sonnet 5.5 includes direct Batch and Azure Foundry CCU rates", () =
       confidence,
     })),
     [
-      { inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
-      { inputUsd: 2, cachedUsd: 0.2, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
-      { inputUsd: 2.2, cachedUsd: 0.22, outputUsd: 11, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+      { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+      { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
+      { inputUsd: 2.2, cachedUsd: 0.11, outputUsd: 11, contextWindow: 1_000_000, maxOutput: 128_000, confidence: "official" },
     ],
   );
-  assert.equal(direct.effectiveDate, "2026-09-28");
-  assert.equal(global.effectiveDate, "2026-09-28");
-  assert.equal(dataZone.effectiveDate, "2026-09-28");
+  assert.equal(direct.effectiveDate, "2026-10-07");
+  assert.equal(global.effectiveDate, "2026-10-07");
+  assert.equal(dataZone.effectiveDate, "2026-10-07");
 
-  const batch = resolveRate(direct, { ...at("2026-09-29T12:00:00Z"), serviceTier: "batch" });
+  const batch = resolveRate(direct, { ...at("2026-10-08T12:00:00Z"), serviceTier: "batch" });
   assert.equal(batch.inputUsd, 1);
-  assert.equal(batch.cachedUsd, 0.1);
+  assert.equal(batch.cachedUsd, 0.05);
   assert.equal(batch.outputUsd, 5);
+});
+
+test("Claude Haiku 5.5 prompt bands have Direct and Foundry rates", () => {
+  const entries = getProvider("claude")?.entries ?? [];
+  const find = (model: string, tier: "Direct" | "Global" | "DataZone") =>
+    entries.find((entry) => entry.model === model && entry.tier === tier);
+  const shortDirect = find("Claude Haiku 5.5 Up To 100K Prompt", "Direct");
+  const shortGlobal = find("Claude Haiku 5.5 Up To 100K Prompt", "Global");
+  const shortDataZone = find("Claude Haiku 5.5 Up To 100K Prompt", "DataZone");
+  const longDirect = find("Claude Haiku 5.5 Over 100K Prompt", "Direct");
+  const longGlobal = find("Claude Haiku 5.5 Over 100K Prompt", "Global");
+  const longDataZone = find("Claude Haiku 5.5 Over 100K Prompt", "DataZone");
+
+  assert.ok(shortDirect);
+  assert.ok(shortGlobal);
+  assert.ok(shortDataZone);
+  assert.ok(longDirect);
+  assert.ok(longGlobal);
+  assert.ok(longDataZone);
+  assert.deepEqual(
+    [shortDirect, shortGlobal, shortDataZone, longDirect, longGlobal, longDataZone].map(
+      ({ inputUsd, cachedUsd, outputUsd }) => [inputUsd, cachedUsd, outputUsd],
+    ),
+    [
+      [0.1, 0.01, 0.5],
+      [0.1, 0.01, 0.5],
+      [0.11, 0.011, 0.55],
+      [0.5, 0.05, 2.5],
+      [0.5, 0.05, 2.5],
+      [0.55, 0.055, 2.75],
+    ],
+  );
+  assert.equal(shortDirect.contextWindow, 1_000_000);
+  assert.equal(shortDirect.maxOutput, 128_000);
+  assert.equal(shortDirect.effectiveDate, "2026-10-07");
+  assert.equal(resolveRate(shortDirect, { ...at("2026-10-08T12:00:00Z"), serviceTier: "batch" }).cachedUsd, 0.005);
+  assert.equal(resolveRate(longDirect, { ...at("2026-10-08T12:00:00Z"), serviceTier: "batch" }).cachedUsd, 0.025);
+  assert.ok(shortGlobal.sourceNote?.includes("CCUs"));
+  assert.ok(shortDataZone.sourceNote?.includes("1.1x"));
 });
 
 test("MAI-Thinking-1 matches the named commercial Foundry meters", () => {

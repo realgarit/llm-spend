@@ -614,9 +614,21 @@ const TIERED_ROWS: {
   },
   {
     providerSlug: "claude",
+    model: "Claude Haiku 5.5 Up To 100K Prompt",
+    tier: "Direct",
+    tiers: { batch: { inputUsd: 0.05, cachedUsd: 0.005, outputUsd: 0.25 } },
+  },
+  {
+    providerSlug: "claude",
+    model: "Claude Haiku 5.5 Over 100K Prompt",
+    tier: "Direct",
+    tiers: { batch: { inputUsd: 0.25, cachedUsd: 0.025, outputUsd: 1.25 } },
+  },
+  {
+    providerSlug: "claude",
     model: "Claude Sonnet 5.5",
     tier: "Direct",
-    tiers: { batch: { inputUsd: 1.0, cachedUsd: 0.1, outputUsd: 5.0 } },
+    tiers: { batch: { inputUsd: 1.0, cachedUsd: 0.05, outputUsd: 5.0 } },
   },
   {
     providerSlug: "openai-azure",
