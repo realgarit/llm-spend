@@ -23,6 +23,47 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-08",
+    title: "Claude Haiku 5.5 launches; Sonnet cache reads fall",
+    tag: "pricing",
+    body: [
+      "Anthropic released Claude Haiku 5.5 on October 7 with a 1M-token context window and 128K max output. Its rates depend on the length of each prompt: up to 100K tokens, $0.10/$0.01/$0.50 per M input/cache-read/output; over 100K, $0.50/$0.05/$2.50. The Direct API Batch lane halves input and output, with cache discounts stacking.",
+      "The catalog adds separate Direct and Microsoft Foundry Global and US Data Zone rows for both prompt-size bands. Foundry bills Claude through CCUs at Anthropic's per-model rates; the US Data Zone adds 1.1x. Since compare workloads store monthly input totals rather than individual prompt size, the two Haiku bands are shown as separately named lanes. Foundry does not support the Message Batches API, so Batch variants are Direct-only. Azure Retail Prices has no per-model Claude token meter.",
+      "Anthropic also reduced Claude Sonnet 5.5 cache reads from $0.20 to $0.10 per M. Updated rates are $2/$0.10/$10 Direct and Global, $2.20/$0.11/$11 in US Data Zone, and $1/$0.05/$5 for the Direct Batch lane.",
+    ],
+    sources: [
+      {
+        label: "Anthropic API release notes — Haiku 5.5 launch and Sonnet 5.5 cache-read change",
+        href: "https://platform.claude.com/docs/en/release-notes/overview",
+      },
+      {
+        label: "Anthropic Claude Haiku 5.5 — prompt-size pricing, context, and availability",
+        href: "https://platform.claude.com/docs/en/models/haiku-5-5/overview",
+      },
+      {
+        label: "Anthropic Claude Sonnet 5.5 — updated cache-read price",
+        href: "https://platform.claude.com/docs/en/models/sonnet-5-5/whats-new-sonnet-5-5",
+      },
+      {
+        label: "Anthropic pricing — Batch, cache, Foundry CCU, and US Data Zone rates",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+      {
+        label: "Anthropic Claude in Microsoft Foundry — hosting options and feature support",
+        href: "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry",
+      },
+      {
+        label: "Microsoft Learn — Claude model deployment types and Haiku 5.5 availability",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models-quotas-limits",
+      },
+      {
+        label: "Azure Retail Prices API — full Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-08",
+  },
+  {
     date: "2026-10-07",
     title: "Qwen3.6 Max Preview mode availability clarified",
     tag: "model",
