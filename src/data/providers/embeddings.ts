@@ -5,7 +5,7 @@ export const embeddings: Provider = {
   name: "Embeddings",
   tagline: "The retrieval layer. Input-only pricing, and the cheapest model is rarely the right one for code RAG.",
   intro: [
-    "Embedding models bill per million input tokens only, with no output meter. Cohere Embed 5 adds Pro and Fast choices at $0.12/M and $0.08/M for text input; image tokens have a separate rate. Alibaba's Qwen3.7 text embedding adds a 128K-token multilingual option at $0.07/M, while OpenAI's small model remains the budget pick.",
+    "Embedding models bill per million input tokens only, with no output meter. Cohere Embed 5 Pro and Fast are available through both Cohere Direct and Microsoft Foundry: Global text rates are $0.12/M and $0.08/M, while Data Zone rates are $0.132/M and $0.088/M. Image input has a separate rate and is outside the text-token comparison. Alibaba's Qwen3.7 text embedding adds a 128K-token multilingual option at $0.07/M, while OpenAI's small model remains the budget pick.",
   ],
   entries: [
     {
@@ -20,7 +20,7 @@ export const embeddings: Provider = {
       notes:
         "High-quality multimodal retrieval model with a 128K-token context, 100+ languages, and 256–2048 output dimensions. Text input is $0.12/M; image input is $0.40/M and is outside this text-token comparison. Shares an embedding space with Embed 5 Fast.",
       sourceNote:
-        "Cohere's official Embed 5 launch post states that the model is generally available through the Cohere API and Microsoft Foundry, at $0.12 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-pro. Captured 2026-10-01. The Azure Retail Prices Foundry feed currently has no Embed 5 meter, so this row records the direct Cohere API text rate only; no Foundry price is inferred.",
+        "Cohere's official Embed 5 launch post states that the model is available through Cohere API and Microsoft Foundry at $0.12 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-pro. Captured 2026-10-09. This Direct row records the Cohere API text rate; Foundry rates from Azure's October 1 meters are listed separately below. Image input remains outside this text-token comparison.",
       effectiveDate: "2026-09-30",
     },
     {
@@ -35,8 +35,68 @@ export const embeddings: Provider = {
       notes:
         "Lower-latency, high-throughput multimodal retrieval model with a 128K-token context, 100+ languages, and 256–2048 output dimensions. Text input is $0.08/M; image input is $0.40/M and is outside this text-token comparison. Shares an embedding space with Embed 5 Pro.",
       sourceNote:
-        "Cohere's official Embed 5 launch post states that the model is generally available through the Cohere API and Microsoft Foundry, at $0.08 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-fast. Captured 2026-10-01. The Azure Retail Prices Foundry feed currently has no Embed 5 meter, so this row records the direct Cohere API text rate only; no Foundry price is inferred.",
+        "Cohere's official Embed 5 launch post states that the model is available through Cohere API and Microsoft Foundry at $0.08 per 1M text tokens and $0.40 per 1M image tokens; Cohere's September 30 release notes identify the API model as embed-v5.0-fast. Captured 2026-10-09. This Direct row records the Cohere API text rate; Foundry rates from Azure's October 1 meters are listed separately below. Image input remains outside this text-token comparison.",
       effectiveDate: "2026-09-30",
+    },
+    {
+      model: "Cohere Embed 5 Pro",
+      host: "Direct from Azure",
+      tier: "Global",
+      inputUsd: 0.12,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Direct from Azure Global Standard meter. The text-token rate matches Cohere's Direct API; image input is billed separately and is outside this comparison.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Cohere Models', captured 2026-10-09: effective 2026-10-01 meter 'Embed V5 Pro Txt Glbl' is $0.00012 per 1K tokens ($0.12/M). The Microsoft Foundry catalog identifies Cohere-Embed-V5-Pro as a Direct from Azure 128K multimodal embedding model. Its separate image meter is not represented in this text-token row.",
+      effectiveDate: "2026-10-01",
+    },
+    {
+      model: "Cohere Embed 5 Pro",
+      host: "Direct from Azure",
+      tier: "DataZone",
+      inputUsd: 0.132,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Direct from Azure Data Zone meter. The text-token rate is 1.1x Global; image input is billed separately and is outside this comparison.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Cohere Models', captured 2026-10-09: effective 2026-10-01 meter 'Embed V5 Pro Txt DZ' is $0.000132 per 1K tokens ($0.132/M). The Global meter is $0.12/M. The Microsoft Foundry catalog identifies Cohere-Embed-V5-Pro as a Direct from Azure 128K multimodal embedding model. Its separate image meter is not represented in this text-token row.",
+      effectiveDate: "2026-10-01",
+    },
+    {
+      model: "Cohere Embed 5 Fast",
+      host: "Direct from Azure",
+      tier: "Global",
+      inputUsd: 0.08,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Direct from Azure Global Standard meter. The text-token rate matches Cohere's Direct API; image input is billed separately and is outside this comparison.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Cohere Models', captured 2026-10-09: effective 2026-10-01 meter 'Embed V5 Fast Txt Glbl' is $0.00008 per 1K tokens ($0.08/M). The Microsoft Foundry catalog identifies Cohere-Embed-V5-Fast as a Direct from Azure 128K multimodal embedding model. Its separate image meter is not represented in this text-token row.",
+      effectiveDate: "2026-10-01",
+    },
+    {
+      model: "Cohere Embed 5 Fast",
+      host: "Direct from Azure",
+      tier: "DataZone",
+      inputUsd: 0.088,
+      cachedUsd: null,
+      outputUsd: 0,
+      contextWindow: 128_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Direct from Azure Data Zone meter. The text-token rate is 1.1x Global; image input is billed separately and is outside this comparison.",
+      sourceNote:
+        "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Cohere Models', captured 2026-10-09: effective 2026-10-01 meter 'Embed V5 Fast Txt DZ' is $0.000088 per 1K tokens ($0.088/M). The Global meter is $0.08/M. The Microsoft Foundry catalog identifies Cohere-Embed-V5-Fast as a Direct from Azure 128K multimodal embedding model. Its separate image meter is not represented in this text-token row.",
+      effectiveDate: "2026-10-01",
     },
     {
       model: "Qwen3.7 text embedding",

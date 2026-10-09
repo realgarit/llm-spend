@@ -23,6 +23,35 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-09",
+    title: "Grok 4.7 and Cohere Embed 5 add Foundry rate lanes",
+    tag: "pricing",
+    body: [
+      "Microsoft Foundry made Grok 4.7 generally available on October 6 in Global Standard and US Data Zone Standard. Its 500K context uses separate prompt bands: below 200K, Global is $2/$0.50/$6 and US Data Zone is $2.20/$0.55/$6.60 per M input/cached/output; from 200K, the rates are $4/$1/$12 and $4.40/$1.10/$13.20. The Azure Retail Prices feed has no Grok 4.7 meter, so these Foundry rates come from Microsoft's official launch table.",
+      "Azure Retail Prices now lists Cohere Embed 5 Pro and Fast text-input meters effective October 1. Global rates are $0.12/M and $0.08/M; Data Zone rates are $0.132/M and $0.088/M. The Microsoft Foundry catalog identifies both as Direct from Azure multimodal embedding models. Their separate image rates remain outside the text-token comparison.",
+      "The same feed now confirms the already-listed GPT-6.1 Sol Foundry rates and DeepSeek V4.1 Flash's Global rate. DeepSeek Data Zone meters also appear, but Microsoft's current model listing documents Global Standard only, so those Data Zone rows are not added pending deployment confirmation.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry Blog — Grok 4.7 availability and Global/Data Zone pricing",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-grok-4-7-on-microsoft-foundry/4562168",
+      },
+      {
+        label: "Azure Retail Prices API — full Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      {
+        label: "Microsoft Foundry Model Catalog — Cohere Embed V5 Pro",
+        href: "https://ai.azure.com/catalog/models/Cohere-Embed-V5-Pro?task=embeddings",
+      },
+      {
+        label: "Microsoft Foundry Model Catalog — Cohere Embed V5 Fast",
+        href: "https://ai.azure.com/catalog/models/Cohere-Embed-V5-Fast?task=embeddings",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-09",
+  },
+  {
     date: "2026-10-08",
     title: "Claude Haiku 5.5 launches; Sonnet cache reads fall",
     tag: "pricing",
