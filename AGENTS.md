@@ -25,6 +25,46 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-09 — Daily audit / Grok 4.7 Foundry and Cohere Embed 5 meters: the
+  full Azure Retail Prices Foundry feed is 37 pages / 36,251 rows (36,079
+  Consumption / 172 Reservation), 26 products, 1,971 product-meter pairs,
+  and 1,942 meter names. Latest effective date is 2026-10-01; the feed has no
+  `lastUpdatedDate`, and the previous raw snapshot is still missing. The feed
+  has no Grok 4.7 or Claude meter.
+  Microsoft's Grok 4.7 Foundry blog is dated October 6, before the October 8
+  changelog, but this Foundry GA addition was missing from the catalog; it is
+  now listed from the official table at Global Standard and US Data Zone
+  Standard rates. The Azure feed still has no 4.7 token meter, so retain the
+  blog as the price source.
+  Cohere Embed 5 Pro/Fast Direct from Azure meters now appear, effective
+  October 1: text input is $0.12/$0.08 per M Global and $0.132/$0.088 per M
+  Data Zone. Image meters are excluded from the text-only comparison.
+  The October 1 feed now confirms existing GPT-6.1 Sol Global and US/EU/APAC
+  Data Zone rates; no amount changed. It also confirms DeepSeek V4.1 Flash's
+  native Global rate. DeepSeek Data Zone meters appear in the feed, but
+  Microsoft's launch table documents Global Standard only, so
+  do not add Data Zone lanes until deployment support is confirmed.
+  A new `Microsoft Decision 1` meter is $0.042 per 1M tokens across 37
+  locations, but no official model card or billing direction was found; keep
+  it out of the catalog pending model identity and input/output semantics.
+  October 1 Baseten changes are provisioned hourly meters and remain outside
+  this token catalog.
+  The October 8 Google Deep Research agent deprecation and Anthropic Usage
+  Policy update do not alter tracked model token pricing. OpenAI's current
+  chat-latest update is not an API rate change; Cohere North 2 is a platform
+  update; DeepSeek's latest API model announcement remains September 10.
+  Alibaba still schedules Qwen3.6 Max Preview retirement for October 10, so
+  recheck tomorrow before removing its row. Mistral Large 4 is still at sale
+  rates on October 9; October 20 remains the derived list-price date. Other
+  watches remain the native Azure Kimi 6/7 meter identity, GPT-6.1 Sol's
+  November 21 Direct / November 30 Foundry promotion dates, DeepSeek V4 Pro's
+  conflicting notices, the missing prior feed snapshot, and deliberate
+  Mistral Small 4 exclusion. Official sources checked: full Azure Retail
+  Prices Foundry feed; Microsoft Grok 4.7 and Cohere Foundry pages; xAI model
+  pricing; OpenAI and Anthropic release notes; Google Gemini API changelog;
+  Mistral pricing; Cohere blog; DeepSeek API updates; and Alibaba pricing and
+  lifecycle pages.
+
 - 2026-10-08 — Daily audit / Claude Haiku 5.5 and Sonnet cache pricing: the
   full Azure Retail Prices Foundry feed remains 36 pages / 35,384 rows
   (35,212 Consumption / 172 Reservation), 24 products, 1,938 product-meter

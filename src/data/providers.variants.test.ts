@@ -515,10 +515,10 @@ test("GPT-6.1 Sol Direct and Foundry rows match Microsoft's and OpenAI's publish
   );
   assert.ok(rows.every((entry) => entry.confidence === "official"));
   assert.ok(
-    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("captured 2026-09-30")),
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("captured 2026-10-09")),
   );
   assert.ok(
-    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("no GPT-6.1 meter as of September 30")),
+    rows.filter((entry) => entry.tier !== "Direct").every((entry) => entry.sourceNote?.includes("effective 2026-10-01")),
   );
 });
 
@@ -927,7 +927,7 @@ test("Grok 4.6 Foundry rows use the official Global meters only", () => {
   assert.ok(rows.every((entry) => entry.sourceNote?.includes("captured 2026-09-11")));
 });
 
-test("Grok 4.7 uses xAI's official direct pricing and has no Foundry lane", () => {
+test("Grok 4.7 uses official Direct and Foundry prices", () => {
   const provider = getProvider("xai");
   const entry = grokDirect("Grok 4.7");
 
@@ -962,12 +962,26 @@ test("Grok 4.7 uses xAI's official direct pricing and has no Foundry lane", () =
     { inputUsd: 4, cachedUsd: 1, outputUsd: 12, contextWindow: 500_000 },
   );
 
-  assert.equal(
-    provider?.entries.some((candidate) => candidate.model.startsWith("Grok 4.7") && candidate.tier !== "Direct"),
-    false,
+  const foundry = provider?.entries.filter(
+    (candidate) => candidate.model.startsWith("Grok 4.7") && candidate.tier !== "Direct",
   );
-  assert.match(entry.sourceNote ?? "", /zero Foundry meters containing 4\.7/);
-  assert.match(long.sourceNote ?? "", /zero Foundry meters containing 4\.7/);
+  assert.ok(foundry);
+  assert.deepEqual(
+    foundry.map(({ model, tier, inputUsd, cachedUsd, outputUsd }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+    })),
+    [
+      { model: "Grok 4.7", tier: "Global", inputUsd: 2, cachedUsd: 0.5, outputUsd: 6 },
+      { model: "Grok 4.7 Long Context", tier: "Global", inputUsd: 4, cachedUsd: 1, outputUsd: 12 },
+      { model: "Grok 4.7", tier: "DataZone", inputUsd: 2.2, cachedUsd: 0.55, outputUsd: 6.6 },
+      { model: "Grok 4.7 Long Context", tier: "DataZone", inputUsd: 4.4, cachedUsd: 1.1, outputUsd: 13.2 },
+    ],
+  );
+  assert.match(foundry[0].sourceNote ?? "", /no 4\.7 meter/);
 });
 
 test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {

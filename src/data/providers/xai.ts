@@ -4,10 +4,11 @@ export const xai: Provider = {
   slug: "xai",
   name: "Grok",
   org: "xAI",
-  tagline: "Grok 4.7 is xAI's current direct-API flagship, while Grok 4.6 remains a Microsoft Foundry Global Standard preview; Foundry Data Zone still tops out at Grok-4.3.",
+  tagline: "Grok 4.7 is GA on Microsoft Foundry Global and US Data Zone; Grok 4.6 remains a Global Standard preview.",
   intro: [
     "xAI released Grok 4.7 on 2026-09-21 as its current direct-API flagship: 500K context, $2/$0.50/$6 per M for input/cached input/output, and $4/$1/$12 once a prompt reaches the published 200K long-context threshold. The separate fast variant is announced by xAI but is not represented as a second token lane here.",
-    "Grok 4.6 (500K context on the direct API), released 2026-08-12, also appears in Microsoft Foundry as a public-preview Global Standard deployment. Foundry documents a 200K-token context window and 128K maximum output for that preview; its current deployment guide lists Global Standard only, while Grok-4.3 remains the newest documented Data Zone lane. The current Foundry feed has no Grok 4.7 meter, so the new flagship is direct-only for now.",
+    "Microsoft Foundry made Grok 4.7 generally available on October 6 in Global Standard and US Data Zone Standard, with a 500K context window. Foundry's rates follow the same short- and long-context schedule as xAI Direct, with the documented 1.1x US Data Zone premium. The Azure Retail Prices feed has no Grok 4.7 meter yet, so its Foundry rates come from Microsoft's launch table.",
+    "Grok 4.6 (500K context on the direct API), released 2026-08-12, remains a public-preview Global Standard deployment in Foundry. Microsoft documents a 200K-token context window and 128K maximum output for that preview; its separate 4.6 Data Zone retail meters remain unmodeled because Microsoft has not confirmed that deployment path.",
   ],
   entries: [
     {
@@ -22,7 +23,7 @@ export const xai: Provider = {
       notes:
         "xAI's current flagship for coding and knowledge work, released 2026-09-21. Standard rates are $2/$0.50/$6 per M; requests at or above 200K prompt tokens use the separate long-context lane below. xAI also announces a faster variant at twice the price, but does not expose it as a separate token table on the official pricing page.",
       sourceNote:
-        "xAI's official Grok 4.7 announcement (x.ai/news/grok-4-7), published and captured 2026-09-21, states that the model is available through the Grok API from $2/M input and $6/M output, with $0.50/M cached input and a 500K context window. The official model page (docs.x.ai/developers/models/grok-4.7) confirms the same model identity, context and cache rate; xAI's pricing page (docs.x.ai/developers/pricing) publishes the $4/$1/$12 long-context band for requests at or above 200K prompt tokens. A full Azure Retail Prices API sweep captured 2026-09-21 has zero Foundry meters containing 4.7, so this is a Direct-only lane.",
+        "xAI's official Grok 4.7 announcement (x.ai/news/grok-4-7), published and captured 2026-09-21, states that the model is available through the Grok API from $2/M input and $6/M output, with $0.50/M cached input and a 500K context window. The official model page (docs.x.ai/developers/models/grok-4.7) confirms the same model identity, context and cache rate; xAI's pricing page (docs.x.ai/developers/pricing) publishes the $4/$1/$12 long-context band for requests at or above 200K prompt tokens. Microsoft's October 6 Foundry launch separately publishes the Global Standard and US Data Zone rates; the Azure Retail Prices feed captured 2026-10-09 has no Grok 4.7 meter.",
       effectiveDate: "2026-09-21",
     },
     {
@@ -37,8 +38,64 @@ export const xai: Provider = {
       notes:
         "Long-context pricing band for requests at or above 200K prompt tokens. This is a separate comparison lane so the site does not confuse a workload's cumulative monthly input volume with one prompt's context length.",
       sourceNote:
-        "xAI's official pricing page (docs.x.ai/developers/pricing), captured 2026-09-21, publishes Grok 4.7 at $4/M input, $1/M cached input and $12/M output for the long-context band beginning at 200K prompt tokens. The model page (docs.x.ai/developers/models/grok-4.7) confirms the 500K context window. The full Azure Retail Prices API sweep captured 2026-09-21 has zero Foundry meters containing 4.7, so this is a Direct-only lane.",
+        "xAI's official pricing page (docs.x.ai/developers/pricing), captured 2026-09-21, publishes Grok 4.7 at $4/M input, $1/M cached input and $12/M output for the long-context band beginning at 200K prompt tokens. The model page (docs.x.ai/developers/models/grok-4.7) confirms the 500K context window. Microsoft's October 6 Foundry launch separately publishes Global Standard and US Data Zone rates; the Azure Retail Prices feed captured 2026-10-09 has no Grok 4.7 meter.",
       effectiveDate: "2026-09-21",
+    },
+    {
+      model: "Grok 4.7",
+      tier: "Global",
+      inputUsd: 2.0,
+      cachedUsd: 0.5,
+      outputUsd: 6.0,
+      contextWindow: 500_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Global Standard, generally available from October 6. Prompts under 200K tokens use the short-context rates; longer prompts use the separate lane below.",
+      sourceNote:
+        "Microsoft's Foundry blog, published 2026-10-06 and captured 2026-10-09, lists Grok 4.7 Global Standard at $2/M input, $0.50/M cached input and $6/M output for prompts under 200K tokens, with a 500K context window. The Azure Retail Prices Foundry feed captured 2026-10-09 has no 4.7 meter, so this row follows Microsoft's official launch table.",
+      effectiveDate: "2026-10-06",
+    },
+    {
+      model: "Grok 4.7 Long Context",
+      tier: "Global",
+      inputUsd: 4.0,
+      cachedUsd: 1.0,
+      outputUsd: 12.0,
+      contextWindow: 500_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry Global Standard long-context rates for prompts of 200K tokens or more.",
+      sourceNote:
+        "Microsoft's Foundry blog, published 2026-10-06 and captured 2026-10-09, lists Grok 4.7 Global Standard at $4/M input, $1/M cached input and $12/M output for prompts of 200K tokens or more, with a 500K context window. The Azure Retail Prices Foundry feed captured 2026-10-09 has no 4.7 meter, so this row follows Microsoft's official launch table.",
+      effectiveDate: "2026-10-06",
+    },
+    {
+      model: "Grok 4.7",
+      tier: "DataZone",
+      inputUsd: 2.2,
+      cachedUsd: 0.55,
+      outputUsd: 6.6,
+      contextWindow: 500_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry US Data Zone Standard, generally available from October 6. The listed rates are 1.1x Global Standard; longer prompts use the separate lane below.",
+      sourceNote:
+        "Microsoft's Foundry blog, published 2026-10-06 and captured 2026-10-09, lists Grok 4.7 US Data Zone Standard at $2.20/M input, $0.55/M cached input and $6.60/M output for prompts under 200K tokens. The Azure Retail Prices Foundry feed captured 2026-10-09 has no 4.7 meter, so this row follows Microsoft's official launch table.",
+      effectiveDate: "2026-10-06",
+    },
+    {
+      model: "Grok 4.7 Long Context",
+      tier: "DataZone",
+      inputUsd: 4.4,
+      cachedUsd: 1.1,
+      outputUsd: 13.2,
+      contextWindow: 500_000,
+      confidence: "official",
+      notes:
+        "Microsoft Foundry US Data Zone Standard long-context rates for prompts of 200K tokens or more; 1.1x the Global Standard rate.",
+      sourceNote:
+        "Microsoft's Foundry blog, published 2026-10-06 and captured 2026-10-09, lists Grok 4.7 US Data Zone Standard at $4.40/M input, $1.10/M cached input and $13.20/M output for prompts of 200K tokens or more. The Azure Retail Prices Foundry feed captured 2026-10-09 has no 4.7 meter, so this row follows Microsoft's official launch table.",
+      effectiveDate: "2026-10-06",
     },
     {
       model: "Grok 4.6",
@@ -144,10 +201,10 @@ export const xai: Provider = {
       ],
     },
     {
-      title: "Grok 4.5 is not on Foundry yet",
+      title: "Grok 4.5 remains Direct-only",
       tone: "warning",
       body: [
-        "As of 2026-07-19 the Foundry Grok lineup stops at Grok-4.3 Global ($1.25 / CHF 1.01 input, $2.50 / CHF 2.01 output). To run Grok 4.5 you must bill through xAI directly. Watch the Foundry Grok pricing page for a 4.5 listing before assuming Azure availability.",
+        "Use xAI's Direct API for Grok 4.5. Microsoft Foundry now lists Grok 4.7 in Global and US Data Zone Standard and Grok 4.6 in Global Standard preview; do not confuse those lanes with availability of the 4.5 model.",
       ],
     },
     {

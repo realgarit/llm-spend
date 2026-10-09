@@ -183,9 +183,9 @@ export const deepseek: Provider = {
       contextWindow: 1_000_000,
       confidence: "official",
       notes:
-        "Microsoft Foundry Direct from Azure public preview, billed through the Azure subscription. Microsoft publishes one flat Global Standard price and no peak/off-peak schedule for this deployment path; do not reuse the DeepSeek API's time-based variants.",
+        "Microsoft Foundry Direct from Azure public preview, billed through the Azure subscription. The flat Global Standard price is separate from the DeepSeek API's time-based variants. Azure's retail feed also emits Data Zone meters, but Microsoft's launch table documents Global Standard only, so no Data Zone lane is inferred.",
       sourceNote:
-        "Microsoft Foundry Blog (techcommunity.microsoft.com/blog/azure-ai-foundry-blog/deepseek-v4-1-flash-is-coming-to-microsoft-foundry/4556431), published 2026-09-23 and captured 2026-09-24, lists Direct from Azure Global Standard at $0.30/M input, $0.006/M cache, and $1.20/M output. The Azure Retail Prices query for Azure Deepseek Models (captured 2026-09-24) has no native Azure V4.1 meter, so the launch table is the official price source pending meter publication. No rate start date is published. The Azure price matches DeepSeek API peak pricing, but Microsoft gives no time-of-day schedule.",
+        "Microsoft Foundry Blog (techcommunity.microsoft.com/blog/azure-ai-foundry-blog/deepseek-v4-1-flash-is-coming-to-microsoft-foundry/4556431) lists Direct from Azure Global Standard at $0.30/M input, $0.006/M cache, and $1.20/M output. Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure Deepseek Models', captured 2026-10-09, now shows matching Global meters effective 2026-10-01. It also emits Data Zone meters, but Microsoft's launch table documents Global Standard only; those Data Zone rows are not modeled until Microsoft confirms deployment support. The Azure price has no peak/off-peak schedule, unlike DeepSeek's Direct API.",
       effectiveDate: "2026-09-24",
     },
     {
