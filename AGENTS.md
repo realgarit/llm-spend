@@ -25,6 +25,42 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-10 — Daily audit / Grok 4.7 retail meters and Qwen3.6 Max Preview
+  retirement: the full Azure Retail Prices Foundry feed now contains 37,479
+  rows (37,307 Consumption / 172 Reservation), 26 products, 2,015
+  product-meter pairs and 1,986 meter names. Latest effective date is
+  2026-10-01; the feed has no `lastUpdatedDate`. Relative to the Oct 9 aggregate
+  snapshot, totals grew by 1,228 rows and 44 meter pairs/names, but the previous
+  raw snapshot is missing, so a complete row-by-row diff is unavailable.
+  Grok 4.7 now has Global and Data Zone short/long input, cached-input and
+  output meters effective Oct 1. Commercial US Data Zone rates match the
+  existing launch-table lane. The same feed lists EU Data Zone rates at
+  $2.40/$0.60/$7.20 short and $4.80/$1.20/$14.40 long per M, plus US
+  Government rates at $2.75/$0.6875/$8.25 and $5.50/$1.375/$16.50. The
+  launch article confirms Global and commercial US Data Zone availability
+  only; these other regional meter rows remain outside comparisons pending
+  deployment confirmation. The catalog now cites the retail feed as
+  confirmation. The new DeepSeek V4.1 Flash Data Zone meters remain excluded
+  because the official model listing confirms Global Standard only. Cohere
+  Embed 5 image meters remain outside
+  the text-only comparison. Microsoft Decision 1 is still excluded because no
+  official model identity or input/output billing direction was found.
+  Alibaba's lifecycle page schedules `qwen3.6-max-preview` retirement on
+  Oct 10 and names `qwen3.7-max` as its replacement; the current pricing table
+  no longer lists the preview, so its Direct row is removed. The Qwen3.7 Max
+  summary now reflects that its 50% promotion ended Aug 31. Other checked
+  provider release notes disclosed no tracked model or token-price change:
+  Anthropic's Oct 9 item is a Managed Agents workflow feature, and the latest
+  Microsoft Foundry model posts remain the already-recorded Oct 7 Haiku 5.5
+  and Oct 6 Grok 4.7 updates. Watches remain Mistral Large 4 list pricing on
+  Oct 20, native Azure Kimi 6/7 meter identity, GPT-6.1 Sol's Nov 21 Direct /
+  Nov 30 Foundry promotion dates, DeepSeek V4 Pro wording, missing prior feed
+  snapshot, and deliberate Mistral Small 4 exclusion. Sources checked: full
+  Azure Retail Prices feed; Alibaba Model Studio pricing/lifecycle pages;
+  Microsoft Foundry Blog; OpenAI and Anthropic release notes; Google Gemini
+  API changelog; DeepSeek and xAI API release notes; Cohere and Mistral
+  release pages.
+
 - 2026-10-09 — Daily audit / Grok 4.7 Foundry and Cohere Embed 5 meters: the
   full Azure Retail Prices Foundry feed is 37 pages / 36,251 rows (36,079
   Consumption / 172 Reservation), 26 products, 1,971 product-meter pairs,

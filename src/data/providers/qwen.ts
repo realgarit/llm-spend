@@ -6,8 +6,8 @@ export const qwen: Provider = {
   org: "Alibaba",
   tagline: "Qwen3.8 Max is the flagship, while Qwen3.8 Flash adds a new $0.15/$0.47 multimodal direct lane — but Foundry still has no per-token Qwen meter.",
   intro: [
-    "Qwen3.8 Max is Alibaba's flagship, GA with a plain $2/M input, $6/M output rate — no promotional discount. Qwen3.8 Flash adds a new multimodal 1M-context lane at $0.15/M input and $0.47/M output, while Qwen3.7 Max remains available at a limited-time 50%-off rate ($1.25/$3.75 effective) through 2026-08-31, alongside Qwen3.7 Plus at 20% off. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint.",
-    "Qwen3.6 Max Preview is scheduled for deprecation on 2026-10-10, with Qwen3.7 Max named as its replacement. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
+    "Qwen3.8 Max is Alibaba's flagship, GA with a plain $2/M input, $6/M output rate — no promotional discount. Qwen3.8 Flash adds a new multimodal 1M-context lane at $0.15/M input and $0.47/M output. Qwen3.7 Max is now at list pricing after its 50% promotion ended on 2026-08-31; Qwen3.7 Plus remains at 20% off. All prices are Alibaba Cloud Model Studio's International (Singapore) endpoint.",
+    "The announced retirement date for qwen3.6-max-preview passed on 2026-10-10; Alibaba's current Model Studio pricing page omits it and names qwen3.7-max as its replacement. On Microsoft Foundry, Qwen models are available only as Managed Compute — dedicated GPU-hour billing ($4–8 per compute hour) with no serverless per-token listing, so there is no Foundry token rate to compare.",
   ],
   entries: [
     {
@@ -131,21 +131,6 @@ export const qwen: Provider = {
       sourceNote:
         "Alibaba Cloud Model Studio pricing page, International endpoint, snapshot qwen3.7-flash-2026-07-15, captured 2026-07-26. Rate shown is the 32K<tokens≤256K band, chosen to match the context band tracked for the existing Qwen3.6 Flash row (≤256K) so the two are directly comparable. Cached input derived as 10% of input per the official context-cache rule (explicit cache hits), same shape as the rest of the Qwen family.",
       effectiveDate: "2026-07-26",
-    },
-    {
-      model: "Qwen3.6 Max Preview",
-      host: "Model Studio (Intl)",
-      tier: "Direct",
-      inputUsd: 1.3,
-      cachedUsd: 0.13,
-      cachedConfidence: "derived",
-      outputUsd: 7.8,
-      confidence: "official",
-      notes:
-        "Supports both Non-Thinking and Thinking modes. Rates shown are the ≤128K tier (128K-256K bills $2/$12). Scheduled for deprecation on 2026-10-10; Alibaba lists Qwen3.7 Max as its replacement.",
-      sourceNote:
-        "Alibaba Cloud Model Studio pricing page, International endpoint, checked 2026-10-07: qwen3.6-max-preview supports both Non-Thinking and Thinking modes and is priced at $1.30/M input and $7.80/M output through 128K, then $2/M and $12/M through 256K. Cached input is derived as 10% of input per the official context-cache doc, which lists this model as supported. Alibaba's official model-lifecycle page still schedules deprecation on 2026-10-10 and names qwen3.7-max as the replacement.",
-      effectiveDate: "2026-07-19",
     },
   ],
   quirks: [

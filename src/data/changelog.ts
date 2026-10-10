@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-10",
+    title: "Foundry lists Grok 4.7 meters; Qwen3.6 Max retires",
+    tag: "pricing",
+    body: [
+      "Azure Retail Prices now lists Grok 4.7 Global and Data Zone input, cached-input and output meters effective October 1, including both prompt-size bands. Its commercial US Data Zone rates match the existing Foundry lane. The feed also publishes EU Data Zone short/long rates of $2.40/$0.60/$7.20 and $4.80/$1.20/$14.40 per M, and US Government Data Zone rates of $2.75/$0.6875/$8.25 and $5.50/$1.375/$16.50. Microsoft's launch article confirms Global and commercial US Data Zone deployments only; the catalog records the additional regional prices as pending deployment confirmation rather than comparison lanes.",
+      "Alibaba's lifecycle notice schedules `qwen3.6-max-preview` retirement for October 10 and names `qwen3.7-max` as the replacement. The current Model Studio pricing table no longer lists the preview, so its $1.30/$7.80 per M rate through 128K and $2/$12 through 256K has been removed. The Qwen3.7 Max replacement remains listed; its provider summary now reflects that the 50% offer ended on August 31.",
+    ],
+    sources: [
+      {
+        label: "Azure Retail Prices API — Grok 4.7 Foundry meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%274.7%27%29",
+      },
+      {
+        label: "Microsoft Foundry Blog — Grok 4.7 deployment availability and pricing",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-grok-4-7-on-microsoft-foundry/4562168",
+      },
+      {
+        label: "Alibaba Cloud Model Studio pricing — current Qwen model availability",
+        href: "https://help.aliyun.com/en/model-studio/model-pricing",
+      },
+      {
+        label: "Alibaba Cloud Model Studio lifecycle — Qwen3.6 Max Preview retirement and replacement",
+        href: "https://help.aliyun.com/en/model-studio/model-depreciation",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-10",
+  },
+  {
     date: "2026-10-09",
     title: "Grok 4.7 and Cohere Embed 5 add Foundry rate lanes",
     tag: "pricing",

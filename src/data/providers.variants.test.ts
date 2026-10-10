@@ -981,7 +981,15 @@ test("Grok 4.7 uses official Direct and Foundry prices", () => {
       { model: "Grok 4.7 Long Context", tier: "DataZone", inputUsd: 4.4, cachedUsd: 1.1, outputUsd: 13.2 },
     ],
   );
-  assert.match(foundry[0].sourceNote ?? "", /no 4\.7 meter/);
+  assert.match(foundry[0].sourceNote ?? "", /Azure Retail Prices Foundry feed captured 2026-10-10.*effective 2026-10-01/);
+});
+
+test("retired Qwen3.6 Max Preview is removed while its replacement remains", () => {
+  const qwen = getProvider("qwen");
+
+  assert.ok(qwen);
+  assert.ok(!qwen.entries.some((entry) => entry.model === "Qwen3.6 Max Preview"));
+  assert.ok(qwen.entries.some((entry) => entry.model === "Qwen3.7 Max (Promo)"));
 });
 
 test("GPT-6 Astra direct rows match OpenAI's published Standard API pricing", () => {
