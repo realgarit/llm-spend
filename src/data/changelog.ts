@@ -23,6 +23,76 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-11",
+    title: "Microsoft-Decision-1 adds input-priced Foundry lanes",
+    tag: "pricing",
+    body: [
+      "Microsoft's Foundry pricing table lists Microsoft-Decision-1 at $0.042 per 1M input tokens in US and EU Data Zone deployments, with output listed as N/A; Microsoft's developer article says output tokens are free. The Azure Retail Prices feed confirms a Global meter at the same input price, effective October 1. The catalog now shows Global and Data Zone lanes on a separate Microsoft Decision Models page; the decision-scoring model stays outside generative workload comparisons.",
+      "Microsoft describes Microsoft-Decision-1 as a 32K-context model that returns structured probability scores for predefined choices. Microsoft Learn documents both Global Standard and Data Zone Standard deployments.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry Blog — Microsoft-Decision-1 availability and Data Zone pricing",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-microsoft-decision-1-in-microsoft-foundry-for-decision-and-classific/4562742",
+      },
+      {
+        label: "Azure Retail Prices API — Microsoft Decision 1 meter",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20meterName%20eq%20%27Microsoft%20Decision%201%201M%20Tokens%27",
+      },
+      {
+        label: "Microsoft Learn — deploy and use Microsoft-Decision-1",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision",
+      },
+      {
+        label: "Microsoft Developer — Microsoft-Decision-1 use and input/output pricing",
+        href: "https://commandline.microsoft.com/microsoft-decision-1-model-foundry/",
+      },
+      {
+        label: "Microsoft Foundry Model Catalog — Microsoft-Decision-1 model details",
+        href: "https://ai.azure.com/catalog/models/Microsoft-Decision-1?publisher=microsoft",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-11",
+  },
+  {
+    date: "2026-10-11",
+    title: "OpenAI publishes Ultrafast rates for GPT-6 models",
+    tag: "pricing",
+    body: [
+      "OpenAI added Ultrafast for GPT-6 Astra in September and GPT-6.1 Sol on October 8; both Direct tiers are now catalogued with short- and long-context rates. Astra is $60/$6/$300 short and $120/$12/$450 long; Sol is $12/$0.60/$60 short and $24/$1.20/$90 long per 1M input/cached-input/output tokens. The comparison service-tier control now includes Ultrafast. The Azure Retail Prices feed has no Ultrafast meter, so these remain Direct-only variants; separate cache-write rates are not modeled.",
+    ],
+    sources: [
+      {
+        label: "OpenAI API changelog — GPT-6.1 Sol Ultrafast availability",
+        href: "https://developers.openai.com/api/docs/changelog",
+      },
+      {
+        label: "OpenAI API pricing — GPT-6 Astra and GPT-6.1 Sol Ultrafast rates",
+        href: "https://developers.openai.com/api/docs/pricing?tab=suite",
+      },
+      {
+        label: "Azure Retail Prices API — full Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-11",
+  },
+  {
+    date: "2026-10-11",
+    title: "Gemini Flash aliases route to current models",
+    tag: "model",
+    body: [
+      "Google deprecated Gemini 3.7 Flash and Gemini 3.5 Flash on October 8 and automatically routes requests to Gemini 3.8 Flash and Gemini 3.6 Flash, respectively. The provider page removes the deprecated aliases as separate price lanes while retaining their current successors; the successor rates are unchanged.",
+    ],
+    sources: [
+      {
+        label: "Google Gemini API release notes — October 8 model routing changes",
+        href: "https://ai.google.dev/gemini-api/docs/changelog?release=09-18-2026",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-11",
+  },
+  {
     date: "2026-10-10",
     title: "Foundry lists Grok 4.7 meters; Qwen3.6 Max retires",
     tag: "pricing",

@@ -25,6 +25,39 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-11 — Daily audit / Microsoft Decision-1, OpenAI Ultrafast, and
+  Gemini alias routing: the full Azure Retail Prices Foundry feed now has
+  37,521 rows (37,349 Consumption / 172 Reservation), 26 products, 2,015
+  product-meter pairs, and 1,986 meter names across 38 pages. This is 42 more
+  rows than Oct 10 with unchanged product/pair/meter-name counts; the previous
+  raw snapshot is missing, so the exact row-level delta is unknown. Latest
+  effective date remains 2026-10-01 and the API items still have no
+  `lastUpdatedDate`.
+  Microsoft-Decision-1 is now catalogued separately from generation: the
+  Foundry launch table lists $0.042/M input in US and EU Data Zone with output
+  N/A, and the feed confirms a $0.042/M Global meter effective Oct 1 across 37
+  regions. Microsoft Learn documents both GlobalStandard and DataZoneStandard;
+  the model supports a 32K context and returns structured probabilities. The
+  current model catalog labels it GA while the Oct 9 launch post calls it
+  public preview, so avoid a lifecycle label until Microsoft reconciles those
+  pages. OpenAI's pricing page publishes Ultrafast Direct rates for GPT-6
+  Astra and GPT-6.1 Sol in short/long context; added those variants and exposed
+  Ultrafast in the compare-tier selector. The full Foundry feed has no
+  Ultrafast meter. Google deprecated Gemini 3.7 Flash and 3.5 Flash on Oct 8
+  and automatically routes them to 3.8 Flash and 3.6 Flash; removed the old
+  aliases as standalone rows.
+  Rechecked provider sources found no additional token-price change: Anthropic
+  Oct 9 dynamic Managed Agents workflows and Cohere Oct 9 shared/dedicated
+  inference are platform features; Z.ai's Oct 10 AutoClaw token rewards do not
+  change API rates; DeepSeek's latest model pricing notice remains Sep 10.
+  The current Fireworks Foundry listing explicitly labels V4.1 Flash
+  Global-Standard-only; native DeepSeek Data Zone meter groups remain outside
+  comparisons until Microsoft confirms deployment support. Open watches:
+  Mistral Large 4 list pricing on Oct 20; native Azure Kimi 6/7 meter identity;
+  DeepSeek V4 Pro continuation/rerouting wording; GPT-5.6 Sol's Nov 21 Direct /
+  Nov 30 Foundry promotional dates; the missing prior raw feed snapshot; and
+  deliberate Mistral Small 4 exclusion.
+
 - 2026-10-10 — Daily audit / Grok 4.7 retail meters and Qwen3.6 Max Preview
   retirement: the full Azure Retail Prices Foundry feed now contains 37,479
   rows (37,307 Consumption / 172 Reservation), 26 products, 2,015

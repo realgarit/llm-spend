@@ -42,6 +42,14 @@ test("decodeCompareState falls back field-by-field for malformed values", () => 
   assert.deepEqual(state, defaults);
 });
 
+test("Ultrafast is a shareable service-tier scenario", () => {
+  const decoded = decodeCompareState("v=1&tier=ultrafast", laneIds);
+
+  assert.equal(decoded.scenario.serviceTier, "ultrafast");
+  assert.equal(scenarioLabel(decoded), "Now · Ultrafast");
+  assert.match(encodeCompareState({ ...defaults, scenario: { time: { mode: "now" }, serviceTier: "ultrafast" } }), /tier=ultrafast/);
+});
+
 test("decodeCompareState accepts safe workload boundaries and ignores a custom hour outside custom mode", () => {
   const state = decodeCompareState("v=1&input=0&output=9007199254740991&cache=0&time=peak&hour=19", laneIds);
 
