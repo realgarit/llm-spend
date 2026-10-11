@@ -21,6 +21,7 @@ import { deepseek } from "./deepseek";
 import { glm } from "./glm";
 import { openaiAzure } from "./openai-azure";
 import { openaiDecisions } from "./openai-decisions";
+import { microsoftDecisions } from "./microsoft-decisions";
 import { claude } from "./claude";
 import { gemini } from "./gemini";
 import { xai } from "./xai";
@@ -37,6 +38,7 @@ export const providers: Provider[] = [
   glm,
   openaiAzure,
   openaiDecisions,
+  microsoftDecisions,
   claude,
   gemini,
   xai,
@@ -54,9 +56,15 @@ export function getProvider(slug: string): Provider | undefined {
   return providers.find((p) => p.slug === slug);
 }
 
-/** Chat/generation models only (excludes embeddings and both Decisions APIs); used by compare + calculator. */
+/** Chat/generation models only (excludes embeddings and decision-scoring APIs); used by compare + calculator. */
 export function chatEntries(): { provider: Provider; entry: Provider["entries"][number] }[] {
   return providers
-    .filter((p) => p.slug !== "embeddings" && p.slug !== "perplexity" && p.slug !== "openai-decisions")
+    .filter(
+      (p) =>
+        p.slug !== "embeddings" &&
+        p.slug !== "perplexity" &&
+        p.slug !== "openai-decisions" &&
+        p.slug !== "microsoft-decisions",
+    )
     .flatMap((p) => p.entries.map((entry) => ({ provider: p, entry })));
 }

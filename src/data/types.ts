@@ -14,6 +14,7 @@ export type ProviderSlug =
   | "glm"
   | "openai-azure"
   | "openai-decisions"
+  | "microsoft-decisions"
   | "claude"
   | "gemini"
   | "xai"
@@ -54,8 +55,9 @@ export type Confidence = "official" | "derived" | "estimate";
  * - flex      : lower-priority synchronous serving
  * - priority  : premium low-latency serving
  * - highspeed : a provider-specific accelerated lane (Moonshot's naming)
+ * - ultrafast : OpenAI's highest-speed processing lane
  */
-export type ServiceTier = "standard" | "batch" | "flex" | "priority" | "highspeed";
+export type ServiceTier = "standard" | "batch" | "flex" | "priority" | "highspeed" | "ultrafast";
 
 /**
  * A half-open window of UTC hours, `[startHourUtc, endHourUtc)`.

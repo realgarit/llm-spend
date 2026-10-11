@@ -1123,11 +1123,20 @@ test("Gemini 3.8 Flash carries its published model limits", () => {
   assert.equal(entry.confidence, "official");
 });
 
+test("deprecated Gemini Flash aliases do not appear as independent price lanes", () => {
+  const entries = getProvider("gemini")?.entries.map((entry) => entry.model) ?? [];
+
+  assert.ok(entries.includes("Gemini 3.8 Flash"));
+  assert.ok(entries.includes("Gemini 3.6 Flash"));
+  assert.equal(entries.includes("Gemini 3.7 Flash"), false);
+  assert.equal(entries.includes("Gemini 3.5 Flash"), false);
+});
+
 // ---------------------------------------------------------------------------
-// Gemini 3.6 / 3.7 / 3.8 Flash promo reversion
+// Gemini 3.6 / 3.8 Flash promo reversion
 // ---------------------------------------------------------------------------
 
-for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash", "Gemini 3.8 Flash"]) {
+for (const model of ["Gemini 3.6 Flash", "Gemini 3.8 Flash"]) {
   test(`${model} stays at the promo rate through the last instant of 2026`, () => {
     const resolved = resolveRate(geminiFlash(model), at("2026-12-31T23:59:59Z"));
 
@@ -1324,7 +1333,7 @@ const GEMINI_TIER_CASES = [
   },
 ];
 
-for (const model of ["Gemini 3.6 Flash", "Gemini 3.7 Flash", "Gemini 3.8 Flash"]) {
+for (const model of ["Gemini 3.6 Flash", "Gemini 3.8 Flash"]) {
   for (const { tier, label, labelAfter, before, after } of GEMINI_TIER_CASES) {
     test(`${model} resolves ${label}'s promo-period numbers before 2027`, () => {
       const resolved = resolveRate(geminiFlash(model), {
@@ -1582,6 +1591,29 @@ test("OpenAI Decisions pricing is catalogued separately from generation comparis
   );
 });
 
+test("Microsoft-Decision-1 Foundry lanes stay outside generative comparisons", () => {
+  const provider = getProvider("microsoft-decisions");
+
+  assert.ok(provider, "Expected the Microsoft Decision Models provider");
+  assert.deepEqual(
+    provider.entries.map(({ tier, inputUsd, cachedUsd, outputUsd, contextWindow }) => ({
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+    })),
+    [
+      { tier: "Global", inputUsd: 0.042, cachedUsd: null, outputUsd: 0, contextWindow: 32_768 },
+      { tier: "DataZone", inputUsd: 0.042, cachedUsd: null, outputUsd: 0, contextWindow: 32_768 },
+    ],
+  );
+  assert.equal(
+    chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "microsoft-decisions"),
+    false,
+  );
+});
+
 // ---------------------------------------------------------------------------
 // Guard: keep the resolver's current state explicit as real dates pass. Rows
 // whose dated variants are intentionally active at the pinned instant are
@@ -1612,13 +1644,12 @@ const ROWS_WITH_PERMANENTLY_ACTIVE_VARIANTS = new Set<string>([
   // September)" variant with `{ from: "2026-09-01T00:00:00Z" }` and no
   // `until` — permanently active from that instant on.
   "qwen / Qwen3.7 Max (Promo) (Model Studio (Intl))",
-  // Gemini 3.6/3.7/3.8 Flash's "Standard (from 2027)" variant reverts the promo
+  // Gemini 3.6/3.8 Flash's "Standard (from 2027)" variant reverts the promo
   // rate via `{ from: "2027-01-01T00:00:00Z" }` with no `until` or
   // `serviceTier` — permanently active from that instant on. (Their other
   // Batch/Flex/Priority variants are `serviceTier`-scoped and never match
   // this guard's plain `{ now }` context, so they need no allowlist entry.)
   "gemini / Gemini 3.6 Flash",
-  "gemini / Gemini 3.7 Flash",
   "gemini / Gemini 3.8 Flash",
 ]);
 

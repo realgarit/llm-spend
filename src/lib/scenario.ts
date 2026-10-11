@@ -52,6 +52,7 @@ export const SERVICE_TIER_OPTIONS: { value: ServiceTier; label: string }[] = [
   { value: "flex", label: "Flex" },
   { value: "priority", label: "Priority" },
   { value: "highspeed", label: "Highspeed" },
+  { value: "ultrafast", label: "Ultrafast" },
 ];
 
 /**

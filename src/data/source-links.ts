@@ -12,6 +12,10 @@ const OFFICIAL_SOURCES: Record<ProviderSlug, SourceLink> = {
     label: "OpenAI Decisions API pricing and availability",
     href: "https://developers.openai.com/api/docs/guides/decisions",
   },
+  "microsoft-decisions": {
+    label: "Microsoft Learn — Microsoft-Decision-1 in Foundry",
+    href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision",
+  },
   claude: { label: "Anthropic pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
   gemini: { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
   xai: { label: "xAI pricing", href: "https://docs.x.ai/developers/pricing" },

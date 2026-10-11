@@ -449,7 +449,7 @@ const TIERED_ROWS: {
   model: string;
   tier: string;
   host?: string;
-  tiers: Partial<Record<"batch" | "flex" | "priority" | "highspeed", { inputUsd: number; cachedUsd: number | null; outputUsd: number }>>;
+  tiers: Partial<Record<"batch" | "flex" | "priority" | "highspeed" | "ultrafast", { inputUsd: number; cachedUsd: number | null; outputUsd: number }>>;
 }[] = [
   {
     providerSlug: "kimi",
@@ -476,16 +476,6 @@ const TIERED_ROWS: {
     tiers: {
       batch: { inputUsd: 0.34, cachedUsd: 0.035, outputUsd: 1.045 },
       priority: { inputUsd: 1.19, cachedUsd: 0.1225, outputUsd: 3.6575 },
-    },
-  },
-  {
-    providerSlug: "gemini",
-    model: "Gemini 3.7 Flash",
-    tier: "Global",
-    tiers: {
-      batch: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
-      flex: { inputUsd: 0.375, cachedUsd: 0.0375, outputUsd: 1.875 },
-      priority: { inputUsd: 1.35, cachedUsd: 0.135, outputUsd: 6.75 },
     },
   },
   {
@@ -524,6 +514,7 @@ const TIERED_ROWS: {
       batch: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 25.0 },
       flex: { inputUsd: 5.0, cachedUsd: 0.5, outputUsd: 25.0 },
       priority: { inputUsd: 20.0, cachedUsd: 2.0, outputUsd: 100.0 },
+      ultrafast: { inputUsd: 60.0, cachedUsd: 6.0, outputUsd: 300.0 },
     },
   },
   {
@@ -535,6 +526,7 @@ const TIERED_ROWS: {
       batch: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
       flex: { inputUsd: 10.0, cachedUsd: 1.0, outputUsd: 37.5 },
       priority: { inputUsd: 40.0, cachedUsd: 4.0, outputUsd: 150.0 },
+      ultrafast: { inputUsd: 120.0, cachedUsd: 12.0, outputUsd: 450.0 },
     },
   },
   {
@@ -546,6 +538,7 @@ const TIERED_ROWS: {
       batch: { inputUsd: 1.0, cachedUsd: 0.05, outputUsd: 5.0 },
       flex: { inputUsd: 1.0, cachedUsd: 0.05, outputUsd: 5.0 },
       priority: { inputUsd: 4.0, cachedUsd: 0.2, outputUsd: 20.0 },
+      ultrafast: { inputUsd: 12.0, cachedUsd: 0.6, outputUsd: 60.0 },
     },
   },
   {
@@ -557,6 +550,7 @@ const TIERED_ROWS: {
       batch: { inputUsd: 2.0, cachedUsd: 0.1, outputUsd: 7.5 },
       flex: { inputUsd: 2.0, cachedUsd: 0.1, outputUsd: 7.5 },
       priority: { inputUsd: 8.0, cachedUsd: 0.4, outputUsd: 30.0 },
+      ultrafast: { inputUsd: 24.0, cachedUsd: 1.2, outputUsd: 90.0 },
     },
   },
   {
@@ -660,7 +654,7 @@ test("a service tier resolves real numbers only on the rows that publish it, and
   const rows = buildCompareRows();
   const today = new Date("2026-08-15T12:00:00Z");
 
-  for (const tier of ["batch", "flex", "priority", "highspeed"] as const) {
+  for (const tier of ["batch", "flex", "priority", "highspeed", "ultrafast"] as const) {
     const ctxs = scenarioContexts({ time: { mode: "now" }, serviceTier: tier }, today, DEFAULT_WORKLOAD.inputTokens);
     for (const row of rows) {
       const { resolved } = compareRowUnderScenario(row, DEFAULT_WORKLOAD, ctxs);
