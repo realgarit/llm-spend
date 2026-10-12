@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/realgarit/llm-spend/actions/workflows/azure-static-web-apps.yml"><img src="https://github.com/realgarit/llm-spend/actions/workflows/azure-static-web-apps.yml/badge.svg" alt="Deploy status"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-F6A821?style=flat" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Next.js-15-000000?style=flat&logo=nextdotjs" alt="Next.js 15">
+  <img src="https://img.shields.io/badge/Next.js-16-000000?style=flat&logo=nextdotjs" alt="Next.js 16">
   <a href="https://llmspend.realgar.ch"><img src="https://img.shields.io/badge/live-llmspend.realgar.ch-F6A821?style=flat" alt="Live site"></a>
 </p>
 
@@ -15,7 +15,7 @@ Live site: **https://llmspend.realgar.ch**
 
 ## Stack
 
-Next.js 15, TypeScript, Tailwind v4, deployed to Azure Static Web Apps (hybrid Next.js).
+Next.js 16, TypeScript, Tailwind v4, deployed to Azure Static Web Apps (hybrid Next.js).
 
 ## Adding a model
 
