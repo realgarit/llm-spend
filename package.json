@@ -19,20 +19,20 @@
   },
   "dependencies": {
     "next": "^15.4.6",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@playwright/test": "^1.62.1",
-    "@tailwindcss/postcss": "^4.1.11",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.15.0",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "eslint": "^9.32.0",
     "eslint-config-next": "^15.4.6",
     "tailwindcss": "^4.1.11",
-    "tsx": "^4.23.1",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.2"
   }
 }
