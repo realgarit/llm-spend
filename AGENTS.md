@@ -25,6 +25,8 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-12 - Operator accepted the upstream braces development-tool limitation in #148. docs/dependency-limits.md records its locked resolution, exposure boundary and reopen triggers. Alerts and future patched-version updates remain enabled; no audit suppression or vulnerable-version override was added.
+
 - 2026-10-12 - Next.js 16.4.0 and eslint-config-next advance together. Next 16 removes next lint: use the ESLint CLI and upstream flat-config exports. This also removes the vulnerable nested PostCSS 8.4.31 resolution carried by Next 15.
 
 - 2026-10-12 - Dependency refresh includes the matching Playwright 1.63.0 CI container and explicit version guard. Image digest verified from Microsoft Container Registry. Keep the browser package, container version and digest coordinated.
