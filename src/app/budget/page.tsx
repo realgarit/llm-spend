@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import type { Metadata } from "next";
 import { buildCompareRows } from "@/data/compare-data";
 import { BudgetPlanner } from "@/components/budget-planner";
@@ -18,7 +19,7 @@ export default function BudgetPage() {
   // compare/page.tsx's and models/[laneId]/page.tsx's buildAtMs (see
   // budget-planner.tsx / lib/use-now.ts). The client planner re-resolves on
   // the visitor's real clock after mount.
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
 
   return (
     <div className="container-page budget-page">

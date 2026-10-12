@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -43,7 +44,7 @@ export default async function LaneDetailPage({
   // Build-time basis for resolving scenario-aware rates — same pattern as
   // compare/page.tsx's buildAtMs (see cost-anatomy-explorer.tsx / lib/use-now.ts).
   // The client explorer re-resolves on the visitor's real clock after mount.
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
 
   return (
     <div className="container-page" style={{ paddingBlock: "3rem" }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 const KEY = "llm-spend-theme";
@@ -10,23 +10,27 @@ function systemTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme | null>(null);
+function readTheme(): Theme {
+  const current = document.documentElement.getAttribute("data-theme");
+  if (current === "dark" || current === "light") return current;
+  try {
+    const stored = localStorage.getItem(KEY);
+    if (stored === "dark" || stored === "light") return stored;
+  } catch { /* Storage may be unavailable in a private browser. */ }
+  return systemTheme();
+}
 
-  useEffect(() => {
-    const stored = (() => {
-      try {
-        return localStorage.getItem(KEY) as Theme | null;
-      } catch {
-        return null;
-      }
-    })();
-    setTheme(stored ?? systemTheme());
-  }, []);
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  return () => observer.disconnect();
+}
+
+export function ThemeToggle() {
+  const theme = useSyncExternalStore<Theme | null>(subscribeTheme, readTheme, () => null);
 
   function toggle() {
     const next: Theme = (theme ?? systemTheme()) === "dark" ? "light" : "dark";
-    setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem(KEY, next);

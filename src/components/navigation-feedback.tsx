@@ -11,11 +11,11 @@ import { usePathname } from "next/navigation";
  */
 export function NavigationFeedback() {
   const pathname = usePathname();
-  const [pending, setPending] = useState(false);
+  return <RouteNavigationFeedback key={pathname} />;
+}
 
-  useEffect(() => {
-    setPending(false);
-  }, [pathname]);
+function RouteNavigationFeedback() {
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     function onDocumentClick(event: MouseEvent) {
