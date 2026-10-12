@@ -25,6 +25,8 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-12 - Dependency refresh includes the matching Playwright 1.63.0 CI container and explicit version guard. Image digest verified from Microsoft Container Registry. Keep the browser package, container version and digest coordinated.
+
 - 2026-10-12 — Daily audit / no catalog-affecting change: the full Azure Retail
   Prices Foundry feed remains 38 pages / 37,521 rows (37,349 Consumption / 172
   Reservation), 26 products, 2,015 product-meter pairs, and 1,986 meter names.
