@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import Link from "next/link";
 import { providers } from "@/data/providers";
 import { formatUsd } from "@/data/currency";
@@ -60,7 +61,7 @@ export default function HomePage() {
   // visitor's clock, but fromPrice() still needs a `now` to resolve rows that
   // carry rate variants, so it gets the same build-time value everything else
   // on the site uses.
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
   return (
     <div className="container-page" style={{ paddingBlock: "3rem" }}>
       {/* Hero */}

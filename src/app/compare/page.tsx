@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import type { Metadata } from "next";
 import { buildCompareRows } from "@/data/compare-data";
 import { CompareExplorer } from "@/components/compare-explorer";
@@ -17,7 +18,7 @@ export default function ComparePage() {
   // Build-time basis for resolving scenario-aware rates — same pattern as
   // pricing-table.tsx's buildAtMs (see rate-cell.tsx / lib/use-now.ts). The
   // client component re-resolves on the visitor's real clock after mount.
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
   return (
     <div className="container-page compare-page">
       <header className="rise compare-intro">

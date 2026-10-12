@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   normalizeShortlist,
   parseStoredShortlist,
@@ -122,14 +122,17 @@ export function useShortlist(
   // Refs mirroring the latest render's inputs/state, so the mount-only effect
   // and the stable-identity callbacks below can read current values without
   // declaring them as reactive dependencies (which would defeat "run once at
-  // mount" / "never change identity"). Assigning `.current` directly in the
-  // render body — not inside an effect — keeps it synchronously up to date
-  // before any callback or effect that reads it can run.
+  // mount" / "never change identity"). Updating in a layout effect keeps
+  // callbacks current before browser events and passive effects, without
+  // mutating refs during a render that React may discard.
   const laneIdsRef = useRef(laneIds);
-  laneIdsRef.current = laneIds;
   const validLaneIdsRef = useRef(validLaneIds);
-  validLaneIdsRef.current = validLaneIds;
   const hadUrlSelectionAtMountRef = useRef(urlLaneIds.length > 0);
+
+  useLayoutEffect(() => {
+    laneIdsRef.current = laneIds;
+    validLaneIdsRef.current = validLaneIds;
+  }, [laneIds, validLaneIds]);
 
   useEffect(() => {
     const next = hadUrlSelectionAtMountRef.current

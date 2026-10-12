@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import { Fragment } from "react";
 import type { Provider } from "@/data/types";
 import { formatTokens } from "@/lib/calc";
@@ -16,7 +17,7 @@ export function PricingTable({ provider }: { provider: Provider }) {
   // that's effectively "now" for the server-rendered HTML; the client
   // components below re-resolve on the visitor's real clock after mount (see
   // rate-cell.tsx / variant-strip.tsx / lib/use-now.ts).
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
 
   return (
     <div className="table-wrap">

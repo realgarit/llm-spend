@@ -1,3 +1,4 @@
+import { getServerNow } from "@/lib/server-now";
 import type { Metadata } from "next";
 import { buildCompareRows } from "@/data/compare-data";
 import { FreshnessDashboard } from "@/components/freshness-dashboard";
@@ -18,7 +19,7 @@ export default function FreshnessPage() {
   // same pattern as compare/page.tsx's, models/[laneId]/page.tsx's and
   // budget/page.tsx's buildAtMs (see freshness-dashboard.tsx / lib/use-now.ts).
   // The client dashboard re-resolves on the visitor's real clock after mount.
-  const buildAtMs = Date.now();
+  const buildAtMs = getServerNow();
 
   return (
     <div className="container-page freshness-page">
