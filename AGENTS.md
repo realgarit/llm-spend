@@ -25,6 +25,38 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-12 — Daily audit / no catalog-affecting change: the full Azure Retail
+  Prices Foundry feed remains 38 pages / 37,521 rows (37,349 Consumption / 172
+  Reservation), 26 products, 2,015 product-meter pairs, and 1,986 meter names.
+  Its latest effective date is 2026-10-01; there are no rows effective from
+  October 2 onward and no `lastUpdatedDate`. Aggregate counts match October 11,
+  but the previous raw snapshot is missing, so row-level equality is still
+  unverified. The Foundry blog's newest model/pricing post is the already
+  catalogued Microsoft-Decision-1 announcement from October 9.
+  Official provider checks found no new tracked rate, tier, or token-model
+  availability since the October 11 changelog: OpenAI's newest API entry is
+  October 8 Ultrafast; Anthropic's October 9 dynamic-workflows item is a
+  platform feature; Google's October 8 Flash aliases route to existing models
+  and its October 6 launch is image-only; DeepSeek's published peak/off-peak
+  schedules and V4 Pro continuation/reroute conflict are already recorded;
+  xAI's October 2 voice-transcription retirement is outside token pricing;
+  Cohere's latest model release is Embed 5 from September 30; and Alibaba's
+  pricing page, refreshed October 12, retains the catalogued Qwen3.8 Max
+  $2/$6 and Qwen3.8 Flash $0.15/$0.47 per M International rates. Mistral Large
+  4 remains on its 50% launch sale; the October 20 list-price transition is
+  still derived from its two-week notice, with no exact cutoff published.
+  A third-party tracker showed October 11 cuts on Baidu-hosted Kimi, DeepSeek,
+  and GLM variants; these are separate host/quantization routes, not updated
+  first-party API prices or Foundry meters, so they are not catalogued.
+  Sources checked: the full Azure Retail Prices API and Microsoft Foundry Blog;
+  official OpenAI, Anthropic, Google, DeepSeek, xAI, Cohere, Alibaba/Qwen,
+  Kimi, Z.AI, MiniMax, and Mistral release/pricing pages. Open watches remain
+  Mistral Large 4 list pricing on October 20; native Azure Kimi 6/7 meter
+  identity; DeepSeek V4 Pro continuation/rerouting wording; GPT-6.1 Sol's
+  November 21 Direct / November 30 Foundry promotion dates; the missing prior
+  raw feed snapshot; and deliberate Mistral Small 4 exclusion. No provider
+  data or customer changelog entry was warranted.
+
 - 2026-10-11 — Daily audit / Microsoft Decision-1, OpenAI Ultrafast, and
   Gemini alias routing: the full Azure Retail Prices Foundry feed now has
   37,521 rows (37,349 Consumption / 172 Reservation), 26 products, 2,015
