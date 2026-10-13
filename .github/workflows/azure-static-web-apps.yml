@@ -8,6 +8,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: llm-spend-production
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
