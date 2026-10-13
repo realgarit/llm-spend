@@ -33,8 +33,8 @@ import type { Page, TestInfo } from "@playwright/test";
  * Text antialiasing differs enough between Windows and Linux that one shared
  * baseline would diff on every run, so Playwright's default per-platform
  * snapshot suffix is kept. The committed baselines were recorded on the
- * platform their filenames name; on any other platform these tests skip with a
- * reason rather than fail on a missing file. See `tests/e2e/README.md`.
+ * platform their filenames name. Linux CI fails on a missing baseline; other
+ * local platforms without baselines skip with a reason. See `tests/e2e/README.md`.
  */
 const PINNED_INSTANT = new Date("2026-09-02T12:00:00Z");
 
@@ -83,10 +83,13 @@ for (const scheme of ["light", "dark"] as const) {
         // deliberately asked for an update (`--update-snapshots` reports
         // "changed" or "all").
         const recording = testInfo.config.updateSnapshots === "changed" || testInfo.config.updateSnapshots === "all";
+        if (process.env.CI && process.platform === "linux" && !recording) {
+          expect(hasBaseline(testInfo, name), `Missing required Linux baseline: ${name}`).toBe(true);
+        }
         test.skip(
           !recording && !hasBaseline(testInfo, name),
           `No ${process.platform} baseline for ${name}. Record one on this platform with ` +
-            "`npm run test:e2e:update` (never in CI) and commit it — see tests/e2e/README.md.",
+            "`npm run test:e2e:update` (manual recording only) and commit it — see tests/e2e/README.md.",
         );
 
         await prepare(page, viewport.width, viewport.height);

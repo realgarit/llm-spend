@@ -111,18 +111,20 @@ Two things to know before you trust or change them:
   opaque block over ~40% of the table and the baseline stopped being something
   a human could review — while still churning on row order and the cost-signal
   rail. Legibility won.
-- **They are platform-specific.** Text antialiasing differs enough between
-  Windows and Linux that a shared baseline would diff on every run, so the
-  committed files carry Playwright's default platform suffix
-  (`…-chromium-win32.png`). On a platform with no baseline these tests **skip
-  with a reason** rather than fail on a missing file — which today means they
-  do not run on the Linux CI runner. To close that gap, record a Linux set
-  inside the matching Playwright container and commit it alongside:
+- **They are platform-specific.** Windows and Linux retain separate baselines.
+  Normal Linux CI requires all four committed images and fails if one is missing.
+  Other local platforms can skip when their own baselines have not been recorded.
+  To record Linux replacements in the exact CI browser image and Node environment,
+  explicitly dispatch the workflow on your review branch:
 
   ```bash
-  docker run --rm -v "$PWD":/w -w /w mcr.microsoft.com/playwright:v1.62.1-noble \
-    sh -c "npm ci && npm run test:e2e:update"
+  gh workflow run ci.yml --ref <branch> -f record_visual_baselines=true
+  gh run download <run-id> -n linux-visual-baselines -D tests/e2e/visual.spec.ts-snapshots
   ```
+
+  Inspect all four PNGs before committing them. The manual job records the images
+  and then runs the normal browser suite. Pull-request CI uses the committed files
+  and never records or accepts replacements automatically.
 
 ## Performance budgets
 
@@ -155,10 +157,11 @@ LCP under 300ms and CLS under 0.001.
 
 ## CI
 
-`.github/workflows/ci.yml` installs Chromium with `--with-deps`, then runs
-`npm run test:e2e` after the build step. On failure it uploads
+`.github/workflows/ci.yml` uses the pinned Playwright 1.63.0 Linux container
+and verifies its browser version, then runs `npm run test:e2e` after the build step. On failure it uploads
 `playwright-report/` and `test-results/` (traces, videos, failure screenshots)
-as artifacts. It never runs `test:e2e:update`.
+as artifacts. Only an explicit manual baseline-recording dispatch runs
+`test:e2e:update`; ordinary CI does not.
 
 ## Conventions worth keeping
 
