@@ -3,6 +3,11 @@ name: CI
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      record_visual_baselines:
+        description: Record Linux visual baselines for manual review
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -52,7 +57,22 @@ jobs:
       # It serves that build with the real standalone server and fails loudly if
       # .next/standalone is missing, so this stays honest if the steps are ever
       # reordered. Never `--update-snapshots` here: visual baselines are
-      # recorded by hand (see tests/e2e/README.md).
+      # recorded only by explicit manual dispatch for review (see tests/e2e/README.md).
+      - name: Record Linux visual baselines for review
+        if: github.event_name == 'workflow_dispatch' && inputs.record_visual_baselines
+        run: npm run test:e2e:update -- visual.spec.ts
+        env:
+          E2E_SKIP_BUILD: "1"
+
+      - name: Upload recorded visual baselines
+        if: github.event_name == 'workflow_dispatch' && inputs.record_visual_baselines
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-visual-baselines
+          path: tests/e2e/visual.spec.ts-snapshots/*-linux.png
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Browser tests
         run: npm run test:e2e
         env:
