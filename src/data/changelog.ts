@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-13",
+    title: "Perplexity halves its Decisions API input rate",
+    tag: "pricing",
+    body: [
+      "Perplexity released the updated open-weights multimodal decision model `pplx-decider-v1.1-27b` at $0.02 per 1M input tokens, half the previous $0.04 rate. Output remains free, with no per-request fee. The current Decisions API guide identifies v1.1 as the current model, still accepts the older v1 ID, and applies the $0.02/M API rate.",
+      "The Direct Perplexity provider page now shows v1.1 at the current rate. The model returns typed probabilities for yes/no, choice, and rubric-scoring decisions, so it remains outside generative workload comparisons. The Azure Retail Prices Foundry feed has no Perplexity meter.",
+    ],
+    sources: [
+      {
+        label: "Perplexity API Platform Forum — v1.1 model launch and $0.02/M rate",
+        href: "https://community.perplexity.ai/t/pplx-decider-v1-1-27b-our-updated-open-weights-multimodal-decision-model-is-now-available/6286",
+      },
+      {
+        label: "Perplexity Decisions API — current model IDs, behavior, and billing",
+        href: "https://docs.perplexity.ai/docs/decisions/quickstart",
+      },
+      {
+        label: "Perplexity model card — v1.1 update and Apache 2.0 weights",
+        href: "https://huggingface.co/perplexity-ai/pplx-decider-v1.1-27b",
+      },
+      {
+        label: "Azure Retail Prices API — Perplexity model meter search",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27pplx-decider%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-13",
+  },
+  {
     date: "2026-10-11",
     title: "Microsoft-Decision-1 adds input-priced Foundry lanes",
     tag: "pricing",

@@ -25,6 +25,39 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-13 — Daily audit / Perplexity Decider v1.1 rate correction: the full
+  Azure Retail Prices Foundry feed remains 38 pages / 37,521 rows (37,349
+  Consumption / 172 Reservation), 26 products, 2,015 product-meter pairs, and
+  1,986 meter names. Latest effective date remains 2026-10-01, with zero rows
+  effective from October 2 onward and no `lastUpdatedDate`; the prior raw
+  snapshot remains missing, so row-level equality is unverified. Microsoft's
+  newest Foundry Blog posts on October 12 are about agent workflows and
+  hosted-agent permissions, not model rates or availability. Corrected a
+  missed pre-cutoff Perplexity update: its October 6 `pplx-decider-v1.1-27b`
+  release halves input pricing from $0.04/M to $0.02/M; the current API guide
+  still accepts v1 at the API-wide $0.02/M rate. The model card confirms the
+  updated open weights; no Perplexity Foundry meter exists. Added the current
+  Direct rate and a dated customer changelog entry. Perplexity's October 7
+  `pplx-embed-v2-late` announcement publishes open weights but no hosted
+  token-priced API rate, so it remains outside the price catalog. Official
+  provider checks found no additional rate, tier, or token-model availability
+  change since the October 11 changelog: OpenAI's latest API entry remains
+  October 8 Ultrafast; Anthropic's October 9 dynamic workflows are a platform
+  feature; Google's October 8 Flash alias routes are already catalogued;
+  DeepSeek V4 Pro's continuation/reroute wording still conflicts; xAI's latest
+  token-relevant model update is the already-listed Grok 4.7; Cohere Embed 5
+  and Qwen3.8 prices are unchanged; and Kimi, Z.AI, and MiniMax pricing remains
+  unchanged. Mistral Large 4 is still on its 50% launch sale; October 20 list
+  pricing remains derived from the two-week notice, with no exact cutoff time.
+  Open watches remain native Azure Kimi 6/7 meter identity, the DeepSeek V4 Pro
+  source conflict, the GPT-6.1 Sol Direct/Foundry promotion dates, the missing
+  prior raw Foundry snapshot, Mistral Large 4 pricing on October 20, and the
+  deliberate Mistral Small 4 exclusion. Local dependencies were stale at
+  Next.js 15.5.20 despite the 16.4.0 lockfile; `npm ci` restored the lock, and
+  Next 16's required TypeScript settings are `jsx: react-jsx` plus
+  `.next/dev/types/**/*.ts` in `include`. `npm test` passed 387/387 and the
+  clean Next 16 production build generated 151 static routes.
+
 - 2026-10-13: Azure production deploys share the `llm-spend-production` concurrency group with cancellation of running jobs disabled. Push and manual deployment runs must serialize; overlapping runs for the same commit were observed when Azure canceled run 38399649473 while 38399765648 was also running.
 
 - 2026-10-13: Manual screenshot recording reports `Record Linux baselines`, while normal PR validation reports `Build`. Keep those check names distinct: recording can pass with newly generated, uncommitted images and must not replace the ordinary validation result for the same commit.
