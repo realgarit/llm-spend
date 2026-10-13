@@ -123,7 +123,8 @@ Two things to know before you trust or change them:
   ```
 
   Inspect all four PNGs before committing them. The manual job records the images
-  and then runs the normal browser suite. Pull-request CI uses the committed files
+  and then runs the browser suite under the distinct `Record Linux baselines`
+  check name. It does not report a `Build` result. Pull-request CI uses the committed files
   and never records or accepts replacements automatically.
 
 ## Performance budgets

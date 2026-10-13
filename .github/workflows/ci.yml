@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    name: Build
+    name: ${{ github.event_name == 'workflow_dispatch' && inputs.record_visual_baselines && 'Record Linux baselines' || 'Build' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -56,8 +56,8 @@ jobs:
       # tests/e2e/serve.mjs would otherwise run `npm run build` a second time.
       # It serves that build with the real standalone server and fails loudly if
       # .next/standalone is missing, so this stays honest if the steps are ever
-      # reordered. Never `--update-snapshots` here: visual baselines are
-      # recorded only by explicit manual dispatch for review (see tests/e2e/README.md).
+      # reordered. Normal checks never record snapshots. The opt-in manual
+      # recording below has a distinct check name and produces review artifacts.
       - name: Record Linux visual baselines for review
         if: github.event_name == 'workflow_dispatch' && inputs.record_visual_baselines
         run: npm run test:e2e:update -- visual.spec.ts
