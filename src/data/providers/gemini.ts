@@ -4,11 +4,99 @@ export const gemini: Provider = {
   slug: "gemini",
   name: "Gemini",
   org: "Google",
-  tagline: "Gemini 3.8 Flash is the current flagship; Gemini 3.6 Flash remains available at its published introductory rate.",
+  tagline: "Gemini 4 Argon is Google's new flagship reasoning model, with introductory API rates through November 30.",
   intro: [
-    "Gemini 3.8 Flash is now the catalog's flagship Gemini model for long-horizon software engineering, agentic and multimodal work. Google publishes $0.75/M input, $0.075/M cached, $3.75/M output through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Batch, Flex and Priority service tiers are modeled at their published prices, and the model has a 1M-token context window with 65,536 maximum output tokens. Google now routes Gemini 3.7 Flash requests to 3.8 Flash and Gemini 3.5 Flash requests to 3.6 Flash, so the deprecated aliases are not listed as separate price lanes.",
+    "Google made Gemini 4 Argon generally available on October 13, 2026. Its Standard API rate is $2/$0.10/$10 per M input/cached-input/output tokens through November 30, then $4/$0.20/$20 from December 1. Batch and Flex are half of Standard; Priority is 1.8x. The 1M-token context supports up to 1M output tokens through background long decode, while synchronous requests default to a 65,536-token output limit. Caching is implicit only, with a 95% cached-input discount.",
+    "Gemini 3.8 Flash remains the leading model in Google's Flash family for long-horizon software engineering, agentic and multimodal work. Google publishes $0.75/M input, $0.075/M cached, $3.75/M output through 2026-12-31, reverting to $1.50/$0.15/$7.50 on 2027-01-01. Batch, Flex and Priority service tiers are modeled at their published prices, and the model has a 1M-token context window with 65,536 maximum output tokens. Google now routes Gemini 3.7 Flash requests to 3.8 Flash and Gemini 3.5 Flash requests to 3.6 Flash, so the deprecated aliases are not listed as separate price lanes.",
   ],
   entries: [
+    {
+      model: "Gemini 4 Argon",
+      tier: "Global",
+      inputUsd: 2,
+      cachedUsd: 0.1,
+      outputUsd: 10,
+      contextWindow: 1_048_576,
+      maxOutput: 1_048_576,
+      confidence: "official",
+      notes:
+        "Google's flagship reasoning model, generally available since October 13, 2026. Standard API rates are $2/$0.10/$10 per M input/cached-input/output tokens through November 30, then $4/$0.20/$20 from December 1. Batch and Flex are half of Standard; Priority is 1.8x. Implicit caching only; explicit caching is unsupported. The default synchronous output limit is 65,536 tokens; background long decode supports up to 1,048,576 output tokens, limited by the shared context window.",
+      sourceNote:
+        "Google Gemini API release notes, checked 2026-10-14, mark Gemini 4 Argon (`gemini-4-argon`) generally available on October 13. Google's Gemini 4 Argon model page, checked 2026-10-14, gives a 1,048,576-token shared context window, 65,536 default synchronous output limit, and up to 1,048,576 output tokens with background long decode. The Gemini API pricing page, captured 2026-10-14, lists Standard at $2/M input, $0.10/M cached input, and $10/M output through November 30, 2026, then $4/$0.20/$20 from December 1; Batch and Flex are half of Standard, and Priority is 1.8x. Caching is implicit only and Google says explicit caching is unsupported. A full Azure Retail Prices Foundry feed sweep and exact `gemini` meter search on 2026-10-14 returned no Google/Gemini token meter, so this is a Direct API lane with no Foundry rate inferred.",
+      effectiveDate: "2026-10-13",
+      variants: [
+        {
+          label: "Standard (from December 1)",
+          conditions: { from: "2026-12-01T00:00:00Z" },
+          inputUsd: 4,
+          cachedUsd: 0.2,
+          outputUsd: 20,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Standard changes from $2/M input, $0.10/M cached input, and $10/M output through November 30, 2026 to $4/$0.20/$20 starting December 1, 2026.",
+        },
+        {
+          label: "Batch",
+          conditions: { serviceTier: "batch", until: "2026-12-01T00:00:00Z" },
+          inputUsd: 1,
+          cachedUsd: 0.05,
+          outputUsd: 5,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Batch is $1/M input, $0.05/M cached input, and $5/M output through November 30, 2026; implicit caching only.",
+        },
+        {
+          label: "Batch (from December 1)",
+          conditions: { serviceTier: "batch", from: "2026-12-01T00:00:00Z" },
+          inputUsd: 2,
+          cachedUsd: 0.1,
+          outputUsd: 10,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Batch is $2/M input, $0.10/M cached input, and $10/M output starting December 1, 2026; implicit caching only.",
+        },
+        {
+          label: "Flex",
+          conditions: { serviceTier: "flex", until: "2026-12-01T00:00:00Z" },
+          inputUsd: 1,
+          cachedUsd: 0.05,
+          outputUsd: 5,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Flex is $1/M input, $0.05/M cached input, and $5/M output through November 30, 2026; implicit caching only.",
+        },
+        {
+          label: "Flex (from December 1)",
+          conditions: { serviceTier: "flex", from: "2026-12-01T00:00:00Z" },
+          inputUsd: 2,
+          cachedUsd: 0.1,
+          outputUsd: 10,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Flex is $2/M input, $0.10/M cached input, and $10/M output starting December 1, 2026; implicit caching only.",
+        },
+        {
+          label: "Priority",
+          conditions: { serviceTier: "priority", until: "2026-12-01T00:00:00Z" },
+          inputUsd: 3.6,
+          cachedUsd: 0.18,
+          outputUsd: 18,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Priority is $3.60/M input, $0.18/M cached input, and $18/M output through November 30, 2026; implicit caching only.",
+        },
+        {
+          label: "Priority (from December 1)",
+          conditions: { serviceTier: "priority", from: "2026-12-01T00:00:00Z" },
+          inputUsd: 7.2,
+          cachedUsd: 0.36,
+          outputUsd: 36,
+          confidence: "official",
+          sourceNote:
+            "Google Gemini API pricing page (https://ai.google.dev/gemini-api/docs/pricing), captured 2026-10-14. Gemini 4 Argon Priority is $7.20/M input, $0.36/M cached input, and $36/M output starting December 1, 2026; implicit caching only.",
+        },
+      ],
+    },
     {
       model: "Gemini 3.8 Flash",
       tier: "Global",

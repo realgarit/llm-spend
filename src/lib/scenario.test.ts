@@ -490,6 +490,16 @@ const TIERED_ROWS: {
   },
   {
     providerSlug: "gemini",
+    model: "Gemini 4 Argon",
+    tier: "Global",
+    tiers: {
+      batch: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+      flex: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+      priority: { inputUsd: 3.6, cachedUsd: 0.18, outputUsd: 18 },
+    },
+  },
+  {
+    providerSlug: "gemini",
     model: "Gemini 3.6 Flash",
     tier: "Global",
     tiers: {
