@@ -1123,9 +1123,92 @@ test("Gemini 3.8 Flash carries its published model limits", () => {
   assert.equal(entry.confidence, "official");
 });
 
+test("Gemini 4 Argon carries the published API model limits and captured official provenance", () => {
+  const entry = geminiFlash("Gemini 4 Argon");
+
+  assert.equal(entry.effectiveDate, "2026-10-13");
+  assert.equal(entry.contextWindow, 1_048_576);
+  assert.equal(entry.maxOutput, 1_048_576);
+  assert.equal(entry.confidence, "official");
+  assert.match(entry.sourceNote ?? "", /captured 2026-10-14/);
+  assert.match(entry.sourceNote ?? "", /no Google\/Gemini token meter/);
+});
+
+test("Gemini 4 Argon Standard rate changes on December 1", () => {
+  const entry = geminiFlash("Gemini 4 Argon");
+  const intro = resolveRate(entry, at("2026-11-30T23:59:59Z"));
+  const list = resolveRate(entry, at("2026-12-01T00:00:00Z"));
+
+  assert.equal(intro.variant, null);
+  assert.deepEqual(
+    { inputUsd: intro.inputUsd, cachedUsd: intro.cachedUsd, outputUsd: intro.outputUsd },
+    { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10 },
+  );
+  assert.equal(list.label, "Standard (from December 1)");
+  assert.deepEqual(
+    { inputUsd: list.inputUsd, cachedUsd: list.cachedUsd, outputUsd: list.outputUsd },
+    { inputUsd: 4, cachedUsd: 0.2, outputUsd: 20 },
+  );
+});
+
+const GEMINI_ARGON_TIER_CASES = [
+  {
+    tier: "batch" as const,
+    label: "Batch",
+    labelAfter: "Batch (from December 1)",
+    before: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+    after: { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10 },
+  },
+  {
+    tier: "flex" as const,
+    label: "Flex",
+    labelAfter: "Flex (from December 1)",
+    before: { inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+    after: { inputUsd: 2, cachedUsd: 0.1, outputUsd: 10 },
+  },
+  {
+    tier: "priority" as const,
+    label: "Priority",
+    labelAfter: "Priority (from December 1)",
+    before: { inputUsd: 3.6, cachedUsd: 0.18, outputUsd: 18 },
+    after: { inputUsd: 7.2, cachedUsd: 0.36, outputUsd: 36 },
+  },
+];
+
+for (const { tier, label, labelAfter, before, after } of GEMINI_ARGON_TIER_CASES) {
+  test(`Gemini 4 Argon resolves ${label} pricing through November 30`, () => {
+    const resolved = resolveRate(geminiFlash("Gemini 4 Argon"), {
+      now: new Date("2026-11-30T23:59:59Z"),
+      serviceTier: tier,
+    });
+
+    assert.equal(resolved.label, label);
+    assert.deepEqual(
+      { inputUsd: resolved.inputUsd, cachedUsd: resolved.cachedUsd, outputUsd: resolved.outputUsd },
+      before,
+    );
+    assert.equal(resolved.confidence, "official");
+  });
+
+  test(`Gemini 4 Argon resolves ${label} list pricing from December 1`, () => {
+    const resolved = resolveRate(geminiFlash("Gemini 4 Argon"), {
+      now: new Date("2026-12-01T00:00:00Z"),
+      serviceTier: tier,
+    });
+
+    assert.equal(resolved.label, labelAfter);
+    assert.deepEqual(
+      { inputUsd: resolved.inputUsd, cachedUsd: resolved.cachedUsd, outputUsd: resolved.outputUsd },
+      after,
+    );
+    assert.equal(resolved.confidence, "official");
+  });
+}
+
 test("deprecated Gemini Flash aliases do not appear as independent price lanes", () => {
   const entries = getProvider("gemini")?.entries.map((entry) => entry.model) ?? [];
 
+  assert.ok(entries.includes("Gemini 4 Argon"));
   assert.ok(entries.includes("Gemini 3.8 Flash"));
   assert.ok(entries.includes("Gemini 3.6 Flash"));
   assert.equal(entries.includes("Gemini 3.7 Flash"), false);

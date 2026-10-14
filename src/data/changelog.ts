@@ -23,6 +23,38 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-14",
+    title: "Gemini 4 Argon adds a new Direct API price lane",
+    tag: "pricing",
+    body: [
+      "Google made Gemini 4 Argon generally available on October 13. The Direct API Standard rate is $2/$0.10/$10 per 1M input/cached-input/output tokens through November 30, then $4/$0.20/$20 from December 1. Batch and Flex cost half of Standard; Priority costs 1.8x. Caching is implicit only, with explicit caching unsupported.",
+      "The model has a 1,048,576-token context window and supports up to 1,048,576 output tokens through background long decode; the default synchronous output limit is 65,536. The complete Azure Retail Prices Foundry feed and a Gemini meter search returned no Google/Gemini token meter, so this is a Direct API addition and no Foundry rate is inferred.",
+    ],
+    sources: [
+      {
+        label: "Google Gemini API release notes — Gemini 4 Argon GA",
+        href: "https://ai.google.dev/gemini-api/docs/changelog",
+      },
+      {
+        label: "Google Gemini 4 Argon — model ID, modalities, and token limits",
+        href: "https://ai.google.dev/gemini-api/docs/models/gemini-4-argon",
+      },
+      {
+        label: "Google Gemini 4 Argon guide — launch pricing and model details",
+        href: "https://ai.google.dev/gemini-api/docs/latest-model",
+      },
+      {
+        label: "Google Gemini API pricing — Standard, Batch, Flex, and Priority rates",
+        href: "https://ai.google.dev/gemini-api/docs/pricing",
+      },
+      {
+        label: "Azure Retail Prices API — Gemini Foundry meter search",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%27gemini%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-14",
+  },
+  {
     date: "2026-10-13",
     title: "Perplexity halves its Decisions API input rate",
     tag: "pricing",

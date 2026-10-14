@@ -25,6 +25,30 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-14 — Daily audit / Gemini 4 Argon Direct API launch: Google's
+  October 13 release notes mark `gemini-4-argon` generally available. Added its
+  official Direct API Standard rates of $2/$0.10/$10 per M input/cached/output
+  through November 30 and $4/$0.20/$20 from December 1, plus Batch/Flex at
+  half Standard and Priority at 1.8x. The model has a 1,048,576-token shared
+  context window; synchronous output defaults to 65,536, and background long
+  decode can reach 1,048,576 tokens. Caching is implicit only. A full Azure
+  Retail Prices Foundry sweep remains 38 pages / 37,521 rows (37,349
+  Consumption / 172 Reservation), 26 products, 2,015 product-meter pairs,
+  and 1,986 meter names; latest effective date remains October 1, with no
+  October 2+ rows or `lastUpdatedDate`. Exact `gemini` meter and `google`
+  product queries returned zero rows, and Microsoft catalog/search checks
+  found no Gemini 4 Argon Foundry listing; no Foundry rate is inferred. The
+  previous raw feed snapshot remains missing, so row-level equality is
+  unverified. A third-party October 13 tracker flagged Kimi K2.6, Qwen3.6,
+  GLM 5.3, DeepSeek V4.1 Flash, and Gemma 4 prices on other hosted/quantized
+  routes (Chutes, Decart, Sail Research, and DeepInfra); these are not the
+  providers' Direct API rates or Azure meters, so they remain outside this
+  catalog. Mistral Large 4's official page still shows its 50% launch price;
+  keep the October 20 derived list-price transition watch active because no
+  exact cutoff time is published. Official OpenAI, Anthropic, DeepSeek, xAI,
+  Cohere, Alibaba/Qwen, Kimi, Z.AI, MiniMax, and Mistral checks showed no
+  additional catalog change since October 13.
+
 - 2026-10-13 — Daily audit / Perplexity Decider v1.1 rate correction: the full
   Azure Retail Prices Foundry feed remains 38 pages / 37,521 rows (37,349
   Consumption / 172 Reservation), 26 products, 2,015 product-meter pairs, and

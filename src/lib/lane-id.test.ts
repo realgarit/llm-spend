@@ -61,9 +61,9 @@ test("buildCompareRows rejects a duplicate catalog lane before it reaches the UI
   assert.throws(() => buildCompareRows([...entries, entries[0]]), /Duplicate lane id/);
 });
 
-test("catalog has 124 unique stable lane ids", () => {
+test("catalog has 125 unique stable lane ids", () => {
   const rows = buildCompareRows();
 
-  assert.equal(rows.length, 124);
+  assert.equal(rows.length, 125);
   assertUniqueLaneIds(rows);
 });
