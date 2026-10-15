@@ -23,6 +23,42 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-15",
+    title: "GPT-chat-latest enters Direct and Foundry price comparisons",
+    tag: "pricing",
+    body: [
+      "The catalog now lists OpenAI's `chat-latest` API alias and Microsoft Foundry's `gpt-chat-latest` preview as separate price lanes at $5/$0.50/$30 per 1M input/cached-input/output tokens. Microsoft's October 14 update brings GPT-6-family intelligence, GenUI, and interleaved-thinking to the Foundry model. OpenAI identifies its alias as the latest Instant model used in ChatGPT and recommends GPT-6 Astra for production API usage.",
+      "The Direct model page lists a 400,000-token context and 128,000 max output. Microsoft's current Foundry snapshot, dated 2026-10-07, is Preview with a 128,000-token context and max output; Microsoft lists it for Global and Data Zone Standard. The Azure Retail Prices feed still contains only older `chat-latest` snapshot meters through 2026-08-06, so the catalog uses Microsoft's current published Global price and does not infer the current snapshot's Data Zone rate.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Foundry Blog — GPT-chat-latest update and current price",
+        href: "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/gpt-chat-latest-gets-more-intelligent-interactive-and-personal-in-microsoft-foun/4564574",
+      },
+      {
+        label: "Microsoft Learn — GPT-chat-latest snapshot, lifecycle, and context",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure",
+      },
+      {
+        label: "Microsoft Learn — Global and Data Zone model availability",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability",
+      },
+      {
+        label: "OpenAI API model page — chat-latest identity, limits, and price",
+        href: "https://developers.openai.com/api/docs/models/chat-latest",
+      },
+      {
+        label: "OpenAI API pricing — chat-latest current rates",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+      {
+        label: "Azure Retail Prices API — chat-latest meter snapshots",
+        href: "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20OpenAI%20GPT5%27%20and%20contains%28tolower%28meterName%29%2C%20%27chat-latest%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-15",
+  },
+  {
     date: "2026-10-14",
     title: "Gemini 4 Argon adds a new Direct API price lane",
     tag: "pricing",

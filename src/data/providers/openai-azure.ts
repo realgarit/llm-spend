@@ -5,10 +5,11 @@ const CAPTURED = "2026-07-11";
 export const openaiAzure: Provider = {
   slug: "openai-azure",
   name: "OpenAI / Azure OpenAI",
-  tagline: "GPT-6.1 Sol joins GPT-6 Astra, Sol and Luna on OpenAI's direct API and Microsoft Foundry.",
+  tagline: "GPT-chat-latest adds a current Direct and Foundry lane at $5/$0.50/$30 per M.",
   intro: [
     "Azure OpenAI has historically matched OpenAI's direct pricing 1:1, so no resale markup. What changes is the deployment type on Microsoft Foundry (Global, Data Zone, Regional; see below). GPT-6.1 Sol became generally available in Foundry on September 29, with published Global and US, EU, and APAC Data Zone Standard rates; its Azure Retail Prices meters are now published, effective October 1, confirming the launch-table rates. OpenAI's Direct API prices match Foundry Global rates: $2/$0.10/$10 per M up to 272K input tokens and $4/$0.20/$15 above 272K. Batch and Flex are half price, Fast mode is 2x, and Ultrafast is 6x on eligible Direct API models. GPT-6 Astra is also available through OpenAI's direct API and Foundry, with a $10/$1/$50 per M short-context rate, $20/$2/$75 above 272K, and published Global and US Data Zone rates. GPT-6 Sol and Luna became generally available in Foundry on September 22. The Azure Retail Prices API now confirms their Standard Global and US/EU Data Zone meters, effective September 1, and the listed prices match Microsoft's announcement and OpenAI's Direct rates. Azure also publishes GPT-6 Sol Priority Processing meters for Global and US Data Zone; the Foundry feed has no Ultrafast meter. Luna has no Priority meter. Cache-write prices are separately billed and not modeled by this schema, which tracks cached-input reads. OpenAI also lists GPT-Rosalind Research at $5/$0.50/$25 per M for approved life-sciences research, with billing beginning 2026-10-05 and no cache-write charge. GPT-5.6 (Sol / Terra / Luna) hit GA on 2026-07-09 and has official Azure Foundry meters covering cached-input and cache-write plus Data Zone (+10%) and long-context tiers.",
     "That 1:1 parity briefly broke. OpenAI cut Terra and Luna on 2026-07-30 and Foundry took three weeks to follow, with a meter tranche effective 2026-08-01 that restored parity on those two. OpenAI then cut the Sol flagship — to $4.00/$0.40/$20.00 short context and $8.00/$0.80/$30.00 long context, described on its pricing page as promotional and available \"at least through November 21, 2026\". The commercial Foundry retail feed now carries those Sol rates effective 2026-09-01, plus the corresponding 10% Data Zone and Priority Processing meters, so the previous Foundry/direct gap is closed for the published commercial lanes.",
+    "OpenAI's `chat-latest` alias and Microsoft Foundry's `gpt-chat-latest` preview both publish $5/$0.50/$30 per M input/cached-input/output. The Direct API page lists a 400K-token context; Microsoft's current 2026-10-07 Foundry snapshot is 128K context and 128K max output. Microsoft lists the snapshot for Global and Data Zone Standard deployments, but Azure Retail Prices still has only older chat-latest meter snapshots. This page shows the current Global price and leaves Data Zone pricing out until the current version has a matching published rate.",
   ],
   entries: [
     {
@@ -448,6 +449,38 @@ export const openaiAzure: Provider = {
       sourceNote:
         "OpenAI's official API pricing page (developers.openai.com/api/docs/pricing), re-read 2026-09-12: `gpt-rosalind-research` is listed at $5/M input, $0.50/M cached input and $25/M output. The same page says billing begins 2026-10-05, cache-write pricing does not apply, and access is limited to approved internal research. The full Azure Retail Prices Foundry feed checked 2026-09-12 contains no Rosalind token meter, so this is a Direct-only lane.",
       effectiveDate: "2026-10-05",
+    },
+    {
+      model: "GPT-chat-latest",
+      host: "OpenAI direct API (`chat-latest`)",
+      tier: "Direct",
+      inputUsd: 5.0,
+      cachedUsd: 0.5,
+      outputUsd: 30.0,
+      contextWindow: 400_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Dynamic alias for the latest Instant model used in ChatGPT. OpenAI recommends GPT-6 Astra for production API usage.",
+      sourceNote:
+        "OpenAI's official `chat-latest` model page, captured 2026-10-15, lists a 400,000-token context window, 128,000 max output, and $5/$0.50/$30 per M input/cached-input/output. The OpenAI API pricing page confirms the same rate. The underlying alias is regularly updated.",
+      effectiveDate: "2026-10-15",
+    },
+    {
+      model: "GPT-chat-latest",
+      host: "Microsoft Foundry (`gpt-chat-latest`, Preview)",
+      tier: "Global",
+      inputUsd: 5.0,
+      cachedUsd: 0.5,
+      outputUsd: 30.0,
+      contextWindow: 128_000,
+      maxOutput: 128_000,
+      confidence: "official",
+      notes:
+        "Current Foundry snapshot is dated 2026-10-07 and remains Preview. The Data Zone Standard deployment is listed as available, but the current snapshot's Data Zone rate is not modeled because its matching meter has not appeared in the Azure Retail Prices feed.",
+      sourceNote:
+        "Microsoft's Foundry Blog, updated 2026-10-14, publishes $5/$0.50/$30 per M input/cached-input/output for GPT-chat-latest. Microsoft Learn lists the current `gpt-chat-latest` (2026-10-07) snapshot as Preview with 128,000 context and max output, and lists Global and Data Zone Standard availability. Azure Retail Prices, queried 2026-10-15 for Azure OpenAI GPT5 chat-latest meters, includes Global rates of $5/$0.50/$30 and older snapshot names through `08062026`, but no `10072026` meter. This row uses Microsoft's current published price; no Data Zone rate is inferred from the older snapshots.",
+      effectiveDate: "2026-10-15",
     },
     {
       model: "GPT-6 Astra",
@@ -1039,6 +1072,13 @@ export const openaiAzure: Provider = {
     },
   ],
   quirks: [
+    {
+      title: "GPT-chat-latest is an auto-updating Preview",
+      tone: "warning",
+      body: [
+        "Microsoft's current `gpt-chat-latest` snapshot is Preview. The October 14 Foundry blog publishes its $5/$0.50/$30 per M rate, while the Azure Retail Prices feed still names older snapshots through 2026-08-06. The current model is listed for Data Zone Standard, but this catalog does not carry over an older snapshot's Data Zone rate without a matching current-version meter. OpenAI likewise describes `chat-latest` as a regularly updated alias and recommends GPT-6 Astra for production API use.",
+      ],
+    },
     {
       title: "GPT-6 Astra is now direct and Foundry",
       tone: "info",

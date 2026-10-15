@@ -25,6 +25,33 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-15 — Daily audit / GPT-chat-latest Direct and Foundry lane: Microsoft
+  updated GPT-chat-latest in Foundry on October 14 with GPT-6-family behavior,
+  GenUI, and interleaved-thinking. Microsoft's price table lists
+  $5/$0.50/$30 per M input/cached/output; OpenAI's `chat-latest` model and
+  pricing pages publish the same Direct rate. Direct documents a 400K context
+  and 128K max output. The latest Foundry snapshot is dated 2026-10-07, remains
+  Preview, and has a 128K context / 128K max output. Microsoft lists it for
+  Global and Data Zone Standard. The full Azure Retail Prices feed remains 38
+  pages / 37,521 rows (37,349 Consumption / 172 Reservation), 26 products,
+  2,015 product-meter pairs and 1,986 meter names; latest effective date is
+  2026-10-01 with no later rows and no `lastUpdatedDate`. The exact GPT5
+  `chat-latest` meter query contains older snapshot names through `08062026`
+  but no current `10072026` meter. Added Direct and Global rows using the
+  current official rate; do not transfer an older Data Zone rate to the new
+  snapshot until Microsoft publishes a matching rate or meter. Microsoft's
+  October 2026 model-router pool also adds GPT-6 Astra, Claude Fable 5.1 / Opus
+  5 / Sonnet 5, Grok 4.6, and Fireworks GLM-5.3 / GLM-5.3-Flash / Kimi K3;
+  these are router-model support additions, not separate per-model price
+  meters. The current Azure feed otherwise remains unchanged. Anthropic's
+  October 14 release notes concern OpenTelemetry and Managed Agents; Cohere's
+  October 14 blog item is research. Mistral Large 4 remains on its 50% sale,
+  with the October 20 list-price transition still derived from its two-week
+  notice and no exact cutoff time. Existing watches remain native Azure Kimi
+  6/7 meter identity, DeepSeek V4 Pro source conflict, GPT-6.1 Sol's November
+  21 Direct / November 30 Foundry promotion dates, missing prior raw Foundry
+  snapshot, and deliberate Mistral Small 4 exclusion.
+
 - 2026-10-14 — Daily audit / Gemini 4 Argon Direct API launch: Google's
   October 13 release notes mark `gemini-4-argon` generally available. Added its
   official Direct API Standard rates of $2/$0.10/$10 per M input/cached/output
