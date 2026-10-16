@@ -6,10 +6,10 @@ export const claude: Provider = {
   slug: "claude",
   name: "Claude",
   org: "Anthropic",
-  tagline: "Claude Haiku 5.5 adds context-priced Direct and Foundry lanes, and Sonnet 5.5 cache reads are now cheaper.",
+  tagline: "Claude Opus 5.5 Fast mode is available on Azure-hosted Foundry, alongside the standard and Direct price lanes.",
   intro: [
-    "Claude Haiku 5.5 launched October 7 with a 1M-token context window and 128K max output. Its input, cache-read, and output rates depend on each prompt's length: $0.10/$0.01/$0.50 per M up to 100K tokens and $0.50/$0.05/$2.50 over 100K. The Direct API Batch lane halves input and output. Claude Sonnet 5.5 remains $2/$0.10/$10 per M after its October 7 cache-read price cut; its Batch rates are $1/$0.05/$5. Claude Opus 5.5 remains $4/$0.20/$20, with Batch at $2/$0.10/$10 and first-party Fast mode at $8/$0.40/$40.",
-    "Microsoft Foundry offers Claude Haiku 5.5 in Global Standard and US Data Zone Standard and bills Claude through CCUs at Anthropic's published per-model rates. The US Data Zone carries the documented 1.1x multiplier. The compare workload stores monthly input totals rather than per-request prompt length, so Haiku's two prompt-price bands are shown as separate lanes. Foundry does not support the Message Batches API.",
+    "Claude Haiku 5.5 launched October 7 with a 1M-token context window and 128K max output. Its input, cache-read, and output rates depend on each prompt's length: $0.10/$0.01/$0.50 per M up to 100K tokens and $0.50/$0.05/$2.50 over 100K. The Direct API Batch lane halves input and output. Claude Sonnet 5.5 remains $2/$0.10/$10 per M after its October 7 cache-read price cut; its Batch rates are $1/$0.05/$5. Claude Opus 5.5 remains $4/$0.20/$20, with Batch at $2/$0.10/$10 and Fast mode at $8/$0.40/$40.",
+    "Microsoft Foundry offers Claude Haiku 5.5 in Global Standard and US Data Zone Standard and bills Claude through CCUs at Anthropic's published per-model rates. Since October 15, Fast mode is also available for Opus 5.5 on Azure-hosted Foundry deployments. It costs $8/$0.40/$40 per M in Global and $8.80/$0.44/$44 in US Data Zone; Anthropic's cache-read and regional multipliers stack with its Fast mode rate. Fast mode is unavailable on Anthropic-hosted Foundry deployments. The compare workload stores monthly input totals rather than per-request prompt length, so Haiku's two prompt-price bands are shown as separate lanes. Foundry does not support the Message Batches API.",
   ],
   entries: [
     {
@@ -159,7 +159,7 @@ export const claude: Provider = {
           outputUsd: 40.0,
           confidence: "official",
           sourceNote:
-            "Anthropic's pricing page, captured 2026-09-23, publishes first-party Opus 5.5 Fast mode at $8/M input and $40/M output. Fast mode is first-party API only; its 2x input rate and the published 0.05x cache-hit factor yield $0.40/M cached input. The catalog's `priority` service tier maps to Fast mode.",
+            "Anthropic's Claude Platform release notes and Fast mode documentation, captured 2026-10-16, confirm that Opus 5.5 Fast mode left research preview on October 15. The official rate is $8/M input and $40/M output; the model's 0.05x cache-hit multiplier yields $0.40/M cached input. Fast mode is available through the Claude API and, for Opus 5.5, Azure-hosted Microsoft Foundry. The catalog's `priority` service tier maps to Fast mode.",
         },
       ],
     },
@@ -177,6 +177,18 @@ export const claude: Provider = {
       sourceNote:
         "Microsoft's September 22 Foundry Opus 5.5 announcement publishes Global Standard at $4/M input, $0.20/M cache hit, and $20/M output, with the same rates for its long-context offer. Microsoft Learn lists Azure-hosted Opus 5.5 as GA with a 1M context and 128K max output; CCU billing converts usage at Anthropic's per-model rates. Captured 2026-09-23; no per-model token meter is expected in the Azure Retail Prices feed.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority", from: "2026-10-15T00:00:00Z" },
+          inputUsd: 8.0,
+          cachedUsd: 0.4,
+          outputUsd: 40.0,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's October 15, 2026 release notes move Opus 5.5 Fast mode out of research preview, remove the access request, and enable it for Azure-hosted Microsoft Foundry deployments. Anthropic's Fast mode pricing is $8/M input and $40/M output across the full context window; the Opus 5.5 cache-hit multiplier is 0.05x, yielding $0.40/M cached input. Foundry rates Claude token usage at the same per-model, per-feature rates as the Claude API and converts usage to CCUs. Captured 2026-10-16.",
+        },
+      ],
     },
     {
       model: "Claude Opus 5.5",
@@ -192,6 +204,18 @@ export const claude: Provider = {
       sourceNote:
         "Microsoft Learn lists Azure-hosted Claude Opus 5.5 as GA in US Data Zone Standard; the Foundry launch table combines Global and US Data Zone offers without separate figures. Anthropic's pricing page, captured 2026-09-23, explicitly says Foundry US Data Zone Standard uses the same 1.1x multiplier as `inference_geo: us`; applying that published multiplier to the $4/$0.20/$20 Global rates gives the explicit $4.40/$0.22/$22 per M rates stored here. CCU billing converts token usage at Anthropic's published rates before marketplace discounts.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Fast mode",
+          conditions: { serviceTier: "priority", from: "2026-10-15T00:00:00Z" },
+          inputUsd: 8.8,
+          cachedUsd: 0.44,
+          outputUsd: 44.0,
+          confidence: "official",
+          sourceNote:
+            "Anthropic's October 15, 2026 release notes enable Opus 5.5 Fast mode on Azure-hosted Microsoft Foundry deployments. The official Fast mode rates are $8/M input and $40/M output. The official Opus 5.5 cache-hit multiplier is 0.05x, and Foundry's US Data Zone multiplier is 1.1x across token categories; applying both documented multipliers yields $8.80/M input, $0.44/M cached input, and $44/M output. Foundry converts usage at these token-equivalent rates to CCUs. Captured 2026-10-16.",
+        },
+      ],
     },
     {
       model: "Claude Sonnet 5.5",
