@@ -23,6 +23,66 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-16",
+    title: "Perplexity lists an NVIDIA Nemotron 3.5 Super API lane",
+    tag: "model",
+    body: [
+      "NVIDIA announced Nemotron 3.5 Super VL on October 15. Perplexity's Agent API model list includes the text-only route `perplexity/nemotron-3.5-super-120b-a12b` at $0.20/$0.04/$0.50 per 1M input/cached-input/output tokens, with a 1,048,576-token context and up to 131,072 output tokens.",
+      "The catalog records the price for Perplexity's hosted Agent API endpoint; it may differ from NVIDIA's own services. Perplexity's October changelog does not specify the exact route rollout date. The current Azure Retail Prices feed and Microsoft's Fireworks model catalog show no Nemotron 3.5 Super VL per-token Foundry lane, so the new price is listed as a Perplexity Direct option.",
+    ],
+    sources: [
+      {
+        label: "NVIDIA Blog — Nemotron 3.5 Super VL launch and Perplexity partnership",
+        href: "https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/",
+      },
+      {
+        label: "Perplexity Agent API models — NVIDIA Nemotron rates and limits",
+        href: "https://docs.perplexity.ai/docs/agent-api/models",
+      },
+      {
+        label: "Perplexity API changelog — October Nemotron model listing",
+        href: "https://docs.perplexity.ai/docs/resources/changelog",
+      },
+      {
+        label: "Microsoft Learn — current Fireworks model deployment catalog",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog",
+      },
+      {
+        label: "Azure Retail Prices API — Foundry Nemotron meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%20%27nemotron%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-16",
+  },
+  {
+    date: "2026-10-16",
+    title: "Claude Opus 5.5 Fast mode adds Foundry price lanes",
+    tag: "pricing",
+    body: [
+      "Anthropic moved Opus 5.5 Fast mode out of research preview on October 15 and made it available for Azure-hosted Microsoft Foundry deployments. The catalog now shows the Fast mode option alongside standard pricing: $8/$0.40/$40 per 1M input/cached-input/output tokens in Global Standard. The cache-hit rate applies the official 0.05x Opus 5.5 cache multiplier to Fast mode's $8 input rate.",
+      "For Azure-hosted US Data Zone Standard, Anthropic's published 1.1x regional multiplier yields $8.80/$0.44/$44 per 1M input/cached-input/output tokens. Claude in Microsoft Foundry bills token usage through CCUs using the same per-model, per-feature rates as the Claude API; Fast mode is not available for Anthropic-hosted Foundry deployments. Standard prices are unchanged, and the Fast mode price applies across the full 1M-token context window.",
+    ],
+    sources: [
+      {
+        label: "Anthropic Claude Platform release notes — October 15 Fast mode update",
+        href: "https://platform.claude.com/docs/en/release-notes/overview",
+      },
+      {
+        label: "Anthropic Fast mode — model availability, rates, and cache modifiers",
+        href: "https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+      },
+      {
+        label: "Anthropic Claude pricing — Foundry CCU billing and Fast mode modifiers",
+        href: "https://platform.claude.com/docs/en/about-claude/pricing",
+      },
+      {
+        label: "Anthropic Claude in Microsoft Foundry — hosted deployment options",
+        href: "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-16",
+  },
+  {
     date: "2026-10-15",
     title: "GPT-chat-latest enters Direct and Foundry price comparisons",
     tag: "pricing",

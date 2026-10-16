@@ -25,6 +25,52 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-16 — Daily audit / Claude Opus 5.5 Fast mode in Foundry: Anthropic's
+  October 15 release notes say Fast mode left research preview for Opus 5.5,
+  no longer requires an access request, and is available on Claude in
+  Microsoft Foundry when the deployment is hosted on Azure. Added Global Fast
+  pricing at $8/$0.40/$40 per M and Azure-hosted US Data Zone at
+  $8.80/$0.44/$44; the cache price applies Opus 5.5's official 0.05x cache-hit
+  multiplier, and the US Data Zone price applies the official 1.1x regional
+  multiplier. Standard prices are unchanged, and the feature remains
+  unavailable for Anthropic-hosted Foundry. The full Azure Retail Prices
+  Foundry feed remains 38 pages / 37,521 rows (37,349 Consumption / 172
+  Reservation), 26 products, 2,015 product-meter pairs, and 1,986 meter names;
+  latest effective date is 2026-10-01 with no October 2+ rows. There are no
+  Claude/Anthropic/CCU per-token meter rows; Kimi 6/7 meter identity is still
+  unresolved, and current Kimi meter names cover K2.5, K2.6, K2.7 Code, and K3.
+  The older `chat-latest` meters still stop at snapshots through 2026-08-06;
+  the current 2026-10-07 snapshot has no matching meter. The previous raw feed
+  snapshot is still missing, so exact row-level comparison is unavailable.
+  Microsoft's October 15 Foundry roundup covers September releases and the GPT
+  prices already catalogued; no new per-token model or meter effective after
+  October 1 was found. The Nemotron meter query returns only the existing
+  Fireworks Nemotron 3.5 Lightning and Nemotron 3 Ultra Data Zone meters,
+  effective August 1; neither is a new model addition since October 15. NVIDIA
+  released Nemotron 3.5 Super VL on October 15, and Perplexity's October Agent
+  API listing includes a text-only Nemotron 3.5 Super route at
+  $0.20/$0.04/$0.50 per M with a 1M context and 131K max output. Its exact
+  Perplexity rollout date is unpublished. The current Microsoft Fireworks
+  catalog does not list this Super VL model and the Azure feed has no matching
+  Super VL token meter. Current official release/pricing checks found no other
+  catalog change for OpenAI, Google, DeepSeek, xAI, Cohere, Alibaba/Qwen, Kimi,
+  Z.AI, or MiniMax. Mistral Large 4 remains at its 50% launch-sale rates on October 16;
+  the October 20 list-price transition remains derived from its two-week
+  notice and the exact cutoff time is unpublished. Sources checked: [NVIDIA
+  Nemotron 3.5 Super VL launch](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/),
+  [Perplexity Agent API model list](https://docs.perplexity.ai/docs/agent-api/models),
+  [Perplexity API changelog](https://docs.perplexity.ai/docs/resources/changelog),
+  [Microsoft Fireworks model catalog](https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog),
+  [Azure Nemotron meter query](https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%20%27nemotron%27%29),
+  [Claude release notes](https://platform.claude.com/docs/en/release-notes/overview),
+  [Fast mode documentation](https://platform.claude.com/docs/en/build-with-claude/fast-mode),
+  [Claude pricing](https://platform.claude.com/docs/en/about-claude/pricing),
+  [Claude in Microsoft Foundry](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry),
+  [Microsoft Foundry September roundup](https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-september-2026/),
+  [full Azure Retail Prices Foundry feed](https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27),
+  OpenAI, Google, DeepSeek, xAI, Cohere, Mistral, Alibaba/Qwen, Kimi, Z.AI,
+  and MiniMax official API release/pricing pages.
+
 - 2026-10-15 — Daily audit / GPT-chat-latest Direct and Foundry lane: Microsoft
   updated GPT-chat-latest in Foundry on October 14 with GPT-6-family behavior,
   GenUI, and interleaved-thinking. Microsoft's price table lists
