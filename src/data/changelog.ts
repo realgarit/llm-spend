@@ -41,7 +41,7 @@ export const changelog: ChangelogEntry[] = [
       },
       {
         label: "DeepSeek Models & Pricing — current snapshot and token rates",
-        href: "https://api-docs.deepseek.com/quick_start/pricing/?model_version=DeepSeek-V4-Pro-0813",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
       },
       {
         label: "Azure Retail Prices API — complete Foundry Models feed",
