@@ -25,6 +25,29 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-17 — Daily audit / DeepSeek V4.1 Flash 1017 snapshot: DeepSeek's
+  October 17 API update moves the first-party `deepseek-flash` alias to
+  `DeepSeek-V4.1-Flash-1017`; the API calling method and published pricing are
+  unchanged. Updated the Direct API row's displayed note and changelog; no
+  new Foundry lane was inferred. The full Azure Retail Prices Foundry sweep
+  remains 38 pages / 37,521 rows (37,349 Consumption / 172 Reservation), 26
+  products, 2,015 product-meter pairs, and 1,986 meter names. Latest effective
+  date is 2026-10-01, with no rows effective afterward. Microsoft's latest
+  Foundry Blog post is its October 15 September roundup; OpenAI's October 16
+  prompt-to-voice and voice list update is a GPT-Live/audio feature outside
+  the text-token catalog. Anthropic's October 15 Fast-mode update is already
+  recorded; Google's October 13 Gemini 4 Argon launch and October 8 alias
+  retirements are already reflected. Mistral Large 4 still shows its launch
+  sale on the current pricing page; the October 20 list-price transition is
+  still derived from its two-week notice and the exact cutoff time is
+  unpublished. Watches remain native Azure Kimi 6/7 meter identity, DeepSeek
+  V4 Pro source wording, GPT-6.1 Sol's November 21 Direct / November 30
+  Foundry promotion dates, the missing previous raw Foundry snapshot, and the
+  deliberate Mistral Small 4 exclusion. Sources checked: DeepSeek API
+  changelog, V4.1 Flash-1017 release and pricing pages; the complete Azure
+  Retail Prices Foundry feed; Microsoft Foundry Blog; OpenAI API changelog;
+  Claude release notes; Gemini API release notes; Mistral pricing.
+
 - 2026-10-16 — Daily audit / Claude Opus 5.5 Fast mode in Foundry: Anthropic's
   October 15 release notes say Fast mode left research preview for Opus 5.5,
   no longer requires an access request, and is available on Claude in

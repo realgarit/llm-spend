@@ -109,9 +109,9 @@ export const deepseek: Provider = {
       maxOutput: 384_000,
       confidence: "official",
       notes:
-        "The `deepseek-flash` endpoint now serves V4.1 Flash. Before 2026-09-10 04:00 UTC, this row's base and legacy variants preserve the V4 Flash schedule; from the transition onward, off-peak is $0.15/$0.003/$0.60 and weekday peak (except Chinese public holidays) is $0.30/$0.006/$1.20 per M (cache hit / cache miss / output order is shown in the source table; the catalog fields are input / cached input / output).",
+        "The direct `deepseek-flash` alias now serves the `DeepSeek-V4.1-Flash-1017` snapshot, upgraded October 17; the API call method and current peak/off-peak price schedule are unchanged. Before 2026-09-10 04:00 UTC, this row's base and legacy variants preserve the V4 Flash schedule; from the transition onward, off-peak is $0.15/$0.003/$0.60 and weekday peak (except Chinese public holidays) is $0.30/$0.006/$1.20 per M (cache hit / cache miss / output order is shown in the source table; the catalog fields are input / cached input / output).",
       sourceNote:
-        "DeepSeek's official API pricing page and September 10 V4.1 Flash announcement, re-read 2026-09-11: `deepseek-flash` is DeepSeek-V4.1-Flash with a 1M context and 384K maximum output; legacy `deepseek-v4-flash` names route to it. The base fields retain the pre-transition V4 Flash off-peak rate for deterministic historical resolution, while the variants below carry the current V4.1 Flash schedule.",
+        "DeepSeek's official API changelog, V4.1 Flash-1017 announcement, and Models & Pricing page, captured 2026-10-17, identify `deepseek-flash` as the alias for the new DeepSeek-V4.1-Flash-1017 snapshot and state that the API call method and pricing are unchanged. The live table retains the 1M context, 384K maximum output, and the peak/off-peak rates represented by the variants below. The base fields retain the pre-transition V4 Flash off-peak rate for deterministic historical resolution.",
       effectiveDate: "2026-09-10",
       variants: [
         {

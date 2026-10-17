@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-17",
+    title: "DeepSeek V4.1 Flash advances to the 1017 snapshot",
+    tag: "model",
+    body: [
+      "On October 17, DeepSeek updated its first-party `deepseek-flash` API alias to the `DeepSeek-V4.1-Flash-1017` snapshot. DeepSeek says the API calling method and pricing are unchanged; the Direct API row now identifies the current snapshot and retains the existing peak/off-peak schedule.",
+      "The update applies to DeepSeek's own API. The full Azure Retail Prices Foundry feed still has no rows effective after October 1, so no new Foundry or hosted-resale price lane is inferred from this API version update.",
+    ],
+    sources: [
+      {
+        label: "DeepSeek API changelog — alias update and unchanged API pricing",
+        href: "https://api-docs.deepseek.com/updates/",
+      },
+      {
+        label: "DeepSeek V4.1 Flash-1017 — release details and open weights",
+        href: "https://api-docs.deepseek.com/news/news261017/",
+      },
+      {
+        label: "DeepSeek Models & Pricing — current snapshot and token rates",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+      {
+        label: "Azure Retail Prices API — complete Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-17",
+  },
+  {
     date: "2026-10-16",
     title: "Perplexity lists an NVIDIA Nemotron 3.5 Super API lane",
     tag: "model",
