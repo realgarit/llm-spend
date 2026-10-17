@@ -47,6 +47,9 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
   changelog, V4.1 Flash-1017 release and pricing pages; the complete Azure
   Retail Prices Foundry feed; Microsoft Foundry Blog; OpenAI API changelog;
   Claude release notes; Gemini API release notes; Mistral pricing.
+  GitHub rejected the first push with GH007; setting author and committer to
+  the account's noreply address for that commit resolved it without changing
+  repository Git configuration.
 
 - 2026-10-16 — Daily audit / Claude Opus 5.5 Fast mode in Foundry: Anthropic's
   October 15 release notes say Fast mode left research preview for Opus 5.5,
