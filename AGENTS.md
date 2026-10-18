@@ -25,6 +25,36 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-18 — Daily audit / Foundry Flex prices and feed growth: the Azure
+  Retail Prices Foundry feed now returns 39 pages / 38,956 rows (38,784
+  Consumption / 172 Reservation), 27 products, 2,073 product-meter pairs, and
+  2,044 meter names. Compared with October 17's aggregate, that is +1,435 rows,
+  +1 product, and +58 pairs/names; the prior raw snapshot is still missing, so
+  the row-level delta cannot be reconciled. Latest effective date remains
+  October 1, with zero rows effective afterward. The feed includes 925 Azure
+  Fal video meters billed per second and fine-tuning SFT/RFT meter groups;
+  these are outside the text-token inference comparison. Added Flex prices for
+  eligible Azure OpenAI Global Standard GPT rows: GPT-6 family rates are
+  confirmed by dedicated Retail Prices meters effective October 1; GPT-5.6
+  Sol/Terra/Luna rates are marked derived at half the current Standard rates
+  because Microsoft documents Flex support and its 50% discount but the feed
+  has no separate GPT-5.6 Flex meters; October 18 is the first verified
+  catalog date, not an asserted launch date. Microsoft documents Flex only for
+  Global Standard, with variable latency, possible 429s, and no automatic
+  Standard fallback; no Data Zone Flex rates are modeled. No other provider
+  model or price change was found after October 17. Mistral Large 4
+  still displays its sale pricing; the October 20 list-price transition
+  remains derived from the two-week launch notice, with no exact cutoff time.
+  Meta's Muse Spark Open was announced October 15; Fireworks lists a limited
+  US-only serverless rate, but it predates the October 17 audit baseline and no
+  Azure Retail Prices token meter is present, so it was not included in this
+  interval. Sources checked: full Azure Retail Prices Foundry feed; Azure
+  OpenAI Flex processing documentation; Microsoft Foundry September roundup;
+  OpenAI API changelog; Claude release notes; Gemini API changelog; DeepSeek
+  updates; Mistral release notes and pricing; xAI release notes; official
+  Cohere, Alibaba/Qwen, and Kimi pages; Meta Muse Spark Open announcement and
+  the Fireworks model page.
+
 - 2026-10-17 — Daily audit / DeepSeek V4.1 Flash 1017 snapshot: DeepSeek's
   October 17 API update moves the first-party `deepseek-flash` alias to
   `DeepSeek-V4.1-Flash-1017`; the API calling method and published pricing are

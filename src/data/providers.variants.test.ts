@@ -1764,3 +1764,74 @@ test("guard: every catalog row resolves to its own base rate as of today", () =>
     }
   }
 });
+
+test("Foundry GPT-6 Global Flex rates match the October 1 retail meters", () => {
+  const expected = [
+    { model: "GPT-6 Astra", inputUsd: 5, cachedUsd: 0.5, outputUsd: 25 },
+    { model: "GPT-6 Astra Long Context", inputUsd: 10, cachedUsd: 1, outputUsd: 37.5 },
+    { model: "GPT-6.1 Sol", inputUsd: 1, cachedUsd: 0.05, outputUsd: 5 },
+    { model: "GPT-6.1 Sol Long Context", inputUsd: 2, cachedUsd: 0.1, outputUsd: 7.5 },
+    { model: "GPT-6 Sol", inputUsd: 1, cachedUsd: 0.1, outputUsd: 5 },
+    { model: "GPT-6 Sol Long Context", inputUsd: 2, cachedUsd: 0.2, outputUsd: 7.5 },
+    { model: "GPT-6 Luna", inputUsd: 0.05, cachedUsd: 0.005, outputUsd: 0.25 },
+    { model: "GPT-6 Luna Long Context", inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.375 },
+  ] as const;
+  const provider = getProvider("openai-azure");
+  assert.ok(provider);
+
+  for (const expectedRow of expected) {
+    const entry = provider.entries.find(
+      (candidate) => candidate.model === expectedRow.model && candidate.tier === "Global" && !candidate.host,
+    );
+    assert.ok(entry, `Expected a Foundry Global ${expectedRow.model} entry`);
+    const resolved = resolveRate(entry, {
+      now: new Date("2026-10-18T12:00:00Z"),
+      serviceTier: "flex",
+    });
+
+    assert.notEqual(resolved.variant, null, `${expectedRow.model} must expose Flex`);
+    assert.equal(resolved.confidence, "official", `${expectedRow.model} Flex provenance`);
+    assert.deepEqual(
+      { inputUsd: resolved.inputUsd, cachedUsd: resolved.cachedUsd, outputUsd: resolved.outputUsd },
+      { inputUsd: expectedRow.inputUsd, cachedUsd: expectedRow.cachedUsd, outputUsd: expectedRow.outputUsd },
+      `${expectedRow.model} Flex rates`,
+    );
+  }
+});
+
+test("Foundry GPT-5.6 Global Flex rates are derived and absent from Data Zone", () => {
+  const expected = [
+    { model: "GPT-5.6 Sol", inputUsd: 2, cachedUsd: 0.2, outputUsd: 10 },
+    { model: "GPT-5.6 Sol Long Context", inputUsd: 4, cachedUsd: 0.4, outputUsd: 15 },
+    { model: "GPT-5.6 Terra", inputUsd: 1, cachedUsd: 0.1, outputUsd: 6 },
+    { model: "GPT-5.6 Terra Long Context", inputUsd: 2, cachedUsd: 0.2, outputUsd: 9 },
+    { model: "GPT-5.6 Luna", inputUsd: 0.1, cachedUsd: 0.01, outputUsd: 0.6 },
+    { model: "GPT-5.6 Luna Long Context", inputUsd: 0.2, cachedUsd: 0.02, outputUsd: 0.9 },
+  ] as const;
+  const provider = getProvider("openai-azure");
+  assert.ok(provider);
+
+  for (const expectedRow of expected) {
+    const entry = provider.entries.find(
+      (candidate) => candidate.model === expectedRow.model && candidate.tier === "Global" && !candidate.host,
+    );
+    assert.ok(entry, `Expected a Foundry Global ${expectedRow.model} entry`);
+    const resolved = resolveRate(entry, {
+      now: new Date("2026-10-18T12:00:00Z"),
+      serviceTier: "flex",
+    });
+
+    assert.notEqual(resolved.variant, null, `${expectedRow.model} must expose verified Flex`);
+    assert.equal(resolved.confidence, "derived", `${expectedRow.model} Flex confidence`);
+    const flexVariant = entry.variants?.find((variant) => variant.conditions.serviceTier === "flex");
+    assert.match(flexVariant?.sourceNote ?? "", /no separate GPT-5\.6 Flex meters?/i);
+    assert.deepEqual(
+      { inputUsd: resolved.inputUsd, cachedUsd: resolved.cachedUsd, outputUsd: resolved.outputUsd },
+      { inputUsd: expectedRow.inputUsd, cachedUsd: expectedRow.cachedUsd, outputUsd: expectedRow.outputUsd },
+      `${expectedRow.model} Flex rates`,
+    );
+  }
+
+  const dataZoneEntries = provider.entries.filter((entry) => entry.tier === "DataZone");
+  assert.ok(dataZoneEntries.every((entry) => !entry.variants?.some((variant) => variant.conditions.serviceTier === "flex")));
+});

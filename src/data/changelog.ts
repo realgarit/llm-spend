@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-18",
+    title: "Foundry Flex rates added for GPT models",
+    tag: "pricing",
+    body: [
+      "The catalog now shows Microsoft's request-level Flex processing prices for eligible Global Standard GPT models. Flex runs at 50% of Standard token rates, while allowing variable latency and occasional capacity errors; it does not automatically fall back to Standard.",
+      "Azure Retail Prices publishes the GPT-6 family Flex meters effective October 1, and their exact input, cached-input, and output rates are recorded. Microsoft also lists GPT-5.6 Sol, Terra, and Luna as Flex-supported, but does not publish separate GPT-5.6 Flex meters in the feed; those values are marked derived from the official 50% discount and current Standard prices. Flex requires Global Standard, so no Data Zone Flex rate is inferred.",
+    ],
+    sources: [
+      {
+        label: "Microsoft Learn — Flex eligibility, model support, and 50% discount",
+        href: "https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/flex-processing",
+      },
+      {
+        label: "Azure Retail Prices API — GPT-6 Global Flex meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20productName%20eq%20%27Azure%20OpenAI%20GPT6%27%20and%20contains%28tolower%28meterName%29%2C%20%27flex%27%29",
+      },
+      {
+        label: "Azure Retail Prices API — complete Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+      {
+        label: "Microsoft Foundry Blog — GPT-6 model availability and standard prices",
+        href: "https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-september-2026/",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-18",
+  },
+  {
     date: "2026-10-17",
     title: "DeepSeek V4.1 Flash advances to the 1017 snapshot",
     tag: "model",
