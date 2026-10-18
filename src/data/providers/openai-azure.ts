@@ -494,6 +494,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra ShortCo Inp Std Gl 1M Tokens' $10.00/M, '6-astra ShortCo Cd Inp Std Gl 1M Tokens' $1.00/M, '6-astra ShortCo Cd Wr Std Gl 1M Tokens' $12.50/M and '6-astra ShortCo Opt Std Gl 1M Tokens' $50.00/M, grouped consistently across 27 Global regions. These retail meters confirm the Global figures published in Microsoft's September 3 Foundry announcement; cache writes remain outside this schema.",
       effectiveDate: "2026-09-01",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 5.0,
+          cachedUsd: 0.5,
+          outputUsd: 25.0,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-astra ShortCo Inp/Cd Inp/Opt Flex Gl' meters are $5.00/$0.50/$25.00 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Astra support in Global Standard and a 50% discount; the $6.25/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6 Astra Long Context",
@@ -507,6 +520,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-09-10: effective 2026-09-01 meters '6-astra LongCo Inp Std Gl 1M Tokens' $20.00/M, '6-astra LongCo Cd Inp Std Gl 1M Tokens' $2.00/M, '6-astra LongCo Cd Wr Std Gl 1M Tokens' $25.00/M and '6-astra LongCo Opt Std Gl 1M Tokens' $75.00/M, grouped consistently across 27 Global regions. These retail meters confirm the Long Context figures published in Microsoft's September 3 Foundry announcement; cache writes remain outside this schema.",
       effectiveDate: "2026-09-01",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 10.0,
+          cachedUsd: 1.0,
+          outputUsd: 37.5,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-astra LongCo Inp/Cd Inp/Opt Flex Gl' meters are $10.00/$1.00/$37.50 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Astra support in Global Standard and a 50% discount; the $12.50/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6 Astra",
@@ -548,6 +574,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Microsoft's Foundry launch announcement lists Global Standard short-context rates of $2/$0.10/$10 per M input/cached-input/output. Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-10-09, confirms matching 6.1-sol Standard Global meters effective 2026-10-01. The cache-write meter is also present but is outside this schema.",
       effectiveDate: "2026-09-29",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 1.0,
+          cachedUsd: 0.05,
+          outputUsd: 5.0,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6.1-sol ShortCo Inp/Cd Inp/Opt Flex Gl' meters are $1.00/$0.05/$5.00 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6.1 Sol support in Global Standard and a 50% discount; the $1.25/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6.1 Sol Long Context",
@@ -563,6 +602,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Microsoft's Foundry launch announcement lists Global Standard long-context rates of $4/$0.20/$15 per M input/cached-input/output for prompts above 272K tokens. Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', captured 2026-10-09, confirms matching 6.1-sol long-context Global meters effective 2026-10-01. The cache-write meter is also present but is outside this schema.",
       effectiveDate: "2026-09-29",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 2.0,
+          cachedUsd: 0.1,
+          outputUsd: 7.5,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6.1-sol LongCo Inp/Cd Inp/Opt Flex Gl' meters are $2.00/$0.10/$7.50 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6.1 Sol support in Global Standard and a 50% discount; the $2.50/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6.1 Sol",
@@ -609,6 +661,17 @@ export const openaiAzure: Provider = {
       effectiveDate: "2026-09-22",
       variants: [
         {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 1.0,
+          cachedUsd: 0.1,
+          outputUsd: 5.0,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-sol ShortCo Inp/Cd Inp/Opt Flex Gl' meters are $1.00/$0.10/$5.00 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Sol support in Global Standard and a 50% discount; the $1.25/M cache-write meter is outside this schema.",
+        },
+        {
           label: "Priority",
           conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
           inputUsd: 4.0,
@@ -635,6 +698,17 @@ export const openaiAzure: Provider = {
         "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-sol LongCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $4.00/$0.40/$15.00 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $5.00/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Sol as generally available.",
       effectiveDate: "2026-09-22",
       variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 2.0,
+          cachedUsd: 0.2,
+          outputUsd: 7.5,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-sol LongCo Inp/Cd Inp/Opt Flex Gl' meters are $2.00/$0.20/$7.50 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Sol support in Global Standard and a 50% discount; the $2.50/M cache-write meter is outside this schema.",
+        },
         {
           label: "Priority",
           conditions: { from: "2026-09-22T00:00:00Z", serviceTier: "priority" },
@@ -717,6 +791,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna ShortCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $0.10/$0.01/$0.50 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $0.125/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Luna as generally available.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 0.05,
+          cachedUsd: 0.005,
+          outputUsd: 0.25,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-luna ShortCo Inp/Cd Inp/Opt Flex Gl' meters are $0.05/$0.005/$0.25 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Luna support in Global Standard and a 50% discount; the $0.0625/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6 Luna Long Context",
@@ -731,6 +818,19 @@ export const openaiAzure: Provider = {
       sourceNote:
         "Azure Retail Prices API, serviceName 'Foundry Models' and productName 'Azure OpenAI GPT6', captured 2026-09-25: the '6-luna LongCo Inp Std Gl', 'Cd Inp Std Gl' and 'Opt Std Gl' meters are $0.20/$0.02/$0.75 per M effective 2026-09-01 across 26 Global regions; the companion cache-write meter is $0.25/M and is outside this schema. Microsoft's September 22 Foundry announcement lists GPT-6 Luna as generally available.",
       effectiveDate: "2026-09-22",
+      variants: [
+        {
+          label: "Flex (from 2026-10-01)",
+          conditions: { from: "2026-10-01T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 0.1,
+          cachedUsd: 0.01,
+          outputUsd: 0.375,
+          confidence: "official",
+          notes: "Global Standard Flex processing; 50% below Standard, with variable latency and possible capacity errors.",
+          sourceNote:
+            "Azure Retail Prices API, serviceName 'Foundry Models', productName 'Azure OpenAI GPT6', queried 2026-10-18: effective 2026-10-01 '6-luna LongCo Inp/Cd Inp/Opt Flex Gl' meters are $0.10/$0.01/$0.375 per M across 26 Global regions. Microsoft's Flex processing documentation confirms GPT-6 Luna support in Global Standard and a 50% discount; the $0.125/M cache-write meter is outside this schema.",
+        },
+      ],
     },
     {
       model: "GPT-6 Luna",
@@ -805,6 +905,17 @@ export const openaiAzure: Provider = {
           sourceNote:
             "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol ShortCo Inp PP Gl', '5.6 sol ShortCo Cd Inp PP Gl' and '5.6 sol ShortCo Opt PP Gl 1M Tokens' meters are $8.00/$0.80/$40.00 per M effective 2026-09-01 across 24 Global regions; the companion cache-write meter is $10.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
         },
+        {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 2.0,
+          cachedUsd: 0.2,
+          outputUsd: 10.0,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of the current Standard rate. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Sol as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard rate is $4.00/$0.40/$20.00 per M, so Flex is $2.00/$0.20/$10.00. Azure Retail Prices has no separate GPT-5.6 Flex meters; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
       ],
     },
     {
@@ -875,6 +986,17 @@ export const openaiAzure: Provider = {
           sourceNote:
             "Azure Retail Prices API, captured 2026-09-14: commercial '5.6 sol LongCo Inp PP Gl', '5.6 sol LongCo Cd Inp PP Gl' and '5.6 sol LongCo Opt PP Gl 1M Tokens' meters are $16.00/$1.60/$60.00 per M effective 2026-09-01 across 25 Global regions; the companion cache-write meter is $20.00/M and is outside this schema. Azure's PP tier maps to this schema's priority service tier.",
         },
+        {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 4.0,
+          cachedUsd: 0.4,
+          outputUsd: 15.0,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of the current Long Context Standard rate. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Sol as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard Long Context rate is $8.00/$0.80/$30.00 per M, so Flex is $4.00/$0.40/$15.00. Azure Retail Prices has no separate GPT-5.6 Flex meters; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
       ],
     },
     {
@@ -916,6 +1038,17 @@ export const openaiAzure: Provider = {
       effectiveDate: "2026-08-20",
       variants: [
         {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 1.0,
+          cachedUsd: 0.1,
+          outputUsd: 6.0,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of Standard. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Terra as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard rate is $2.00/$0.20/$12.00 per M, so Flex is $1.00/$0.10/$6.00. Azure Retail Prices has no separate GPT-5.6 Flex meter; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
+        {
           label: "Priority",
           conditions: { serviceTier: "priority" },
           inputUsd: 4.0,
@@ -940,6 +1073,17 @@ export const openaiAzure: Provider = {
         "Azure Retail Prices API 'Foundry Models', captured 2026-09-14: '5.6 terra LongCo Inp Std Gl 1M Tokens' $4.00/M, 'Cd Inp Std Gl' $0.40/M, 'Cd Wr Std Gl' $5.00/M and 'Opt Std Gl' $18.00/M are effective 2026-08-01 across 24 Global regions. The newly published commercial '5.6 terra LongCo Inp PP Gl', '5.6 terra LongCo Cd Inp PP Gl', '5.6 terra LongCo Cd Wr PP Gl' and '5.6 terra LongCo Opt PP Gl 1M Tokens' meters are $8.00/$0.80/$10.00/$36.00 per M effective 2026-09-01 across 25 Global regions; cache writes remain outside this schema.",
       effectiveDate: "2026-08-20",
       variants: [
+        {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 2.0,
+          cachedUsd: 0.2,
+          outputUsd: 9.0,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of Long Context Standard. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Terra as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard Long Context rate is $4.00/$0.40/$18.00 per M, so Flex is $2.00/$0.20/$9.00. Azure Retail Prices has no separate GPT-5.6 Flex meter; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
         {
           label: "Priority (from 2026-09-01)",
           conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
@@ -966,6 +1110,17 @@ export const openaiAzure: Provider = {
       effectiveDate: "2026-08-20",
       variants: [
         {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 0.1,
+          cachedUsd: 0.01,
+          outputUsd: 0.6,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of Standard. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Luna as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard rate is $0.20/$0.02/$1.20 per M, so Flex is $0.10/$0.01/$0.60. Azure Retail Prices has no separate GPT-5.6 Flex meter; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
+        {
           label: "Priority",
           conditions: { serviceTier: "priority" },
           inputUsd: 0.4,
@@ -990,6 +1145,17 @@ export const openaiAzure: Provider = {
         "Azure Retail Prices API 'Foundry Models', captured 2026-09-14: '5.6 luna LongCo Inp Std Gl 1M Tokens' $0.40/M, 'Cd Inp Std Gl' $0.04/M, 'Cd Wr Std Gl' $0.50/M and 'Opt Std Gl' $1.80/M are effective 2026-08-01 across 24 Global regions. The newly published commercial '5.6 luna LongCo Inp PP Gl', '5.6 luna LongCo Cd Inp PP Gl', '5.6 luna LongCo Cd Wr PP Gl' and '5.6 luna LongCo Opt PP Gl 1M Tokens' meters are $0.80/$0.08/$1.00/$3.60 per M effective 2026-09-01 across 25 Global regions; cache writes remain outside this schema.",
       effectiveDate: "2026-08-20",
       variants: [
+        {
+          label: "Flex (verified 2026-10-18)",
+          conditions: { from: "2026-10-18T00:00:00Z", serviceTier: "flex" },
+          inputUsd: 0.2,
+          cachedUsd: 0.02,
+          outputUsd: 0.9,
+          confidence: "derived",
+          notes: "Global Standard Flex processing; half of Long Context Standard. First catalog verification is October 18; Microsoft publishes no rate effective date.",
+          sourceNote:
+            "Derived from Microsoft's Flex processing documentation, checked 2026-10-18, which lists GPT-5.6 Luna as supported and specifies a 50% discount from Standard with cached-token discounts retained. The current Azure Global Standard Long Context rate is $0.40/$0.04/$1.80 per M, so Flex is $0.20/$0.02/$0.90. Azure Retail Prices has no separate GPT-5.6 Flex meter; October 18 is the first catalog verification date, not an asserted launch date.",
+        },
         {
           label: "Priority (from 2026-09-01)",
           conditions: { from: "2026-09-01T00:00:00Z", serviceTier: "priority" },
