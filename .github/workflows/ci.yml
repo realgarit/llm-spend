@@ -66,7 +66,7 @@ jobs:
 
       - name: Upload recorded visual baselines
         if: github.event_name == 'workflow_dispatch' && inputs.record_visual_baselines
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: linux-visual-baselines
           path: tests/e2e/visual.spec.ts-snapshots/*-linux.png
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload Playwright artifacts
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: |
