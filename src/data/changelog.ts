@@ -23,6 +23,38 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-19",
+    title: "MiniMax M3.1 Flash adds a Direct API lane",
+    tag: "pricing",
+    body: [
+      "MiniMax rolled out M3.1 Flash on October 19 and publishes its API rates at $0.15/$0.015/$0.60 per 1M input/cached-input/output tokens. The OpenAI-compatible API identifies the model as `MiniMax-M3.1-Flash` and documents a 1M-token context window.",
+      "The Azure Retail Prices query for MiniMax Foundry meters returns only the existing Fireworks-hosted M2.5 and MiniMax 3 Data Zone listings, with no M3.1 Flash meter. The catalog therefore adds the new MiniMax API lane without inferring a Foundry rate. MiniMax's API guide says M3.1 Flash does not support a `service_tier` parameter, so no Priority variant is listed.",
+    ],
+    sources: [
+      {
+        label: "MiniMax Research — M3.1 Flash release and API pricing",
+        href: "https://www.minimax.io/blog/minimax-m31f",
+      },
+      {
+        label: "MiniMax API release notes — October 19 model rollout",
+        href: "https://platform.minimax.io/docs/release-notes/models",
+      },
+      {
+        label: "MiniMax API pricing overview — current token rates",
+        href: "https://platform.minimax.io/docs/pricing/overview",
+      },
+      {
+        label: "MiniMax OpenAI-compatible API — model ID, context, and service tiers",
+        href: "https://platform.minimax.io/docs/api-reference/text-openai-api",
+      },
+      {
+        label: "Azure Retail Prices API — MiniMax Foundry meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%20%27minimax%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-19",
+  },
+  {
     date: "2026-10-18",
     title: "Foundry Flex rates added for GPT models",
     tag: "pricing",

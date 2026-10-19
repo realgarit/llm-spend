@@ -4,10 +4,10 @@ export const minimax: Provider = {
   slug: "minimax",
   name: "MiniMax",
   org: "MiniMax AI",
-  tagline: "MiniMax M2.5 and MiniMax 3 are resold on Microsoft Foundry as Data Zone-only serverless listings; the direct API adds M2.7 and M3 as the current lineup for comparison.",
+  tagline: "MiniMax M2.5 and MiniMax 3 are resold on Microsoft Foundry as Data Zone-only serverless listings; the direct API lineup now includes M3.1 Flash.",
   intro: [
     "MiniMax's M2.5 and MiniMax 3 models are resold on Microsoft Foundry exclusively as Data Zone serverless listings — there is no published Global-tier meter for either model, the same situation as the GLM family. Both carry an officially published cached-input meter.",
-    "MiniMax's own direct API is now shown alongside those Foundry lanes as the comparison baseline. On MiniMax's pricing page, M2.5 has moved to a collapsed 'Legacy Models' section, while M2.7 and MiniMax M3 are the current generation.",
+    "MiniMax's own direct API is shown alongside those Foundry lanes as the comparison baseline. MiniMax M3.1 Flash is its newest API release, alongside M2.7 and MiniMax M3; the Azure Retail Prices feed has no matching Foundry meter for M3.1 Flash.",
   ],
   entries: [
     {
@@ -76,6 +76,21 @@ export const minimax: Provider = {
       sourceNote:
         "MiniMax official pricing page (platform.minimax.io/docs/guides/pricing-paygo), captured 2026-07-29: $0.30/M input, $0.06/M cache read, $1.20/M output, plus a $0.375/M cache-write charge this catalog's schema does not model. Unlike M3, M2.7 carries no 'Permanent 50% off' label. A full Azure Foundry sweep on 2026-07-29 found no MiniMax M2.7 meter on any tier.",
       effectiveDate: "2026-07-29",
+    },
+    {
+      model: "MiniMax M3.1 Flash",
+      host: "MiniMax direct API",
+      tier: "Direct",
+      inputUsd: 0.15,
+      cachedUsd: 0.015,
+      outputUsd: 0.6,
+      contextWindow: 1_000_000,
+      confidence: "official",
+      notes:
+        "API model ID `MiniMax-M3.1-Flash`; MiniMax's API guide says this model does not accept a service-tier parameter.",
+      sourceNote:
+        "MiniMax's official October 19, 2026 release announcement says M3.1 Flash is available through the MiniMax API and publishes $0.15/M input, $0.60/M output, and $0.015/M cached input. The official pricing overview repeats these rates. MiniMax's OpenAI-compatible API documentation identifies the model ID as `MiniMax-M3.1-Flash`, gives a 1,000,000-token context window, and says this model does not support the `service_tier` field. The October 19 Azure Retail Prices API query for Foundry meters containing `minimax` returned only Fireworks-hosted MiniMax M2.5 and MiniMax 3 Data Zone meters; no M3.1 Flash Foundry meter is listed.",
+      effectiveDate: "2026-10-19",
     },
   ],
   quirks: [

@@ -25,6 +25,29 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-19 — Daily audit / MiniMax M3.1 Flash Direct API: MiniMax's October
+  19 release makes `MiniMax-M3.1-Flash` available through its API at
+  $0.15/$0.015/$0.60 per M input/cached-input/output tokens; its API guide lists
+  a 1M context and no `service_tier` support. Added the Direct lane and dated
+  changelog entry. The full Azure Retail Prices Foundry sweep remains 39 pages
+  / 38,956 rows (38,784 Consumption / 172 Reservation), 27 products, 2,073
+  product-meter pairs, and 2,044 meter names, with no rows effective after
+  October 1. The MiniMax meter query returns only the existing Fireworks M2.5
+  and MiniMax 3 Data Zone meters, so no Foundry price is inferred. No other
+  catalog-affecting change was found on the official Microsoft Foundry and
+  tracked-provider release/pricing pages. Mistral Large 4 still displays its
+  50% sale on October 19; October 20 list pricing remains derived from its
+  two-week launch notice and the exact cutoff time is unpublished. Recheck the
+  live Mistral price on October 20. Sources checked: MiniMax's October 19
+  announcement, API release notes/pricing/docs, the complete Azure Retail
+  Prices feed and MiniMax query, Microsoft Foundry Blog, official OpenAI,
+  Anthropic, Google, DeepSeek, xAI, Cohere, Alibaba/Qwen, Kimi, Z.AI, and
+  Mistral release/pricing pages. PR #168's initial CI run failed only the two
+  1280px /compare visual snapshots after the result row order changed. Manual
+  Linux baseline run 39286314206 passed and produced reviewed screenshots; the
+  1280px light/dark images changed, while both 375px snapshots remain
+  byte-identical.
+
 - 2026-10-19 — Node 20 end of life (2026-04-30): engines, CI and the Azure
   Static Web Apps build (setup-node and Oryx NODE_VERSION) now use Node 22, and
   @types/node stays on 22.x with the semver-major Dependabot ignore. Node 24 is
