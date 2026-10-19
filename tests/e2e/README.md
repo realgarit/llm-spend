@@ -158,7 +158,7 @@ LCP under 300ms and CLS under 0.001.
 
 ## CI
 
-`.github/workflows/ci.yml` uses the pinned Playwright 1.63.0 Linux container
+`.github/workflows/ci.yml` uses the pinned Playwright 1.64.0 Linux container
 and verifies its browser version, then runs `npm run test:e2e` after the build step. On failure it uploads
 `playwright-report/` and `test-results/` (traces, videos, failure screenshots)
 as artifacts. Only an explicit manual baseline-recording dispatch runs
