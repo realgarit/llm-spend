@@ -42,7 +42,11 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
   announcement, API release notes/pricing/docs, the complete Azure Retail
   Prices feed and MiniMax query, Microsoft Foundry Blog, official OpenAI,
   Anthropic, Google, DeepSeek, xAI, Cohere, Alibaba/Qwen, Kimi, Z.AI, and
-  Mistral release/pricing pages.
+  Mistral release/pricing pages. PR #168's initial CI run failed only the two
+  1280px /compare visual snapshots after the result row order changed. Manual
+  Linux baseline run 39286314206 passed and produced reviewed screenshots; the
+  1280px light/dark images changed, while both 375px snapshots remain
+  byte-identical.
 
 - 2026-10-19 — Node 20 end of life (2026-04-30): engines, CI and the Azure
   Static Web Apps build (setup-node and Oryx NODE_VERSION) now use Node 22, and
