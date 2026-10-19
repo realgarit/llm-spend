@@ -25,6 +25,14 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-19 — TypeScript 7 held: Dependabot #166 (typescript 7.0.2, the
+  native Go compiler) failed CI at lint with "typescript-eslint does not support
+  TS 7.0". typescript-eslint 8.72.0 (latest and canary) still declares peer
+  typescript >=4.8.4 <6.1.0, and eslint-config-next 16.4.2 depends on it, so
+  #166 was closed and Dependabot ignores typescript >= 7. Lift the ignore when
+  a typescript-eslint release accepts TS 7. #165 (@types/node 22.20.5) stays on
+  22.x to match the Node 22 Static Web Apps runtime.
+
 - 2026-10-19 — Daily audit / MiniMax M3.1 Flash Direct API: MiniMax's October
   19 release makes `MiniMax-M3.1-Flash` available through its API at
   $0.15/$0.015/$0.60 per M input/cached-input/output tokens; its API guide lists

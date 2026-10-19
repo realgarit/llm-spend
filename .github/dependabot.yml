@@ -36,10 +36,18 @@ updates:
   # @types/node follows the Node major the site runs on (package.json engines,
   # CI and Azure Static Web Apps build), not the newest Node release. Change its
   # major together with the runtime, not through a routine Dependabot PR.
+  # TypeScript 7 (the native Go compiler) is held: typescript-eslint, which
+  # eslint-config-next depends on, declares peer typescript >=4.8.4 <6.1.0 up
+  # to 8.72.0 and its parser exits with "typescript-eslint does not support
+  # TS 7.0" (PR #166 CI, 2026-10-19). Remove this once a typescript-eslint
+  # release supports TS 7.
   ignore:
   - dependency-name: '@types/node'
     update-types:
     - version-update:semver-major
+  - dependency-name: typescript
+    versions:
+    - '>= 7'
   groups:
     minor-and-patch:
       patterns:
