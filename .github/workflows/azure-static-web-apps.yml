@@ -26,20 +26,23 @@ jobs:
           submodules: false
           lfs: false
 
-      # Next.js requires Node 20+. Oryx also honors the "engines" field in
-      # package.json (>=20) for its own internal build step.
+      # Node 22 is the newest Node the Static Web Apps deploy step accepts:
+      # its bundled runtime table lists node 18/20/22 (22 is the default), and
+      # a build on Node 24.13 was rejected on 2026-07-11. Node 24 is the Active
+      # LTS, so move to it once Static Web Apps supports it. Node 20 reached end
+      # of life on 2026-04-30. Oryx also honors package.json "engines" (22.x).
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         env:
-          # Pin Oryx's build Node. package.json engines is "20.x"; this is the
+          # Pin Oryx's build Node. package.json engines is "22.x"; this is the
           # belt-and-braces guard so Oryx never resolves to an unsupported 24.x.
-          NODE_VERSION: "20"
+          NODE_VERSION: "22"
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Enables PR comments / GitHub integration
