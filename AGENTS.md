@@ -25,6 +25,20 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-19 — Node 20 end of life (2026-04-30): engines, CI and the Azure
+  Static Web Apps build (setup-node and Oryx NODE_VERSION) now use Node 22, and
+  @types/node stays on 22.x with the semver-major Dependabot ignore. Node 24 is
+  the Active LTS but is not usable here: the Static Web Apps deploy client
+  (staticappsclient image built 2026-09-28) lists only node 18/20/22, with 22
+  as the default, and a Node 24.13 build was rejected on 2026-07-11. Node 22
+  is supported until 2027-04-30; move to 24 once Static Web Apps accepts it.
+  The four win32 /compare baselines were re-recorded with
+  `npm run test:e2e:update -- visual.spec.ts`. They were reviewed against the
+  old win32 and current Linux images: only catalog content changed (127 lanes,
+  new providers). Locally, `eslint .` also walks the ignored
+  `.kilo/worktrees/` checkout and fails on its config; pass
+  `--ignore-pattern ".kilo/**"` for local runs. CI has no such directory.
+
 - 2026-10-19 — Dependabot wave: merged #160 (actions/upload-artifact v7;
   a manual baseline-recording dispatch exercised the upload step), #162
   (ESLint 10.12.0; lint output and rule firing match ESLint 9, but

@@ -4,7 +4,7 @@
   "private": true,
   "description": "What LLM APIs actually cost. Real prices in USD and CHF, measured on Azure AI Foundry and direct APIs, with prompt-cache economics and cost verification.",
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "next dev",
