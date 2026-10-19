@@ -25,6 +25,18 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-19 — Dependabot wave: merged #160 (actions/upload-artifact v7;
+  a manual baseline-recording dispatch exercised the upload step), #162
+  (ESLint 10.12.0; lint output and rule firing match ESLint 9, but
+  eslint-plugin-react 7.37.5, jsx-a11y 6.10.2 and import 2.32.0 still declare
+  peer eslint up to ^9, so npm logs ERESOLVE override warnings) and #163
+  (Playwright 1.64.0 plus the matching v1.64.0-noble CI image digest and
+  version guard). Closed #161: @types/node 26 does not match the Node 20
+  runtime; Dependabot now ignores semver-major @types/node updates. The
+  @types/node 22.x vs Node 20 runtime mismatch predates this wave. The four
+  win32 visual baselines for /compare are stale on main (page height grew);
+  Linux CI baselines pass.
+
 - 2026-10-18 — Daily audit / Foundry Flex prices and feed growth: the Azure
   Retail Prices Foundry feed now returns 39 pages / 38,956 rows (38,784
   Consumption / 172 Reservation), 27 products, 2,073 product-meter pairs, and

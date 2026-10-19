@@ -33,6 +33,13 @@ updates:
     time: "06:00"
     timezone: Europe/Zurich
   open-pull-requests-limit: 3
+  # @types/node follows the Node major the site runs on (package.json engines,
+  # CI and Azure Static Web Apps build), not the newest Node release. Change its
+  # major together with the runtime, not through a routine Dependabot PR.
+  ignore:
+  - dependency-name: '@types/node'
+    update-types:
+    - version-update:semver-major
   groups:
     minor-and-patch:
       patterns:
