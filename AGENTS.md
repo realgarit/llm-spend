@@ -25,6 +25,35 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-20 — Daily audit / Mistral Large 4 transition confirmation and
+  Perplexity DeepSeek V4 Pro route: the complete Azure Retail Prices Foundry feed is
+  unchanged at 39 pages / 38,956 rows (38,784 Consumption / 172 Reservation),
+  27 products, 2,073 product-meter pairs, and 2,044 meter names. Latest
+  effective date is October 1, with no later-effective rows and no Mistral
+  Large 4 token meter. Microsoft's latest Foundry Blog post is October 19
+  browser automation GA, a platform feature rather than a token-model or price
+  change. The Azure pricing-page URL from the audit prompt returned 404, and
+  Azure site search did not surface a replacement; the Retail Prices feed
+  remains the authoritative Foundry meter check.
+  Mistral's live API pricing page showed list prices in Standard, Batch, and
+  Priority modes when checked in the in-app Browser on October 20: Standard
+  $1.36/$0.14/$4.18, Batch $0.68/$0.07/$2.09, and Priority
+  $2.38/$0.245/$7.315 per M. The page's live table confirms the existing
+  October 20 date boundary; web text extraction still showed stale sale
+  content. The two-week launch offer has no published cutoff time.
+  Perplexity's October Agent API docs now list
+  `perplexity/deepseek-v4-pro-0813` at $1.32/$0.044/$3.96 per M, with no
+  optional tier. This single published route rate matches DeepSeek Direct's
+  weekday peak price; DeepSeek's own price is half as much off-peak. The exact
+  Perplexity rollout day is unpublished, so October 20 is the first
+  verification date. Perplexity's new GPT-6 Astra route matches OpenAI's
+  current short/long Direct prices and is not duplicated. Sources checked:
+  the full Azure Retail Prices Foundry feed; Microsoft Foundry Blog; Mistral
+  API pricing and changelog; Perplexity Agent API models and
+  changelog; DeepSeek Models & Pricing; and current official OpenAI, Anthropic,
+  Google, xAI, Cohere, Alibaba/Qwen, Kimi, Z.AI, and MiniMax pricing/release
+  pages. No other catalog-affecting change was found since October 19.
+
 - 2026-10-19 — TypeScript 7 held: Dependabot #166 (typescript 7.0.2, the
   native Go compiler) failed CI at lint with "typescript-eslint does not support
   TS 7.0". typescript-eslint 8.72.0 (latest and canary) still declares peer

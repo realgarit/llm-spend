@@ -23,6 +23,54 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-20",
+    title: "Mistral Large 4 launch pricing transitions to list",
+    tag: "pricing",
+    body: [
+      "Mistral's live API pricing page now shows Mistral Large 4's published list rates: Standard $1.36/$0.14/$4.18, Batch $0.68/$0.07/$2.09, and Priority $2.38/$0.245/$7.315 per 1M input/cached-input/output tokens. The catalog's October 20 date-level schedule now applies those rates after the two-week 50% launch offer.",
+      "Mistral does not publish the exact offer cutoff time; its pricing page displays list rates on October 20, confirming the scheduled date. The full Azure Retail Prices feed still has no Mistral Large 4 meter, so no Foundry per-token rate is inferred.",
+    ],
+    sources: [
+      {
+        label: "Mistral API pricing — current Standard, Batch, and Priority rates",
+        href: "https://docs.mistral.ai/inference/pricing",
+      },
+      {
+        label: "Mistral changelog — October 6 launch offer duration",
+        href: "https://docs.mistral.ai/resources/changelogs",
+      },
+      {
+        label: "Azure Retail Prices API — complete Foundry Models feed",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-20",
+  },
+  {
+    date: "2026-10-20",
+    title: "Perplexity adds a DeepSeek V4 Pro route",
+    tag: "pricing",
+    body: [
+      "Perplexity's Agent API model list now includes `perplexity/deepseek-v4-pro-0813` at $1.32/$0.044/$3.96 per 1M input/cached-input/output tokens. The list shows no optional service tier and publishes one rate; that rate matches DeepSeek Direct's weekday peak pricing, while DeepSeek's own API charges half as much off-peak.",
+      "Perplexity's October changelog identifies DeepSeek V4 Pro as a new Agent API model but gives no rollout day. October 20 is the first verified date for this route, not an asserted launch date.",
+    ],
+    sources: [
+      {
+        label: "Perplexity Agent API models — DeepSeek V4 Pro route and rates",
+        href: "https://docs.perplexity.ai/docs/agent-api/models",
+      },
+      {
+        label: "DeepSeek Models & Pricing — version and peak/off-peak rates",
+        href: "https://api-docs.deepseek.com/quick_start/pricing/",
+      },
+      {
+        label: "Perplexity API changelog — October model additions",
+        href: "https://docs.perplexity.ai/docs/resources/changelog",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-20",
+  },
+  {
     date: "2026-10-19",
     title: "MiniMax M3.1 Flash adds a Direct API lane",
     tag: "pricing",
