@@ -1614,6 +1614,34 @@ test("GPT-5.6 Terra and Luna long-context rows expose the new retail Priority me
   }
 });
 
+test("Perplexity Agent API lists DeepSeek V4 Pro at its published route price", () => {
+  const entry = getProvider("perplexity")?.entries.find(
+    (candidate) => candidate.model === "DeepSeek V4 Pro" && candidate.host === "Perplexity Agent API",
+  );
+  assert.ok(entry, "Expected the Perplexity Agent API DeepSeek V4 Pro lane");
+
+  assert.deepEqual(
+    {
+      tier: entry.tier,
+      inputUsd: entry.inputUsd,
+      cachedUsd: entry.cachedUsd,
+      outputUsd: entry.outputUsd,
+      confidence: entry.confidence,
+      effectiveDate: entry.effectiveDate,
+      variants: entry.variants,
+    },
+    {
+      tier: "Direct",
+      inputUsd: 1.32,
+      cachedUsd: 0.044,
+      outputUsd: 3.96,
+      confidence: "official",
+      effectiveDate: "2026-10-20",
+      variants: undefined,
+    },
+  );
+});
+
 test("Mistral Large 4 launch prices transition to published list rates on October 20", () => {
   const entry = getProvider("mistral")?.entries.find((candidate) => candidate.model === "Mistral Large 4");
   assert.ok(entry, "Expected Mistral Large 4 Direct entry");
