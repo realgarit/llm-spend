@@ -25,6 +25,38 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-21 — Daily audit / OpenAI 12-hour prompt cache writes: OpenAI's
+  October 20 Responses API update adds a 12-hour minimum cache lifetime for
+  GPT-5.6 and later. The default 30-minute write rate remains 1.25x input;
+  12-hour writes cost 2.5x. Read prices are unchanged. The comparison schema
+  still models input, cached-input reads, and output, so these separate write
+  fees are documented but not calculated. The OpenAI field note, cache
+  economics page, and dated customer changelog now state this boundary.
+  The complete Azure Retail Prices Foundry feed is unchanged at 39 pages /
+  38,956 rows (38,784 Consumption / 172 Reservation), 27 products, 2,073
+  product-meter pairs, and 2,044 meter names; latest effective date remains
+  October 1, with no later-effective rows and no `lastUpdatedDate` values.
+  The original pricing URL still returns 404, but navigating from the official
+  Foundry Models product page through its Pricing section and CTA opens the
+  current family-table route (`/pricing/details/ai-foundry-models/aoai/#pricing`)
+  in the in-app Browser; provider tabs navigate to their own family routes.
+  Cohere announced Rerank 5 Pro/Fast on October 21 and lists both on Foundry,
+  but Cohere bills reranking by search unit, not tokens, and the Azure feed has
+  only older Rerank 4 search meters; keep it outside this token catalog.
+  The Fireworks family page also surfaced an Inkling Data Zone row at
+  $1.10/$0.19/$4.46 per M. Its Azure meters are effective August 1, and
+  Thinking Machines announced Inkling on July 15; Fireworks' API page lists
+  $1.00/$0.17/$4.05 per M. This is a pre-window, currently untracked model
+  coverage candidate, not an October 21 launch or price change. Revisit it in
+  a broader provider-coverage pass rather than treating it as today's news.
+  Sources checked: Azure Retail Prices complete feed and Inkling/Rerank meter
+  queries; Microsoft Foundry Blog and pricing family table; OpenAI API
+  changelog, prompt-caching guide, and pricing; Anthropic release notes;
+  Google Gemini API changelog; DeepSeek updates; Mistral changelog; Cohere
+  Rerank 5 release and pricing docs; Alibaba Model Studio pricing and release
+  notes. Targeted searches of official Perplexity, Kimi, GLM, xAI, and MiniMax
+  documentation for October 20–21 returned no dated model or price entry.
+
 - 2026-10-20 — Daily audit / Mistral Large 4 transition confirmation and
   Perplexity DeepSeek V4 Pro route: the complete Azure Retail Prices Foundry feed is
   unchanged at 39 pages / 38,956 rows (38,784 Consumption / 172 Reservation),

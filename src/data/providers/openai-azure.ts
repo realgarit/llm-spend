@@ -1277,10 +1277,10 @@ export const openaiAzure: Provider = {
       ],
     },
     {
-      title: "GPT-5.6 cache-write billing changed",
+      title: "OpenAI cache-write rates depend on cache lifetime",
       tone: "warning",
       body: [
-        "GPT-5.6 bills cache writes at 1.25x the uncached input rate (was the standard input rate). Reads stay ~90% off. Factor the write premium into high-churn prompts.",
+        "For GPT-5.6 and later in the Responses API, cache writes cost 1.25x uncached input for the default 30-minute minimum lifetime, or 2.5x for a 12-hour minimum lifetime. Cache-read prices stay model-specific and do not change with the selected lifetime. These separate write charges are not included in the catalog's input/cache-read/output comparisons.",
       ],
     },
     {

@@ -23,6 +23,30 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-21",
+    title: "OpenAI adds 12-hour prompt caching",
+    tag: "pricing",
+    body: [
+      "OpenAI's Responses API now offers a 12-hour minimum cache lifetime for GPT-5.6 and later models. Cache writes cost 1.25x uncached input at the default 30-minute lifetime or 2.5x for the 12-hour option; model-specific cache-read prices are unchanged.",
+      "The OpenAI provider notes and cache-economics page now show both write rates and clarify that the catalog's input/cache-read/output comparisons do not include separately billed cache writes.",
+    ],
+    sources: [
+      {
+        label: "OpenAI API changelog — 12-hour prompt caching",
+        href: "https://developers.openai.com/api/docs/changelog",
+      },
+      {
+        label: "OpenAI prompt caching guide — write rates by lifetime",
+        href: "https://developers.openai.com/api/docs/guides/prompt-caching",
+      },
+      {
+        label: "OpenAI API pricing — model cache-write prices",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-21",
+  },
+  {
     date: "2026-10-20",
     title: "Mistral Large 4 launch pricing transitions to list",
     tag: "pricing",
