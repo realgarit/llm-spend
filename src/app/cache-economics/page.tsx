@@ -87,11 +87,12 @@ export default function CacheEconomicsPage() {
           </div>
           <div className="callout callout-warning">
             <div className="eyebrow" style={{ marginBottom: "0.35rem" }}>Cache write</div>
-            <h4>~1.25× the input price, once</h4>
+            <h4>1.25× or 2.5× input, once</h4>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "0.4rem" }}>
-              Writing a prefix into cache costs a one-time premium, ~1.25x input on Claude and on GPT-5.6. It&rsquo;s
-              amortized across every later read, so a prefix reused many times pays the write once and banks the ~90%
-              discount.
+              On GPT-5.6 and later, OpenAI charges 1.25x input for a cache write with the default 30-minute minimum
+              lifetime, or 2.5x for a 12-hour minimum lifetime in the Responses API. Cache-read prices stay the same
+              for both lifetimes. Claude also charges a one-time write premium that depends on cache lifetime. The
+              hit-rate estimates below do not include separate cache-write fees.
             </p>
           </div>
         </div>
