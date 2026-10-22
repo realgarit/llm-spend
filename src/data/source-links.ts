@@ -16,6 +16,7 @@ const OFFICIAL_SOURCES: Record<ProviderSlug, SourceLink> = {
     label: "Microsoft Learn — Microsoft-Decision-1 in Foundry",
     href: "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision",
   },
+  cohere: { label: "Cohere API pricing", href: "https://cohere.com/pricing" },
   claude: { label: "Anthropic pricing", href: "https://platform.claude.com/docs/en/about-claude/pricing" },
   gemini: { label: "Gemini API pricing", href: "https://ai.google.dev/gemini-api/docs/pricing" },
   xai: { label: "xAI pricing", href: "https://docs.x.ai/developers/pricing" },

@@ -15,6 +15,7 @@ export type ProviderSlug =
   | "openai-azure"
   | "openai-decisions"
   | "microsoft-decisions"
+  | "cohere"
   | "claude"
   | "gemini"
   | "xai"

@@ -23,6 +23,54 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-22",
+    title: "Perplexity updates its Decisions API models",
+    tag: "model",
+    body: [
+      "Perplexity's Decisions API now lists `pplx-decider-v1.2` as its 27B model at $0.02 per 1M input tokens; the previous v1.1 and v1 IDs continue to resolve to v1.2. Perplexity also lists a new 4B `pplx-decider-flash-v1.2` model at $0.01 per 1M input tokens. Both have free output and no per-request fee.",
+      "The official changelog identifies the update as October 2026 but does not publish a day; October 22 is the first verified date, not an asserted rollout date. These typed-decision lanes remain outside generative comparisons.",
+    ],
+    sources: [
+      {
+        label: "Perplexity API changelog — Decisions API v1.2 models",
+        href: "https://docs.perplexity.ai/docs/resources/changelog",
+      },
+      {
+        label: "Perplexity API pricing — Decisions API model rates",
+        href: "https://docs.perplexity.ai/docs/getting-started/pricing",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-22",
+  },
+  {
+    date: "2026-10-22",
+    title: "Cohere Rerank 5 adds token-priced API rates",
+    tag: "pricing",
+    body: [
+      "Cohere's Rerank 5 Pro and Fast are generally available through its API and Microsoft Foundry. The Cohere API pricing page lists $0.05 and $0.02 per 1M tokens, respectively; the catalog now shows these as Direct input-only retrieval lanes, outside generative comparisons.",
+      "Microsoft's current Foundry family table and Azure Retail Prices feed still show Rerank v4 search-unit meters only. No Rerank 5 Foundry token rate is published, so the catalog adds no Foundry price.",
+    ],
+    sources: [
+      {
+        label: "Cohere Rerank 5 release — API rates and Foundry availability",
+        href: "https://cohere.com/blog/rerank-5",
+      },
+      {
+        label: "Cohere API pricing — Advanced retrieval models",
+        href: "https://cohere.com/pricing",
+      },
+      {
+        label: "Microsoft Foundry Cohere pricing table",
+        href: "https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/cohere/#pricing",
+      },
+      {
+        label: "Azure Retail Prices API — Cohere Rerank meters",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28meterName%29%2C%20%27rerank%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-22",
+  },
+  {
     date: "2026-10-21",
     title: "OpenAI adds 12-hour prompt caching",
     tag: "pricing",

@@ -1642,6 +1642,40 @@ test("Perplexity Agent API lists DeepSeek V4 Pro at its published route price", 
   );
 });
 
+test("Perplexity Decisions API lists the current v1.2 models as input-only lanes", () => {
+  const entries = getProvider("perplexity")?.entries.filter(({ model }) => model.includes("decider"));
+
+  assert.deepEqual(
+    entries?.map(({ model, inputUsd, cachedUsd, outputUsd, effectiveDate }) => ({
+      model,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      effectiveDate,
+    })),
+    [
+      {
+        model: "pplx-decider-v1.2",
+        inputUsd: 0.02,
+        cachedUsd: null,
+        outputUsd: 0,
+        effectiveDate: "2026-10-22",
+      },
+      {
+        model: "pplx-decider-flash-v1.2",
+        inputUsd: 0.01,
+        cachedUsd: null,
+        outputUsd: 0,
+        effectiveDate: "2026-10-22",
+      },
+    ],
+  );
+  assert.equal(
+    chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "perplexity"),
+    false,
+  );
+});
+
 test("Mistral Large 4 launch prices transition to published list rates on October 20", () => {
   const entry = getProvider("mistral")?.entries.find((candidate) => candidate.model === "Mistral Large 4");
   assert.ok(entry, "Expected Mistral Large 4 Direct entry");
@@ -1721,6 +1755,44 @@ test("Microsoft-Decision-1 Foundry lanes stay outside generative comparisons", (
   );
   assert.equal(
     chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "microsoft-decisions"),
+    false,
+  );
+});
+
+test("Cohere Rerank 5 token rates stay outside generative comparisons", () => {
+  const provider = getProvider("cohere");
+
+  assert.ok(provider, "Expected the Cohere provider");
+  assert.deepEqual(
+    provider.entries.map(({ model, tier, inputUsd, cachedUsd, outputUsd, contextWindow }) => ({
+      model,
+      tier,
+      inputUsd,
+      cachedUsd,
+      outputUsd,
+      contextWindow,
+    })),
+    [
+      {
+        model: "Rerank 5 Pro",
+        tier: "Direct",
+        inputUsd: 0.05,
+        cachedUsd: null,
+        outputUsd: 0,
+        contextWindow: 32_768,
+      },
+      {
+        model: "Rerank 5 Fast",
+        tier: "Direct",
+        inputUsd: 0.02,
+        cachedUsd: null,
+        outputUsd: 0,
+        contextWindow: 32_768,
+      },
+    ],
+  );
+  assert.equal(
+    chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "cohere"),
     false,
   );
 });

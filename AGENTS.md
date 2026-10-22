@@ -25,6 +25,49 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-22 — Daily audit / Cohere Rerank 5 Direct API token pricing: Cohere
+  released Rerank 5 Pro and Fast on October 21 and its live API pricing page's
+  Advanced retrieval models tab lists $0.05/$0.02 per 1M tokens. Added
+  input-only Direct lanes; Rerank is retrieval scoring, so both rows stay out
+  of the generative comparison/calculator. Cohere lists both models as
+  available in Microsoft Foundry, but the live Cohere family price table still
+  lists only Rerank v4 at $2.50/$2 per 1K searches, and the Azure Retail
+  Prices meter query returns only Rerank v4 search-unit meters. No Foundry
+  Rerank 5 rate is inferred. The older general Cohere billing guide still says
+  reranking is priced by search count; the current Rerank 5 pricing page and
+  launch article explicitly publish per-token rates for this generation, while
+  v4 remains search-priced.
+  The complete Azure Retail Prices Foundry feed now returns 40 pages / 39,157
+  rows (38,985 Consumption / 172 Reservation), 27 products, 2,106
+  product-meter pairs, and 2,077 meter names, up by 201 rows and 33 pairs /
+  names from October 21's aggregate. The latest effective date remains
+  October 1, with no rows effective later and no `lastUpdatedDate`; the prior
+  raw feed snapshot is still missing, so the exact row-level delta cannot be
+  reconciled. New/current feed groups include legacy GPT-5.4/5.5 meters and
+  regional Grok/DeepSeek meters whose deployment support remains unconfirmed;
+  no change to an existing eligible lane was found. Mistral's live API table
+  still shows Large 4 at $1.36/$0.14/$4.18 per M in Standard mode, confirming
+  the October 20 list-price transition.
+  Other official checks found no additional token-rate or eligible model
+  availability change: Anthropic's October 21 API version and SDK update is
+  non-pricing; Google's latest relevant release note remains October 13;
+  DeepSeek's latest update is October 17; xAI's October updates concern Voice;
+  Alibaba's October 19 retirement notice covers Qwen3.5 models not present in this
+  catalog; Z.ai and MiniMax prices match current rows; and Kimi has no later
+  model-pricing entry. Sources checked: the complete Azure Retail Prices
+  feed and Rerank query; Microsoft Foundry pricing page and blog; Cohere
+  Rerank 5 release notes, API pricing page, model docs, and general pricing
+  guide; Mistral live API pricing; OpenAI API changelog; Claude release notes;
+  Gemini API changelog; DeepSeek updates; xAI release notes; Perplexity
+  changelog; Alibaba Model Studio release/pricing notes; Kimi, Z.ai, and
+  MiniMax official pricing documentation.
+  The first PR browser run passed 54 tests and failed only four /compare
+  pixel baselines because the Cohere footer link adds one 28px line. The
+  pinned Linux baseline workflow (run 39811550281) passed after recording; all
+  four Linux and four local Win32 screenshots were reviewed. Only the expected
+  Cohere footer link and page-height increase changed; snapshot updates are
+  included in this PR.
+
 - 2026-10-21 — Daily audit / OpenAI 12-hour prompt cache writes: OpenAI's
   October 20 Responses API update adds a 12-hour minimum cache lifetime for
   GPT-5.6 and later. The default 30-minute write rate remains 1.25x input;
