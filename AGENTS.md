@@ -52,8 +52,7 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
   availability change: Anthropic's October 21 API version and SDK update is
   non-pricing; Google's latest relevant release note remains October 13;
   DeepSeek's latest update is October 17; xAI's October updates concern Voice;
-  Alibaba's
-  October 19 retirement notice covers Qwen3.5 models not present in this
+  Alibaba's October 19 retirement notice covers Qwen3.5 models not present in this
   catalog; Z.ai and MiniMax prices match current rows; and Kimi has no later
   model-pricing entry. Sources checked: the complete Azure Retail Prices
   feed and Rerank query; Microsoft Foundry pricing page and blog; Cohere
@@ -62,6 +61,12 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
   Gemini API changelog; DeepSeek updates; xAI release notes; Perplexity
   changelog; Alibaba Model Studio release/pricing notes; Kimi, Z.ai, and
   MiniMax official pricing documentation.
+  The first PR browser run passed 54 tests and failed only four /compare
+  pixel baselines because the Cohere footer link adds one 28px line. The
+  pinned Linux baseline workflow (run 39811550281) passed after recording; all
+  four Linux and four local Win32 screenshots were reviewed. Only the expected
+  Cohere footer link and page-height increase changed; snapshot updates are
+  included in this PR.
 
 - 2026-10-21 — Daily audit / OpenAI 12-hour prompt cache writes: OpenAI's
   October 20 Responses API update adds a 12-hour minimum cache lifetime for
