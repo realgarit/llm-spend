@@ -22,6 +22,7 @@ import { glm } from "./glm";
 import { openaiAzure } from "./openai-azure";
 import { openaiDecisions } from "./openai-decisions";
 import { microsoftDecisions } from "./microsoft-decisions";
+import { cohere } from "./cohere";
 import { claude } from "./claude";
 import { gemini } from "./gemini";
 import { xai } from "./xai";
@@ -39,6 +40,7 @@ export const providers: Provider[] = [
   openaiAzure,
   openaiDecisions,
   microsoftDecisions,
+  cohere,
   claude,
   gemini,
   xai,
@@ -64,7 +66,8 @@ export function chatEntries(): { provider: Provider; entry: Provider["entries"][
         p.slug !== "embeddings" &&
         p.slug !== "perplexity" &&
         p.slug !== "openai-decisions" &&
-        p.slug !== "microsoft-decisions",
+        p.slug !== "microsoft-decisions" &&
+        p.slug !== "cohere",
     )
     .flatMap((p) => p.entries.map((entry) => ({ provider: p, entry })));
 }
