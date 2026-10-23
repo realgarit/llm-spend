@@ -31,7 +31,8 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
   input, and free output; the current API pricing table lists $0.125/M
   30-minute cache writes and $0.25/M 12-hour writes. The OpenAI Decisions row
   now includes the cache-read rate and documents write fees outside the shared
-  comparison schema. An Azure Retail Prices query for Azure OpenAI decision
+  comparison schema. The repository freshness marker now records the October
+  23 audit. An Azure Retail Prices query for Azure OpenAI decision
   meters returned zero rows on October 23; no Foundry rate is inferred.
   The complete Foundry feed returned 40 pages / 39,157 rows (38,985
   Consumption / 172 Reservation), 27 products, with no rows effective after
