@@ -23,6 +23,34 @@ export interface ChangelogSource {
  */
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-10-23",
+    title: "OpenAI's Decisions API reaches general availability",
+    tag: "pricing",
+    body: [
+      "OpenAI made the GPT-6 Luna Decisions API generally available on October 22. The guide now documents prompt-cache hits at $0.01 per 1M cached input tokens; the $0.10/M uncached input rate is unchanged, output remains free, and cache writes cost $0.125/M for 30 minutes or $0.25/M for 12 hours.",
+      "The OpenAI Decisions row now includes its cache-read rate. Cache-write fees remain outside the site's three-price comparison schema. The Azure Retail Prices feed has no GPT-6 Luna Decisions meter, so this remains a Direct-only lane with no Foundry rate inferred.",
+    ],
+    sources: [
+      {
+        label: "OpenAI API changelog — Decisions API general availability",
+        href: "https://developers.openai.com/api/docs/changelog",
+      },
+      {
+        label: "OpenAI Decisions API guide — availability and billing",
+        href: "https://developers.openai.com/api/docs/guides/decisions",
+      },
+      {
+        label: "OpenAI API pricing — GPT-6 Luna cache read and write rates",
+        href: "https://developers.openai.com/api/docs/pricing",
+      },
+      {
+        label: "Azure Retail Prices API — GPT-6 Luna Decisions meter query",
+        href: "https://prices.azure.com/api/retail/prices?%24filter=serviceName%20eq%20%27Foundry%20Models%27%20and%20contains%28tolower%28productName%29%2C%20%27azure%20openai%27%29%20and%20contains%28tolower%28meterName%29%2C%20%27decision%27%29",
+      },
+    ],
+    sourcesVerifiedOn: "2026-10-23",
+  },
+  {
     date: "2026-10-22",
     title: "Perplexity updates its Decisions API models",
     tag: "model",
