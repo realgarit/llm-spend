@@ -25,6 +25,32 @@ Always ship changes via branch → commit → push → PR → CI → merge → d
 
 ## Working notes
 
+- 2026-10-23 — Daily audit / OpenAI Decisions API GA and prompt caching:
+  OpenAI's October 22 API changelog marks GPT-6 Luna `/v1/decisions` generally
+  available. The official guide lists $0.10/M uncached input, $0.01/M cached
+  input, and free output; the current API pricing table lists $0.125/M
+  30-minute cache writes and $0.25/M 12-hour writes. The OpenAI Decisions row
+  now includes the cache-read rate and documents write fees outside the shared
+  comparison schema. An Azure Retail Prices query for Azure OpenAI decision
+  meters returned zero rows on October 23; no Foundry rate is inferred.
+  The complete Foundry feed returned 40 pages / 39,157 rows (38,985
+  Consumption / 172 Reservation), 27 products, with no rows effective after
+  October 1. It currently has 2,094 distinct product/meter-name pairs and
+  2,065 distinct meter names by exact-string grouping, while the October 22
+  note recorded 2,106 / 2,077; the prior raw feed snapshot is still missing,
+  so the difference cannot be reconciled or tied to an eligible lane.
+  Other official checks found Perplexity's Claude Haiku 5.5 route and Mistral's
+  Z.ai GLM 5.3 Flash route at the same published rates as their existing
+  developer API rows, so no duplicate cost lanes were added. Mistral's new
+  Voxtral 3 models are billed per minute or per million characters, and
+  Google's October 23 Deep Research Agent retirement is outside the token-rate
+  catalog. Sources checked: the full Azure Retail Prices Foundry feed and
+  Azure OpenAI decision-meter query; Microsoft Foundry Blog; OpenAI API
+  changelog, Decisions guide, and pricing; Perplexity Agent API changelog and
+  model list; Mistral model catalog, changelog, and pricing; Anthropic release
+  notes; Gemini API release notes; DeepSeek changelog; xAI release notes;
+  Cohere release notes; Alibaba Model Studio pricing; and Z.ai pricing.
+
 - 2026-10-22 — Daily audit / Cohere Rerank 5 Direct API token pricing: Cohere
   released Rerank 5 Pro and Fast on October 21 and its live API pricing page's
   Advanced retrieval models tab lists $0.05/$0.02 per 1M tokens. Added

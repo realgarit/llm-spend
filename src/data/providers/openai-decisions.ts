@@ -4,10 +4,10 @@ export const openaiDecisions: Provider = {
   slug: "openai-decisions",
   name: "OpenAI Decisions API",
   org: "OpenAI",
-  tagline: "GPT-6 Luna's typed decision endpoint bills input tokens only.",
+  tagline: "GPT-6 Luna's general-availability Decisions API discounts cached input.",
   intro: [
-    "OpenAI's Decisions API is a direct public-beta endpoint for classification, routing, and rubric scoring. It returns typed answers and probabilities instead of generated text, and currently uses GPT-6 Luna.",
-    "OpenAI lists a base rate of $0.10 per 1M input tokens, with no cache-read, cache-write, or output-token charge. Regional processing premiums and long-context input multipliers apply; their adjusted dollar rates are not listed separately here. The current Azure Retail Prices feed has no Decisions-named Foundry meter, so this is a Direct-only lane and remains outside generative workload comparisons.",
+    "OpenAI's generally available Decisions API is a direct endpoint for classification, routing, and rubric scoring. It returns typed answers and probabilities instead of generated text, and currently uses GPT-6 Luna.",
+    "OpenAI lists $0.10 per 1M uncached input tokens, $0.01 per 1M cached input tokens, and no output-token charge. Cache writes cost $0.125/M for a 30-minute lifetime or $0.25/M for 12 hours; the comparison schema does not represent cache-write fees. Regional processing premiums and long-context input multipliers apply. The Azure Retail Prices feed has no GPT-6 Luna Decisions meter, so this remains a Direct-only lane outside generative workload comparisons.",
   ],
   entries: [
     {
@@ -15,15 +15,15 @@ export const openaiDecisions: Provider = {
       host: "OpenAI Decisions API",
       tier: "Direct",
       inputUsd: 0.1,
-      cachedUsd: null,
+      cachedUsd: 0.01,
       outputUsd: 0,
       contextWindow: 1_050_000,
       confidence: "official",
       notes:
-        "Public beta at `/v1/decisions`; the $0.10/M input rate is the documented base price. There are no cache-read, cache-write, or output-token charges. Regional processing premiums and long-context input multipliers apply, but the guide does not publish their adjusted amounts.",
+        "Generally available at `/v1/decisions`. Uncached input costs $0.10/M, cached input $0.01/M, and output is free. Cache writes cost $0.125/M for 30 minutes or $0.25/M for 12 hours and are billed separately from this row. Regional processing premiums and long-context input multipliers apply.",
       sourceNote:
-        "OpenAI's Decisions API guide, checked 2026-10-07, documents a $0.10/M input base rate for `gpt-6-luna`, with no cache-read, cache-write, or output-token charge; it also says regional processing premiums and long-context multipliers apply without enumerating adjusted prices. The GPT-6 Luna model page lists a 1,050,000-token context window. An Azure Retail Prices query for Foundry meter names containing `decisions` returned zero rows on 2026-10-07, so no Foundry rate is inferred.",
-      effectiveDate: "2026-10-06",
+        "OpenAI's Decisions API guide, checked 2026-10-23, marks `/v1/decisions` generally available and lists $0.10/M uncached input, no output-token charge, and cache pricing that matches standard GPT-6 Luna rates. OpenAI's API pricing page, checked 2026-10-23, lists GPT-6 Luna at $0.01/M cached input, $0.125/M for 30-minute cache writes, and $0.25/M for 12-hour writes. Regional processing premiums and long-context input multipliers apply. The GPT-6 Luna model page lists a 1,050,000-token context window. An Azure Retail Prices query for Azure OpenAI product meters containing `decision` returned zero rows on 2026-10-23, so no Foundry rate is inferred.",
+      effectiveDate: "2026-10-22",
     },
   ],
 };

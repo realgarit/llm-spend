@@ -1721,14 +1721,18 @@ test("Mistral Large 4 launch prices transition to published list rates on Octobe
   );
 });
 
-test("OpenAI Decisions pricing is catalogued separately from generation comparisons", () => {
+test("OpenAI Decisions GA pricing includes cache reads outside generation comparisons", () => {
   const provider = getProvider("openai-decisions");
   const entry = provider?.entries.find((candidate) => candidate.model === "GPT-6 Luna (Decisions API)");
 
   assert.ok(entry, "Expected the OpenAI Decisions API lane");
   assert.equal(entry.inputUsd, 0.1);
-  assert.equal(entry.cachedUsd, null);
+  assert.equal(entry.cachedUsd, 0.01);
   assert.equal(entry.outputUsd, 0);
+  assert.equal(entry.effectiveDate, "2026-10-22");
+  assert.ok(entry.notes?.includes("Generally available"));
+  assert.ok(entry.notes?.includes("$0.125/M for 30 minutes"));
+  assert.ok(entry.notes?.includes("$0.25/M for 12 hours"));
   assert.equal(entry.host, "OpenAI Decisions API");
   assert.equal(
     chatEntries().some(({ provider: candidateProvider }) => candidateProvider.slug === "openai-decisions"),
